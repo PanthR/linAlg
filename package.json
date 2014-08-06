@@ -1,0 +1,30 @@
+{
+  "name": "linAlg",
+  "version": "0.0.0",
+  "description": "linAlg\r ======",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter=spec --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PanthR/linAlg.git"
+  },
+  "keywords": [
+    "matrices",
+    "linear-algebra",
+    "vectors",
+    "linear-solvers",
+    "numeric"
+  ],
+  "author": "wahl@hanover.edu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PanthR/linAlg/issues"
+  },
+  "homepage": "https://github.com/PanthR/linAlg",
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "mocha": "~1.21.3"
+  }
+}
