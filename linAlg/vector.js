@@ -29,8 +29,8 @@ define(function(require) {
 	// Vector.prototype methods 
 
 	/**
-	 * Returns i'th value
-	 * @param  {int} i - index
+	 * Returns the ith value
+	 * @param  {int} i  - index
 	 * @return {double} - value
 	 *
 	 * Vector indexing begins from 1
@@ -42,6 +42,20 @@ define(function(require) {
 			this.values[i-1] = this.compute(i) || 0;
 		}
 		return this.values[i-1];
+	}
+
+	/**
+	 * Sets the ith value
+	 * @param {int} i - index
+	 * @param {double} v - value
+	 * @return {object} this
+	 */
+	Vector.prototype.set = function set(i, v) {
+		if ( i >= 1 && i <= len) { 
+			if (!this.values) { this.values = []; }
+			this.values[i-1] = v || 0;
+		}
+		return this;
 	}
 
 	/**
