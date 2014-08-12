@@ -10,7 +10,7 @@ describe('Tabular vectors', function() {
       expect(v1).to.be.instanceof(TabularV);
       expect(v1).to.be.instanceof(Vector);
    });
-   it('are returned from the Vector constructor when it is fed a function', function() {
+   it('are formed when the Vector constructor is fed a function', function() {
       expect(new Vector(f, 10)).to.be.instanceof(TabularV);
    });
    it('are 1-indexed', function() {
@@ -32,4 +32,4 @@ describe('Tabular vectors', function() {
       expect(v1.get(10)).to.equal(10);
       expect(v1.get(11)).to.equal(0);
    });
-})
+});

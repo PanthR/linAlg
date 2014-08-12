@@ -9,7 +9,7 @@ describe('Dense vectors', function() {
       expect(v1).to.be.instanceof(DenseV);
       expect(v1).to.be.instanceof(Vector);
    });
-   it('are returned from the Vector constructor when it is fed an array', function() {
+   it('are formed when the Vector constructor is fed an array', function() {
       expect(new Vector([4,6,7])).to.be.instanceof(DenseV);
    });
    it('are 1-indexed', function() {

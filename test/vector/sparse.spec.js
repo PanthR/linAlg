@@ -10,7 +10,7 @@ describe('Sparse vectors', function() {
       expect(v1).to.be.instanceof(SparseV);
       expect(v1).to.be.instanceof(Vector);
    });
-   it('are returned from the Vector constructor when it is fed an object', function() {
+   it('are formed when the Vector constructor is fed an object', function() {
       expect(new Vector(dict, 1000)).to.be.instanceof(SparseV);
    });
    it('are 1-indexed', function() {
