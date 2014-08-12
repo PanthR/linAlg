@@ -25,7 +25,8 @@
    "homepage": "https://github.com/PanthR/linAlg",
    "devDependencies": {
       "chai": "^1.9.1",
-      "mocha": "~1.21.3"
+      "mocha": "~1.21.3",
+      "mocha-jshint": "0.0.9"
    },
    "jshintConfig": {
       "bitwise": true,
@@ -49,7 +50,12 @@
       "maxcomplexity": 6,
       "maxlen": 80,
       "eqnull": true,
-      "predef": [ "define", "module", "require" ]
+      "predef": [
+      "define",
+      "module",
+      "require",
+      "describe",
+      "it"
+      ]
    }
-
 }
