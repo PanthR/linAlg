@@ -1,23 +1,30 @@
 (function(define) {'use strict';
 define(function(require) {
 
-	// TODO: decide if Vectors are editable
-	// 
+	// TODO: decide if Vectors are editable (implement "set" method?)
+	
 	// TODO:  Testing
 
-	var Vector, DenseV, SparseV;
+	var Vector, DenseV, SparseV, TabularV;
 
 	/**
 	 * Constructs a Vector object
-	 * @param {array|object} arr - Values
+	 * @param {array|function|object} arr - Values
 	 * @param {int} [len] - length of Vector
 	 */
 	function Vector(arr, len) {
 		if (Array.isArray(arr)) {
 			return new DenseV(arr);
 		}
+		if (typeof arr === 'function') {
+			return new TabularV(arr, len);
+		}
 		return new SparseV(arr, len);
 	}
+
+	DenseV   = (require('./vector/dense'))(Vector);
+	SparseV  = (require('./vector/sparse'))(Vector);
+	TabularV = (require('./vector/tabular'))(Vector);
 
 	// Vector.prototype methods 
 
@@ -26,10 +33,26 @@ define(function(require) {
 	 * @param  {int} i - index
 	 * @return {double} - value
 	 *
-	 * Indexing begins from 0
+	 * Vector indexing begins from 1
 	 */
 	Vector.prototype.get = function get(i) {
-		console.log("Vector.get not implemented");
+		if ( i < 1 || i > len) { return 0; }
+		if (!this.values) { this.values = []; }
+		if (this.values[i-1] == null) { 
+			this.values[i-1] = this.compute(i) || 0;
+		}
+		return this.values[i-1];
+	}
+
+	/**
+	 * Compute the ith entry, to be used internally
+	 * @private
+	 * @param  {int} i  - index
+	 * @return {number} - value
+	 */
+	Vector.prototype.compute = function compute(i) {
+		throw new Error("Subclasses of Vector need to implement compute: "
+			+ this.constructor.name);
 	}
 
 	/**
@@ -37,88 +60,18 @@ define(function(require) {
 	 * @param  {[type]} other [description]
 	 * @return {[type]}       [description]
 	 */
-	Vector.prototype.dot = function dot(other) {
-		var res, i, l;
+	// Vector.prototype.dot = function dot(other) {
+	// 	var res, i, l;
 
-		res = 0;
-		l = this.length;
+	// 	res = 0;
+	// 	l = this.length;
 
-		for(i = 0; i < l; i += 1) {
-			res += this.get(i) * other.get(i);
-		}
+	// 	for(i = 0; i < l; i += 1) {
+	// 		res += this.get(i) * other.get(i);
+	// 	}
 
-		return res;
-	};
-
-	/**
-	 * Constructs a DenseV object
-	 * @param {array} arr - Values
-	 */
-	function DenseV(arr) {
-		this.values = arr;
-		this.length = arr.length;
-		this.nnz = this.length;
-	}
-
-	DenseV.prototype = Object.create(Vector.prototype);
-
-	// DenseV.prototype methods
-	DenseV.prototype.get = function get(i) {
-		return this.values[i] || 0;
-	}
-
-	DenseV.prototype.dot = function dot(other) {
-		if (isSparse(other)) {
-			return other.dot(this);
-		}
-		// both are dense
-		return Vector.prototype.dot.call(this, other);
-	}
-
-	/**
-	 * Constructs a SparseV object
-	 * @param {object} arr - Values
-	 * @param {int} len - length of Vector
-	 *
-	 * The object properties are the indices of the non-zero values.
-	 */
-	function SparseV(arr, len) {
-		this.values = arr;
-		this.length = len;
-		this.keys = arr.keys(); // array of nonzero entries
-		this.nnz = this.keys.length; // number of nonzero entries
-	}
-
-	SparseV.prototype = Object.create(Vector.prototype);
-
-	// SparseV.prototype methods
-
-	SparseV.prototype.get = function get(i) {
-		return this.values[i] || 0;
-	}
-
-	SparseV.prototype.dot = function dot(other) {
-		// "this" is sparse
-		// "other" is sparse or dense
-		var res, i, l, that;
-
-		res = 0;
-		that = this;
-
-		if (that.nnz > other.nnz) { 
-			// swap roles
-			that = other;
-			other = this;
-		}
-
-		l = that.nnz;
-
-		for(i = 0; i < l; i += 1) {
-			res += that.get(that.keys[i]) * other.get(that.keys[i]);
-		}
-
-		return res;
-	};
+	// 	return res;
+	// };
 
 	// Helper functions
 	
@@ -131,6 +84,8 @@ define(function(require) {
 	function isSparse(a) {
 		return a instanceof SparseV;
 	}
+
+	return Vector;
 
 });
 
