@@ -1,30 +1,55 @@
 {
-  "name": "linAlg",
-  "version": "0.0.0",
-  "description": "linAlg\r ======",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha --reporter=spec --recursive"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/PanthR/linAlg.git"
-  },
-  "keywords": [
-    "matrices",
-    "linear-algebra",
-    "vectors",
-    "linear-solvers",
-    "numeric"
-  ],
-  "author": "wahl@hanover.edu",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/PanthR/linAlg/issues"
-  },
-  "homepage": "https://github.com/PanthR/linAlg",
-  "devDependencies": {
-    "chai": "~1.9.1",
-    "mocha": "~1.21.3"
-  }
+   "name": "linAlg",
+   "version": "0.0.0",
+   "description": "linAlg\r ======",
+   "main": "index.js",
+   "scripts": {
+      "test": "mocha --reporter=spec --recursive"
+   },
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/PanthR/linAlg.git"
+   },
+   "keywords": [
+   "matrices",
+   "linear-algebra",
+   "vectors",
+   "linear-solvers",
+   "numeric"
+   ],
+   "author": "wahl@hanover.edu",
+   "license": "MIT",
+   "bugs": {
+      "url": "https://github.com/PanthR/linAlg/issues"
+   },
+   "homepage": "https://github.com/PanthR/linAlg",
+   "devDependencies": {
+      "chai": "^1.9.1",
+      "mocha": "~1.21.3"
+   },
+   "jshintConfig": {
+      "bitwise": true,
+      "curly": true,
+      "camelcase": true,
+      "eqeqeq": true,
+      "forin": true,
+      "freeze": true,
+      "immed": true,
+      "indent": 3,
+      "latedef": true,
+      "newcap": true,
+      "plusplus": true,
+      "quotmark": "single",
+      "undef": true,
+      "unused": "vars",
+      "strict": true,
+      "maxparams": 4,
+      "maxdepth": 4,
+      "maxstatements": 20,
+      "maxcomplexity": 6,
+      "maxlen": 80,
+      "eqnull": true,
+      "predef": [ "define", "module", "require" ]
+   }
+
 }
