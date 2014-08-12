@@ -36,7 +36,7 @@ define(function(require) {
 	 * Vector indexing begins from 1
 	 */
 	Vector.prototype.get = function get(i) {
-		if ( i < 1 || i > len) { return 0; }
+		if ( i < 1 || i > this.length) { return 0; }
 		if (!this.values) { this.values = []; }
 		if (this.values[i-1] == null) { 
 			this.values[i-1] = this.compute(i) || 0;
@@ -51,7 +51,7 @@ define(function(require) {
 	 * @return {object} this
 	 */
 	Vector.prototype.set = function set(i, v) {
-		if ( i >= 1 && i <= len) { 
+		if ( i >= 1 && i <= this.length) { 
 			if (!this.values) { this.values = []; }
 			this.values[i-1] = v || 0;
 		}

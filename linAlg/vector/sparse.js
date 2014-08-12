@@ -28,7 +28,7 @@ return function(Vector) {
 	}
 
 	SparseV.prototype.set = function set(i, v) {
-		if ( i >= 1 && i <= len) { 
+		if ( i >= 1 && i <= this.length) { 
 			this._values[i] = v || 0;
 		}
 		return this;
