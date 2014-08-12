@@ -22,9 +22,9 @@ define(function(require) {
 		return new SparseV(arr, len);
 	}
 
-	DenseV   = (require('./vector/dense'))(Vector);
-	SparseV  = (require('./vector/sparse'))(Vector);
-	TabularV = (require('./vector/tabular'))(Vector);
+	Vector.DenseV   = DenseV   = (require('./vector/dense'))(Vector);
+	Vector.SparseV  = SparseV  = (require('./vector/sparse'))(Vector);
+	Vector.TabularV = TabularV = (require('./vector/tabular'))(Vector);
 
 	// Vector.prototype methods 
 
