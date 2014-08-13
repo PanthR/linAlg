@@ -4,7 +4,7 @@
    "description": "linAlg\r ======",
    "main": "index.js",
    "scripts": {
-      "test": "mocha --reporter=spec --recursive"
+      "test": "mocha --reporter=spec --recursive --require=./test/stackFixer.js"
    },
    "repository": {
       "type": "git",
