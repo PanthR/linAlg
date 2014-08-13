@@ -1,11 +1,11 @@
 (function(define) {'use strict';
 define(function(require) {
 
-   // TODO: decide if Vectors are editable (implement "set" method?)
+   // TODO: decide if Vectors are editable (implement 'set' method?)
    
    // TODO:  Testing
 
-   var Vector, DenseV, SparseV, TabularV;
+   var DenseV, SparseV, TabularV;
 
    /**
     * Constructs a Vector object
@@ -42,7 +42,7 @@ define(function(require) {
          this.values[i-1] = this.compute(i) || 0;
       }
       return this.values[i-1];
-   }
+   };
 
    /**
     * Sets the ith value
@@ -56,7 +56,7 @@ define(function(require) {
          this.values[i-1] = v || 0;
       }
       return this;
-   }
+   };
 
    /**
     * Compute the ith entry, to be used internally
@@ -65,9 +65,11 @@ define(function(require) {
     * @return {number} - value
     */
    Vector.prototype.compute = function compute(i) {
-      throw new Error("Subclasses of Vector need to implement compute: "
-         + this.constructor.name);
-   }
+
+      throw new Error('Subclasses of Vector need to implement compute: ' +
+         this.constructor.name);
+   };
+
 
    /**
     * Dot product

@@ -23,7 +23,7 @@ return function(Vector) {
 
    TabularV.prototype.compute = function compute(i) {
       return this.f(i);
-   }
+   };
 
    return TabularV;
 };

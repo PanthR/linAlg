@@ -23,14 +23,14 @@ return function(Vector) {
 
    SparseV.prototype.get = function get(i) {
       return this._values[i] || 0;
-   }
+   };
 
    SparseV.prototype.set = function set(i, v) {
       if ( i >= 1 && i <= this.length) { 
          this._values[i] = v || 0;
       }
       return this;
-   }
+   };
 
    // SparseV.prototype.dot = function dot(other) {
    //    // "this" is sparse
