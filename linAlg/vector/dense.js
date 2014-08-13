@@ -6,34 +6,34 @@ define(function(require) {
  */
 return function(Vector) {
 
-	/**
-	 * Constructs a DenseV object
-	 * @param {array} arr - Values
-	 */
-	function DenseV(arr) {
-		this.values = arr;
-		this.length = arr.length;
-		this.nnz = this.length;
-	}
+   /**
+    * Constructs a DenseV object
+    * @param {array} arr - Values
+    */
+   function DenseV(arr) {
+      this.values = arr;
+      this.length = arr.length;
+      this.nnz = this.length;
+   }
 
-	// makes DenseV a "subclass" of Vector
-	DenseV.prototype = Object.create(Vector.prototype);
+   // makes DenseV a "subclass" of Vector
+   DenseV.prototype = Object.create(Vector.prototype);
 
-	// DenseV.prototype methods
-	// DenseV.prototype.dot = function dot(other) {
-	// 	if (isSparse(other)) {
-	// 		return other.dot(this);
-	// 	}
-	// 	// both are dense
-	// 	return Vector.prototype.dot.call(this, other);
-	// }
+   // DenseV.prototype methods
+   // DenseV.prototype.dot = function dot(other) {
+   //    if (isSparse(other)) {
+   //       return other.dot(this);
+   //    }
+   //    // both are dense
+   //    return Vector.prototype.dot.call(this, other);
+   // }
 
-	return DenseV;
+   return DenseV;
 };
 
 });
 
 }(typeof define === 'function' && define.amd ? define : function(factory) { 
-	'use strict';
-	module.exports = factory(require); 
+   'use strict';
+   module.exports = factory(require); 
 }));
