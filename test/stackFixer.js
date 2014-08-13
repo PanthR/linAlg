@@ -1,6 +1,6 @@
 var oldconsoleError = console.error, errorStackDepth = 1;
 var path = require('path');
-var appRoot = path.resolve(__dirname, '..')+'/';
+var appRoot = path.resolve(__dirname, '..');
 var regexp = /\.spec\.js\:\d+\:\d+/;
 
 console.error = function () {//fmt, i, title, msg, stack
