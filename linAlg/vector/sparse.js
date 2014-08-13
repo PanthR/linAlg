@@ -15,8 +15,6 @@ return function(Vector) {
    function SparseV(arr, len) {
       this._values = arr;
       this.length = len;
-      this.keys = Object.keys(arr); // array of nonzero entries
-      this.nnz = this.keys.length; // number of nonzero entries
    }
 
    SparseV.prototype = Object.create(Vector.prototype);

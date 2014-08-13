@@ -13,7 +13,6 @@ return function(Vector) {
    function DenseV(arr) {
       this.values = arr;
       this.length = arr.length;
-      this.nnz = this.length;
    }
 
    // makes DenseV a "subclass" of Vector

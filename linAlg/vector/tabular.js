@@ -15,7 +15,6 @@ return function(Vector) {
    function TabularV(f, len) {
       this.f = f;
       this.length = len;
-      this.nnz = len; // number of nonzero entries
    }
 
    TabularV.prototype = Object.create(Vector.prototype);
