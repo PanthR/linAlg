@@ -15,6 +15,7 @@ return function(Vector) {
    function TabularV(f, len) {
       this.f = f;
       this.length = len;
+      this.constructor = TabularV;
    }
 
    TabularV.prototype = Object.create(Vector.prototype);
