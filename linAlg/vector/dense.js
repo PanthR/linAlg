@@ -25,6 +25,13 @@ return function(Vector) {
       return Vector;
    };
 
+   DenseV.forEachPair = function forEachPair(v1, v2, f) {
+      v1.forEach(function(val, i) {
+         f(val, v2.get(i), i);
+      });
+      return Vector;
+   };
+
    // DenseV.prototype methods
 
    // DenseV.prototype.dot = function dot(other) {

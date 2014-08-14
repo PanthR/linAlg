@@ -37,6 +37,23 @@ define(function(require) {
       return Vector;
    };
 
+   Vector.forEachPair = function forEachPair(v1, v2, f, skipZeros) {
+      if (!sameLength(v1, v2)) {
+         throw new Error('Vector.forEachPair: vectors should be same langth');
+      }
+      function swap(f) {
+         return function(b, a, i) { return f(a, b, i); };
+      }
+      if (isSparse(v1)) {
+         SparseV.forEachPair(v1, v2, f, skipZeros);
+      } else if (isSparse(v2)) {
+         SparseV.forEachPair(v2, v1, swap(f), skipZeros);
+      } else {
+         DenseV.forEachPair(v1, v2, f);
+      }
+      return Vector;
+   };
+
    // Vector.prototype methods 
 
    /**
@@ -92,6 +109,11 @@ define(function(require) {
     */
    Vector.prototype.forEach = function forEach(f, skipZeros) {
       Vector.forEach(this, f, skipZeros);
+      return this;
+   };
+
+   Vector.prototype.forEachPair = function forEachPair(v2, f, skipZeros) {
+      Vector.forEachPair(this, v2, f, skipZeros);
       return this;
    };
 
