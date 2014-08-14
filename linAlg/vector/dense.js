@@ -18,7 +18,15 @@ return function(Vector) {
    // makes DenseV a "subclass" of Vector
    DenseV.prototype = Object.create(Vector.prototype);
 
+   // DenseV class methods
+   
+   DenseV.forEach = function forEach(v1, f) {
+      v1.values.forEach(function(v, i) { f(v, i + 1); });
+      return Vector;
+   };
+
    // DenseV.prototype methods
+
    // DenseV.prototype.dot = function dot(other) {
    //    if (isSparse(other)) {
    //       return other.dot(this);
@@ -29,6 +37,7 @@ return function(Vector) {
 
    return DenseV;
 };
+
 
 });
 

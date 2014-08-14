@@ -26,6 +26,17 @@ define(function(require) {
    Vector.SparseV  = SparseV  = (require('./vector/sparse'))(Vector);
    Vector.TabularV = TabularV = (require('./vector/tabular'))(Vector);
 
+
+   // Vector dispatch class methods
+   Vector.forEach = function forEach(v, f, skipZeros) {
+      if (isSparse(v)) { 
+         SparseV.forEach(v, f, skipZeros);
+      } else {
+         DenseV.forEach(v, f);
+      }
+      return Vector;
+   };
+
    // Vector.prototype methods 
 
    /**
@@ -68,6 +79,20 @@ define(function(require) {
 
       throw new Error('Subclasses of Vector need to implement compute: ' +
          this.constructor.name);
+   };
+
+   /**
+    * [forEach description]
+    * @param  {[type]} f         [description]
+    * @param  {[type]} skipZeros [description]
+    * @return {[type]}           [description]
+    *
+    * Note: skipZeros = true gives permission for zeros to be skipped
+    * (doesn't FORCE skipping)
+    */
+   Vector.prototype.forEach = function forEach(f, skipZeros) {
+      Vector.forEach(this, f, skipZeros);
+      return this;
    };
 
 

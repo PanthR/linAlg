@@ -19,6 +19,22 @@ return function(Vector) {
 
    SparseV.prototype = Object.create(Vector.prototype);
 
+   // SparseV class methods
+   
+   SparseV.forEach = function forEach(v1, f, skipZeros) {
+      var i, vals;
+      vals = v1._values;
+      if (skipZeros) {
+         Object.keys(vals).forEach(function(i) {
+            f(vals[i], parseInt(i));
+         });
+      } else {
+         for (i = 1; i <= v1.length; i += 1) {
+            f(v1.get(i), i);
+         }
+      }
+      return Vector;
+   };
    // SparseV.prototype methods
 
    SparseV.prototype.get = function get(i) {
