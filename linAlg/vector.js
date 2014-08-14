@@ -117,6 +117,13 @@ define(function(require) {
       return this;
    };
 
+   Vector.prototype.reduce = function reduce(f, initial, skipZeros) {
+      initial = initial || 0;
+      this.forEach(function(v, i) {
+         initial = f(initial, v, i);
+      }, skipZeros);
+      return initial;
+   };
 
    /**
     * Dot product
