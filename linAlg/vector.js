@@ -29,12 +29,7 @@ define(function(require) {
 
    // Vector dispatch class methods
    Vector.forEach = function forEach(v, f, skipZeros) {
-      if (isSparse(v)) { 
-         SparseV.forEach(v, f, skipZeros);
-      } else {
-         DenseV.forEach(v, f);
-      }
-      return Vector;
+      return v.constructor.forEach(v, f, skipZeros);
    };
 
    Vector.forEachPair = function forEachPair(v1, v2, f, skipZeros) {
