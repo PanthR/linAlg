@@ -6,11 +6,18 @@ define(function(require) {
  */
 return function(Vector) {
    /**
-    * Constructs a TabularV object
-    * @param {function} f - generating function
-    * @param {int} len    - length of Vector
+    * An internal representation of vectors represented via a function.
+    * Users should not need to access this directly.
+    * Use {{#crossLink "Vector"}}{{/crossLink}} instead.
     *
-    * The object properties are the indices of the non-zero values.
+    * Implementation detail: The values of the vector are computed lazily,
+    * only when they are accessed. Users should not count on side-effects of the function `f`.
+    * @namespace Vector
+    * @class TabularV
+    * @param f {Function}  The entry-generating function `f(n)`
+    * @param len {Integer} The length of the resulting vector.
+    * @constructor
+    *
     */
    function TabularV(f, len) {
       this.f = f;

@@ -6,11 +6,15 @@ define(function(require) {
  */
 return function(Vector) {
    /**
-    * Constructs a SparseV object
-    * @param {object} arr - Values
-    * @param {int} len - length of Vector
+    * An internal representation of "sparce" vectors. Users should not need to access this directly.
+    * Use {{#crossLink "Vector"}}{{/crossLink}} instead.
     *
     * The object properties are the indices of the non-zero values.
+    * @namespace Vector
+    * @class SparcV
+    * @param arr {Object} The non-zero values
+    * @param len {Integer} The length of the vector
+    *
     */
    function SparseV(arr, len) {
       this._values = arr;

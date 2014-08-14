@@ -1,16 +1,32 @@
 (function(define) {'use strict';
 define(function(require) {
 
-   // TODO: decide if Vectors are editable (implement 'set' method?)
-   
-   // TODO:  Testing
+   /**
+    * Representation of fixed-length vectors.
+    * @module Vector
+    * @author Haris Skiadas <skiadas@hanover.edu>
+    * @author Barb Wahl <wahl@hanover.edu>
+    */
 
    var DenseV, SparseV, TabularV;
 
    /**
-    * Constructs a Vector object
-    * @param {array|function|object} arr - Values
-    * @param {int} [len] - length of Vector
+    * `Vector` objects are a Javascript representations of real-valued vectors.
+    * They are constructed in one of three ways:
+    * 1. Based on an array of values
+    * 2. Based on a key-value object representing the non-zero indices and their values (sparse vectors)
+    * 3. Based on a function `f(n)` describing how the i-th index is meant to be computed.
+    *
+    * `Vector` objects are 1-indexed.
+    *
+    * @class Vector
+    * @constructor
+    * @param arr {Array|Function|Object} A description of the vector's values
+    * @param [len] {Integer}     The vector's length. Optional if an array is passed.
+    * @example
+    *     var v1 = new Vector([3, 5, 1, 2]);          // A length-4 vector
+    *     var v2 = new Vector({ 4: 10, 2: 12 }, 10);  // A length-10 sparse vector
+    *     var v3 = new Vector(Math.exp, 3);           // A length-3 vector with values exp(1), exp(2), exp(3)
     */
    function Vector(arr, len) {
       if (Array.isArray(arr)) {
@@ -21,6 +37,11 @@ define(function(require) {
       }
       return new SparseV(arr, len);
    }
+   /**
+    * The length of the vector
+    * @property length
+    * @type {Integer}
+    */
 
    Vector.DenseV   = DenseV   = (require('./vector/dense'))(Vector);
    Vector.SparseV  = SparseV  = (require('./vector/sparse'))(Vector);
@@ -52,9 +73,10 @@ define(function(require) {
    // Vector.prototype methods 
 
    /**
-    * Returns the ith value
-    * @param  {int} i  - index
-    * @return {double} - value
+    * Returns the ith value of the vector
+    * @method get
+    * @param i {Integer} index (1-based)
+    * @return {Double} The i-th value in the vector
     *
     * Vector indexing begins from 1
     */
@@ -68,10 +90,12 @@ define(function(require) {
    };
 
    /**
-    * Sets the ith value
-    * @param {int} i - index
-    * @param {double} v - value
-    * @return {object} this
+    * Sets the ith value of the vector
+    * @method set
+    * @param i {Integer} index
+    * @param v {Double} the new value
+    * @return {Object} this
+    * @chainable
     */
    Vector.prototype.set = function set(i, v) {
       if ( i >= 1 && i <= this.length) { 
@@ -83,9 +107,10 @@ define(function(require) {
 
    /**
     * Compute the ith entry, to be used internally
+    * @method compute
     * @private
-    * @param  {int} i  - index
-    * @return {number} - value
+    * @param i {Integer} index
+    * @return {Double} the i-th value
     */
    Vector.prototype.compute = function compute(i) {
 
@@ -120,7 +145,7 @@ define(function(require) {
       return initial;
    };
 
-   /**
+   /*
     * Dot product
     * @param  {[type]} other [description]
     * @return {[type]}       [description]

@@ -7,8 +7,13 @@ define(function(require) {
 return function(Vector) {
 
    /**
-    * Constructs a DenseV object
-    * @param {array} arr - Values
+    * An internal representation of "dense" vectors. Users should not need to access this directly.
+    * Use {{#crossLink "Vector"}}{{/crossLink}} instead.
+    * @namespace Vector
+    * @class DenseV
+    * @extends Vector
+    * @param arr {Array} values
+    * @constructor
     */
    function DenseV(arr) {
       this.values = arr;
