@@ -19,7 +19,7 @@ return function(Vector) {
    SparseV.prototype = Object.create(Vector.prototype);
 
    /* SparseV class methods */
-   
+
    SparseV.forEach = function forEach(v1, f, skipZeros) {
       var i, vals;
       vals = v1._values;
@@ -56,7 +56,7 @@ return function(Vector) {
    };
 
    SparseV.prototype.set = function set(i, v) {
-      if ( i >= 1 && i <= this.length) { 
+      if ( i >= 1 && i <= this.length) {
          this._values[i] = v || 0;
       }
       return this;
@@ -67,7 +67,7 @@ return function(Vector) {
 
 });
 
-}(typeof define === 'function' && define.amd ? define : function(factory) { 
+}(typeof define === 'function' && define.amd ? define : function(factory) {
    'use strict';
-   module.exports = factory(require); 
+   module.exports = factory(require);
 }));

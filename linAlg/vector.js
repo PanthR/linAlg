@@ -14,12 +14,12 @@ define(function(require) {
    // 1. Based on an array of values. In this case, the resulting vector length `len` is optional.
    // 2. Based on a key-value object representing the non-zero indices and their values (sparse vectors)
    // 3. Based on a function `f(n)` describing how the i-th index is meant to be computed.
-   // 
+   //
    // `Vector` objects are 1-indexed.
-   // 
+   //
    //     var v1 = new Vector([3, 5, 1, 2]);          // A length-4 vector
    //     var v2 = new Vector({ 4: 10, 2: 12 }, 10);  // A length-10 sparse vector
-   //     var v3 = new Vector(Math.exp, 3);           // A length-3 vector with values exp(1), exp(2), exp(3)
+   //     var v3 = new Vector(Math.exp, 3);           // A length-3 vector with values e(1), e(2), e(3)
    //     v1.length                                   // All vectors have a length property
    function Vector(arr, len) {
       if (Array.isArray(arr)) {
@@ -37,19 +37,20 @@ define(function(require) {
 
 
    /* Vector dispatch class methods */
-   
-   // Execute the function `f` for each entries from the vector `v`, starting with the entry with index 1.
-   // `f` will be called as `f(value, index)`.
+
+   // Execute the function `f` for each entries from the vector `v`,
+   // starting with the entry with index 1. `f` will be called as `f(value, index)`.
    // If `skipZeros` is `true`, then the system _may_ skip the execution of `f` for zero-entries.
    Vector.forEach = function forEach(v, f, skipZeros) {
       return v.constructor.forEach(v, f, skipZeros);
    };
 
-   // Execute the function `f` for each pair of corresponding entries from the vectors `v1` and `v2`,
-   // starting with the entries with index 1.
-   // `f` will be called as `f(value1, value2, index)`, where `value1`, `value2` are the entries of the
-   // vectors `v1`, `v2` at index `i`.
-   // If `skipZeros` is `true`, then the system _may_ skip the execution of `f` when one of the values is 0.
+   // Execute the function `f` for each pair of corresponding entries from the
+   // vectors `v1` and `v2`, starting with the entries with index 1.
+   // `f` will be called as `f(value1, value2, index)`, where `value1`, `value2` are the entries
+   //  of the vectors `v1`, `v2` at index `i`.
+   // If `skipZeros` is `true`, then the system _may_ skip the execution of `f` when
+   // one of the values is 0.
    Vector.forEachPair = function forEachPair(v1, v2, f, skipZeros) {
       if (!sameLength(v1, v2)) {
          throw new Error('Vector.forEachPair: vectors should be same langth');
@@ -73,7 +74,7 @@ define(function(require) {
    Vector.prototype.get = function get(i) {
       if ( i < 1 || i > this.length) { return 0; }
       if (!this.values) { this.values = []; }
-      if (this.values[i-1] == null) { 
+      if (this.values[i-1] == null) {
          this.values[i-1] = this.compute(i) || 0;
       }
       return this.values[i-1];
@@ -81,7 +82,7 @@ define(function(require) {
 
    // Set the entry at index `i` of the vector. Users should avoid calling this method.
    Vector.prototype.set = function set(i, v) {
-      if ( i >= 1 && i <= this.length) { 
+      if ( i >= 1 && i <= this.length) {
          if (!this.values) { this.values = []; }
          this.values[i-1] = v || 0;
       }
@@ -118,7 +119,7 @@ define(function(require) {
    };
 
    /* Helper functions */
-   
+
    function sameLength(a, b) {
       return a.length === b.length;
    }
@@ -131,7 +132,7 @@ define(function(require) {
 
 });
 
-}(typeof define === 'function' && define.amd ? define : function(factory) { 
+}(typeof define === 'function' && define.amd ? define : function(factory) {
    'use strict';
-   module.exports = factory(require); 
+   module.exports = factory(require);
 }));

@@ -19,7 +19,7 @@ return function(Vector) {
    DenseV.prototype = Object.create(Vector.prototype);
 
    /* DenseV class methods */
-   
+
    DenseV.forEach = function forEach(v1, f) {
       v1.values.forEach(function(v, i) { f(v, i + 1); });
       return Vector;
@@ -40,7 +40,7 @@ return function(Vector) {
 
 });
 
-}(typeof define === 'function' && define.amd ? define : function(factory) { 
+}(typeof define === 'function' && define.amd ? define : function(factory) {
    'use strict';
-   module.exports = factory(require); 
+   module.exports = factory(require);
 }));
