@@ -84,6 +84,9 @@ define(function(require) {
       return initial;
    };
 
+   // Alias for `Vector.reduce`
+   Vector.foldl = Vector.reduce;
+
    /* Vector.prototype methods */
 
    // Get the entry at index `i` of the vector. Vector indexing begins from 1
@@ -130,6 +133,9 @@ define(function(require) {
       return Vector.reduce(this, f, initial, skipZeros);
    };
 
+   // Alias for `Vector.prototype.reduce`
+   Vector.prototype.foldl = Vector.prototype.reduce;
+   
    /* Helper functions */
 
    function sameLength(a, b) {
