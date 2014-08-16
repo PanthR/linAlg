@@ -68,6 +68,22 @@ define(function(require) {
       return Vector;
    };
 
+   // Similar to `Array.prototype.reduce`. Given a function `f(acc, val, i)` and an
+   // `initial` value, it successively calls the function on the vector's entries,
+   // storing each result in the variable `acc`, then feeding that value back.
+   // If `skipZeros` is `true`, this operation _may_ skip any zero entries.
+   // `initial` and `acc` do not have to be numbers, but they do need to have the
+   // same type, and `f` should return that same type.
+   //     var a = new Vector([1,2,3]);
+   //     a.reduce(function(a,b) { return a + b; }, 4); // Equivalent to (((4 + 1) + 2) + 3)
+   Vector.reduce = function reduce(v, f, initial, skipZeros) {
+      initial = initial || 0;
+      v.forEach(function(val, i) {
+         initial = f(initial, val, i);
+      }, skipZeros);
+      return initial;
+   };
+
    /* Vector.prototype methods */
 
    // Get the entry at index `i` of the vector. Vector indexing begins from 1
@@ -111,11 +127,7 @@ define(function(require) {
 
    // Delegates to `Vector.reduce`.
    Vector.prototype.reduce = function reduce(f, initial, skipZeros) {
-      initial = initial || 0;
-      this.forEach(function(v, i) {
-         initial = f(initial, v, i);
-      }, skipZeros);
-      return initial;
+      return Vector.reduce(this, f, initial, skipZeros);
    };
 
    /* Helper functions */
