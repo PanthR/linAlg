@@ -4,7 +4,7 @@
    "description": "linAlg\r ======",
    "main": "index.js",
    "scripts": {
-      "test": "mocha --reporter=spec --recursive --require=./test/stackFixer.js",
+      "test": "eslint linAlg; mocha --reporter=progress --recursive --require=./test/stackFixer.js",
       "doc": "node generateDoc.js"
    },
    "repository": {
@@ -26,38 +26,9 @@
    "homepage": "https://github.com/PanthR/linAlg",
    "devDependencies": {
       "chai": "^1.9.1",
+      "eslint": "^0.7.4",
       "handlebars": "^2.0.0-alpha.4",
       "mocha": "~1.21.3",
       "mocha-jshint": "0.0.9"
-   },
-   "jshintConfig": {
-      "bitwise": true,
-      "curly": true,
-      "camelcase": true,
-      "eqeqeq": true,
-      "forin": true,
-      "freeze": true,
-      "immed": true,
-      "indent": 3,
-      "latedef": true,
-      "newcap": true,
-      "plusplus": true,
-      "quotmark": "single",
-      "undef": true,
-      "unused": "vars",
-      "strict": true,
-      "maxparams": 4,
-      "maxdepth": 4,
-      "maxstatements": 20,
-      "maxcomplexity": 6,
-      "maxlen": 80,
-      "eqnull": true,
-      "predef": [
-      "define",
-      "module",
-      "require",
-      "describe",
-      "it"
-      ]
    }
 }
