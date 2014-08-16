@@ -4,7 +4,8 @@
    "description": "linAlg\r ======",
    "main": "index.js",
    "scripts": {
-      "test": "mocha --reporter=spec --recursive --require=./test/stackFixer.js"
+      "test": "mocha --reporter=spec --recursive --require=./test/stackFixer.js",
+      "doc": "node generateDoc.js"
    },
    "repository": {
       "type": "git",
@@ -25,6 +26,7 @@
    "homepage": "https://github.com/PanthR/linAlg",
    "devDependencies": {
       "chai": "^1.9.1",
+      "handlebars": "^2.0.0-alpha.4",
       "mocha": "~1.21.3",
       "mocha-jshint": "0.0.9"
    },

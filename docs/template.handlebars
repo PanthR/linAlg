@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="doc.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <title>{{settings.title}}</title>
+  </head>
+  <body>
+    <div id="main">
+      {{#with settings}}
+      <h1>{{moduleName}} <span class="version">(v {{version}})</span></h1>
+      Author(s): {{#each authors}}<span class="author">{{{author this}}}</span>{{/each}}
+      <p>{{intro}}</p>
+      {{/with}}
+      {{#each matches}}
+        <div>
+        {{#if method}}
+        <h4 id="{{stripReplace method}}">{{method}}</h4>
+        {{/if}}
+        <div>{{{comment}}}</div>
+        </div>
+      {{/each}}
+    </div>
+    <div id="sidebar">
+      <ul>
+      {{#each matches}}
+        {{#if method}}<li><a href="#{{stripReplace method}}">{{strip method}}</a></li>{{/if}}
+      {{/each}}
+      </ul>
+    <div>
+  </body>
+</html>
