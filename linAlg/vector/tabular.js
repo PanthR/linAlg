@@ -5,20 +5,11 @@ define(function(require) {
  * creates the subclass TabularV of Vector
  */
 return function(Vector) {
-   /**
-    * An internal representation of vectors represented via a function.
-    * Users should not need to access this directly.
-    * Use {{#crossLink "Vector"}}{{/crossLink}} instead.
-    *
-    * Implementation detail: The values of the vector are computed lazily,
-    * only when they are accessed. Users should not count on side-effects of the function `f`.
-    * @namespace Vector
-    * @class TabularV
-    * @param f {Function}  The entry-generating function `f(n)`
-    * @param len {Integer} The length of the resulting vector.
-    * @constructor
-    *
-    */
+
+   // Subclass of `Vector` representing vectors whose values are specified via
+   // a function `f(i)` of the index.
+   // The values of the vector are computed lazily, only when they are accessed.
+   // Users should not need to access this directly.
    function TabularV(f, len) {
       this.f = f;
       this.length = len;
@@ -35,7 +26,7 @@ return function(Vector) {
       return Vector;
    };
 
-   // TabularV.prototype methods
+   /* TabularV.prototype methods */
 
    TabularV.prototype.compute = function compute(i) {
       return this.f(i);

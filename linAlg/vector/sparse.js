@@ -5,17 +5,11 @@ define(function(require) {
  * creates the subclass SparseV of Vector
  */
 return function(Vector) {
-   /**
-    * An internal representation of "sparce" vectors. Users should not need to access this directly.
-    * Use {{#crossLink "Vector"}}{{/crossLink}} instead.
-    *
-    * The object properties are the indices of the non-zero values.
-    * @namespace Vector
-    * @class SparcV
-    * @param arr {Object} The non-zero values
-    * @param len {Integer} The length of the vector
-    *
-    */
+
+   // Subclass of `Vector` representing "sparse" vectors.
+   // Sparce vectors are stored as objects, whose keys represent the indices
+   // that have non-zero values.
+   // Users should not need to access this directly.
    function SparseV(arr, len) {
       this._values = arr;
       this.length = len;
@@ -24,7 +18,7 @@ return function(Vector) {
 
    SparseV.prototype = Object.create(Vector.prototype);
 
-   // SparseV class methods
+   /* SparseV class methods */
    
    SparseV.forEach = function forEach(v1, f, skipZeros) {
       var i, vals;
@@ -55,7 +49,7 @@ return function(Vector) {
       return Vector;
    };
 
-   // SparseV.prototype methods
+   /* SparseV.prototype methods */
 
    SparseV.prototype.get = function get(i) {
       return this._values[i] || 0;
@@ -67,29 +61,6 @@ return function(Vector) {
       }
       return this;
    };
-
-   // SparseV.prototype.dot = function dot(other) {
-   //    // "this" is sparse
-   //    // "other" is sparse or dense
-   //    var res, i, l, that;
-
-   //    res = 0;
-   //    that = this;
-
-   //    if (that.nnz > other.nnz) { 
-   //       // swap roles
-   //       that = other;
-   //       other = this;
-   //    }
-
-   //    l = that.nnz;
-
-   //    for(i = 0; i < l; i += 1) {
-   //       res += that.get(that.keys[i]) * other.get(that.keys[i]);
-   //    }
-
-   //    return res;
-   // };
 
    return SparseV;
 };

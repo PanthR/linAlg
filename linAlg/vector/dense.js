@@ -6,25 +6,19 @@ define(function(require) {
  */
 return function(Vector) {
 
-   /**
-    * An internal representation of "dense" vectors. Users should not need to access this directly.
-    * Use {{#crossLink "Vector"}}{{/crossLink}} instead.
-    * @namespace Vector
-    * @class DenseV
-    * @extends Vector
-    * @param arr {Array} values
-    * @constructor
-    */
+   // Subclass of `Vector` representing "dense" vectors.
+   // Dense vectors are stored simply as Javascript Arrays
+   // Users should not need to access this directly.
    function DenseV(arr) {
       this.values = arr;
       this.length = arr.length;
       this.constructor = DenseV;
    }
 
-   // makes DenseV a "subclass" of Vector
+   /* makes DenseV a "subclass" of Vector */
    DenseV.prototype = Object.create(Vector.prototype);
 
-   // DenseV class methods
+   /* DenseV class methods */
    
    DenseV.forEach = function forEach(v1, f) {
       v1.values.forEach(function(v, i) { f(v, i + 1); });
@@ -38,15 +32,7 @@ return function(Vector) {
       return Vector;
    };
 
-   // DenseV.prototype methods
-
-   // DenseV.prototype.dot = function dot(other) {
-   //    if (isSparse(other)) {
-   //       return other.dot(this);
-   //    }
-   //    // both are dense
-   //    return Vector.prototype.dot.call(this, other);
-   // }
+   /* DenseV.prototype methods */
 
    return DenseV;
 };
