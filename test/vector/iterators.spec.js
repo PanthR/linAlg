@@ -127,4 +127,44 @@ describe('Iterations over vectors via', function() {
          expect(v3.map(f).get(2)).to.equal(6);
       });
    });
+   describe('mapPair', function() {
+      it('requires a pair of vectors of same length', function() {
+         expect(function() { v1.mapPair(v2, function() {}); }).to.throw(Error);
+         expect(function() { v2.mapPair(v3, function() {}); }).to.throw(Error);
+         expect(function() { v3.mapPair(v4, function() {}); }).to.throw(Error);
+      });
+      it('provides the correct parameters', function() {
+         var a;
+         var f = function(val1, val2, i) { a.push([val1, val2, i]); };
+         a = []; v1.mapPair(v4, f).toArray();
+            expect(a).to.deep.equal([[4, 0, 1], [2, 4, 2], [1, 0, 3]]);
+         a = []; v1.mapPair(v4, f, true).toArray();
+            expect(a).to.deep.equal([[2, 4, 2]]);
+         a = []; v1.mapPair(v5, f).toArray();
+            expect(a).to.deep.equal([[4, 1, 1], [2, 4, 2], [1, 9, 3]]);
+         a = []; v4.mapPair(v1, f, false).toArray();
+            expect(a).to.deep.equal([[0, 4, 1], [4, 2, 2], [0, 1, 3]]);
+         a = []; v4.mapPair(v1, f, true).toArray();
+            expect(a).to.deep.equal([[4, 2, 2]]);
+         a = []; v5.mapPair(v1, f).toArray();
+            expect(a).to.deep.equal([[1, 4, 1], [4, 2, 2], [9, 1, 3]]);
+      });
+      it('returns a vector of the same length', function() {
+         var f = function(val1, val2) { return val1 + val2; }
+         expect(v1.mapPair(v4,f)).to.be.instanceof(Vector);
+         expect(v1.mapPair(v5,f).length).to.equal(v1.length);
+         expect(v2.mapPair(v2,f)).to.be.instanceof(Vector);
+         expect(v2.mapPair(v2,f).length).to.equal(v2.length);
+         expect(v2.mapPair(v2,f, true).length).to.equal(v2.length);
+         expect(v3.mapPair(v3,f)).to.be.instanceof(Vector);
+         expect(v3.mapPair(v3,f).length).to.equal(v3.length);
+      });
+      it('the resulting vector has the correct values', function() {
+         var f = function(val1, val2, i) { return val1 - val2; }
+         expect(v1.mapPair(v4, f).toArray()).to.deep.equal([4, -2, 1]);
+         expect(v1.mapPair(v4, f, true)).to.be.instanceof(Vector.SparseV);
+         expect(v1.mapPair(v4, f, true).toArray()).to.deep.equal([0, -2, 0]);
+         expect(v1.mapPair(v5, f).toArray()).to.deep.equal([3, -2, -8]);
+      });
+   });
 });
