@@ -26,7 +26,6 @@
      "max-depth": [2, 4],
      "max-len": [2, 105],
      "max-params": [2, 4],
-     "max-statements": [2, 20],
      "no-plusplus": 2
   }
 }
