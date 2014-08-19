@@ -49,6 +49,14 @@ return function(Vector) {
       return Vector;
    };
 
+   SparseV.map = function map(v1, f) {
+      var newValues = {};
+      SparseV.forEach(v1, function(v, i) {
+         newValues[i] = f(v, i);
+      }, true);
+      return new Vector(newValues, v1.length);
+   };
+
    /* SparseV.prototype methods */
 
    SparseV.prototype.get = function get(i) {

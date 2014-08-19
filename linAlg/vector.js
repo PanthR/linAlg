@@ -87,6 +87,11 @@ define(function(require) {
    // Alias for `Vector.reduce`
    Vector.foldl = Vector.reduce;
 
+   Vector.map = function map(v, f, skipZeros) {
+      if (skipZeros && isSparse(v)) { return SparseV.map(v, f); }
+      return new Vector(function(i) { return f(v.get(i), i); }, v.length);
+   };
+
    /* Vector.prototype methods */
 
    // Get the entry at index `i` of the vector. Vector indexing begins from 1
@@ -137,6 +142,10 @@ define(function(require) {
 
    // Alias for `Vector.prototype.reduce`
    Vector.prototype.foldl = Vector.prototype.reduce;
+
+   Vector.prototype.map = function map(f, skipZeros) {
+      return Vector.map(this, f, skipZeros);
+   };
 
    Vector.prototype.toArray = function toArray() {
       var arr = [];
