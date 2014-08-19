@@ -57,6 +57,14 @@ return function(Vector) {
       return new Vector(newValues, v1.length);
    };
 
+   SparseV.mapPair = function mapPair(v1, v2, f) {
+      var newValues = {};
+      Vector.forEachPair(v1, v2, function(val1, val2, i) {
+         newValues[i] = f(val1, val2, i);
+      }, true);
+      return new Vector(newValues, v1.length);
+   };
+
    /* SparseV.prototype methods */
 
    SparseV.prototype.get = function get(i) {

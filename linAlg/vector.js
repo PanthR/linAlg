@@ -108,6 +108,18 @@ define(function(require) {
       return new Vector(function(i) { return f(v.get(i), i); }, v.length);
    };
 
+   Vector.mapPair = function mapPair(v1, v2, f, skipZeros) {
+      if (!sameLength(v1, v2)) {
+         throw new Error('Vector.mapPair: vectors should be same langth');
+      }
+      if (skipZeros && (isSparse(v1) || isSparse(v2))) {
+         return SparseV.mapPair(v1, v2, f);
+      }
+      return new Vector(function(i) {
+         return f(v1.get(i), v2.get(i), i);
+      }, v1.length);
+   };
+
    // p should be >0 or Infinity
    Vector.norm = function(v1, p) {
       var res;
@@ -181,6 +193,10 @@ define(function(require) {
 
    Vector.prototype.map = function map(f, skipZeros) {
       return Vector.map(this, f, skipZeros);
+   };
+
+   Vector.prototype.mapPair = function mapPair(v2, f, skipZeros) {
+      return Vector.mapPair(this, v2, f, skipZeros);
    };
 
    // Vector operations
