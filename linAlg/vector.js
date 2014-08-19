@@ -115,7 +115,7 @@ define(function(require) {
    };
 
    // p should be >0 or Infinity
-   Vector.norm = function(v1, p) {
+   Vector.norm = function norm(v1, p) {
       var res;
       if (p == null) { p = 2; }
       if (p === Infinity) {
@@ -135,7 +135,7 @@ define(function(require) {
       }, 0, true);
    };
 
-   Vector.seq = function(a, b, step) {
+   Vector.seq = function seq(a, b, step) {
       var length;
       if (arguments.length === 1) { b = a; a = 1; step = 1; length = b; }
       if (b === a) { return new Vector([a]); }
@@ -210,11 +210,11 @@ define(function(require) {
 
    // Vector operations
 
-   Vector.prototype.norm = function(p) {
+   Vector.prototype.norm = function norm(p) {
       return Vector.norm(this, p);
    };
 
-   Vector.prototype.dot = function(v2) {
+   Vector.prototype.dot = function dot(v2) {
       return Vector.dot(this, v2);
    };
 
