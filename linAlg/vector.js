@@ -92,6 +92,21 @@ define(function(require) {
       return new Vector(function(i) { return f(v.get(i), i); }, v.length);
    };
 
+   // p should be >0 or Infinity
+   Vector.norm = function(v1, p) {
+      var res;
+      if (p == null) { p = 2; }
+      if (p === Infinity) {
+         return v1.reduce(function(acc, v) {
+            return Math.max(acc, Math.abs(v));
+         }, 0, true);
+      }
+      res = v1.reduce(function(acc, v) {
+         return acc + Math.pow(Math.abs(v), p);
+      }, 0, true);
+      return Math.pow(res, 1 / p);
+   };
+
    /* Vector.prototype methods */
 
    // Get the entry at index `i` of the vector. Vector indexing begins from 1
@@ -145,6 +160,10 @@ define(function(require) {
 
    Vector.prototype.map = function map(f, skipZeros) {
       return Vector.map(this, f, skipZeros);
+   };
+
+   Vector.prototype.norm = function(p) {
+      return Vector.norm(this, p);
    };
 
    Vector.prototype.toArray = function toArray() {
