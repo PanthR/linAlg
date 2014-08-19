@@ -94,6 +94,12 @@ define(function(require) {
    };
    /* eslint-enable */
 
+   Vector.dot = function dot(v1, v2) {
+      return Vector.reducePair(v1, v2, function(acc, val1, val2) {
+         return acc + val1 * val2;
+      }, 0, true);
+   };
+
    // Alias for `Vector.reduce`
    Vector.foldl = Vector.reduce;
 
@@ -177,8 +183,14 @@ define(function(require) {
       return Vector.map(this, f, skipZeros);
    };
 
+   // Vector operations
+
    Vector.prototype.norm = function(p) {
       return Vector.norm(this, p);
+   };
+
+   Vector.prototype.dot = function(v2) {
+      return Vector.dot(this, v2);
    };
 
    Vector.prototype.toArray = function toArray() {
