@@ -31,9 +31,9 @@ define(function(require) {
       return new SparseV(arr, len);
    }
 
-   Vector.DenseV   = DenseV   = (require('./vector/dense'))(Vector);
-   Vector.SparseV  = SparseV  = (require('./vector/sparse'))(Vector);
-   Vector.TabularV = TabularV = (require('./vector/tabular'))(Vector);
+   Vector.DenseV   = DenseV   = require('./vector/dense')(Vector);
+   Vector.SparseV  = SparseV  = require('./vector/sparse')(Vector);
+   Vector.TabularV = TabularV = require('./vector/tabular')(Vector);
 
 
    /* Vector dispatch class methods */
@@ -90,20 +90,22 @@ define(function(require) {
    /* Vector.prototype methods */
 
    // Get the entry at index `i` of the vector. Vector indexing begins from 1
+   /* eslint-disable complexity */
    Vector.prototype.get = function get(i) {
       if ( i < 1 || i > this.length) { return 0; }
       if (!this.values) { this.values = []; }
-      if (this.values[i-1] == null) {
-         this.values[i-1] = this.compute(i) || 0;
+      if (this.values[i - 1] == null) {
+         this.values[i - 1] = this.compute(i) || 0;
       }
-      return this.values[i-1];
+      return this.values[i - 1];
    };
+   /* eslint-enable */
 
    // Set the entry at index `i` of the vector. Users should avoid calling this method.
    Vector.prototype.set = function set(i, v) {
       if ( i >= 1 && i <= this.length) {
          if (!this.values) { this.values = []; }
-         this.values[i-1] = v || 0;
+         this.values[i - 1] = v || 0;
       }
       return this;
    };
@@ -135,7 +137,7 @@ define(function(require) {
 
    // Alias for `Vector.prototype.reduce`
    Vector.prototype.foldl = Vector.prototype.reduce;
-   
+
    /* Helper functions */
 
    function sameLength(a, b) {
