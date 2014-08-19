@@ -84,6 +84,16 @@ define(function(require) {
       return initial;
    };
 
+   /* eslint-disable max-params */
+   Vector.reducePair = function reducePair(v1, v2, f, initial, skipZeros) {
+      initial = initial || 0;
+      Vector.forEachPair(v1, v2, function(val1, val2, i) {
+         initial = f(initial, val1, val2, i);
+      }, skipZeros);
+      return initial;
+   };
+   /* eslint-enable */
+
    // Alias for `Vector.reduce`
    Vector.foldl = Vector.reduce;
 
@@ -153,6 +163,11 @@ define(function(require) {
    // Delegates to `Vector.reduce`.
    Vector.prototype.reduce = function reduce(f, initial, skipZeros) {
       return Vector.reduce(this, f, initial, skipZeros);
+   };
+
+   // Delegates to `Vector.reducePair`.
+   Vector.prototype.reducePair = function reduce(v2, f, initial, skipZeros) {
+      return Vector.reducePair(this, v2, f, initial, skipZeros);
    };
 
    // Alias for `Vector.prototype.reduce`
