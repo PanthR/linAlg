@@ -138,6 +138,12 @@ define(function(require) {
    // Alias for `Vector.prototype.reduce`
    Vector.prototype.foldl = Vector.prototype.reduce;
 
+   Vector.prototype.toArray = function toArray() {
+      var arr = [];
+      this.forEach(arr.push);
+      return arr;
+   };
+
    /* Helper functions */
 
    function sameLength(a, b) {
