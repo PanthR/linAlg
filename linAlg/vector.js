@@ -211,7 +211,7 @@ define(function(require) {
 
    Vector.prototype.toArray = function toArray() {
       var arr = [];
-      this.forEach(arr.push);
+      this.forEach(function(v) { arr.push(v); });
       return arr;
    };
 
