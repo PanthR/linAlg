@@ -86,7 +86,6 @@ describe('Iterations over vectors via', function() {
          expect(v2.reduce(f, 0, true)).to.equal(7);
          expect(v3.reduce(f, 0)).to.equal(30);
       });
-      
    });
    describe('map', function() {
       it('provides the correct values', function() {
@@ -165,6 +164,35 @@ describe('Iterations over vectors via', function() {
          expect(v1.mapPair(v4, f, true)).to.be.instanceof(Vector.SparseV);
          expect(v1.mapPair(v4, f, true).toArray()).to.deep.equal([0, -2, 0]);
          expect(v1.mapPair(v5, f).toArray()).to.deep.equal([3, -2, -8]);
+      });
+   });
+   describe('reducePair', function() {
+      it('requires a pair of vectors of same length', function() {
+         expect(function() { v1.reducePair(v2, function() {}); }).to.throw(Error);
+         expect(function() { v2.reducePair(v3, function() {}); }).to.throw(Error);
+         expect(function() { v3.reducePair(v4, function() {}); }).to.throw(Error);
+      });
+      it('provides the correct parameters', function() {
+         var a;
+         var f = function(_, val1, val2, i) { a.push([val1, val2, i]); };
+         a = []; v1.reducePair(v4, f, 0); 
+            expect(a).to.deep.equal([[4, 0, 1], [2, 4, 2], [1, 0, 3]]);
+         a = []; v1.reducePair(v4, f, 0, true);
+            expect(a).to.deep.equal([[2, 4, 2]]);
+         a = []; v1.reducePair(v5, f, 0);
+            expect(a).to.deep.equal([[4, 1, 1], [2, 4, 2], [1, 9, 3]]);
+         a = []; v4.reducePair(v1, f, 0, false);
+            expect(a).to.deep.equal([[0, 4, 1], [4, 2, 2], [0, 1, 3]]);
+         a = []; v4.reducePair(v1, f, 0, true);
+            expect(a).to.deep.equal([[4, 2, 2]]);
+         a = []; v5.reducePair(v1, f, 0);
+            expect(a).to.deep.equal([[1, 4, 1], [4, 2, 2], [9, 1, 3]]);
+      });
+      it('returns the correct value', function() {
+         var f = function(a, val1, val2, i) { return a + (val1 * i - val2); }
+         expect(v1.reducePair(v4, f, 0)).to.equal(4 * 1 - 0 + 2 * 2 - 4 + 1 * 3 - 0);
+         expect(v1.reducePair(v4, f, 0, true)).to.equal(2 * 2 - 4);
+         expect(v1.reducePair(v5, f, 0)).to.equal(4 * 1 - 1 + 2 * 2 - 4 + 1 * 3 - 9);
       });
    });
 });
