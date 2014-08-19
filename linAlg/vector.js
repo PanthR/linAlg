@@ -94,12 +94,6 @@ define(function(require) {
    };
    /* eslint-enable */
 
-   Vector.dot = function dot(v1, v2) {
-      return Vector.reducePair(v1, v2, function(acc, val1, val2) {
-         return acc + val1 * val2;
-      }, 0, true);
-   };
-
    // Alias for `Vector.reduce`
    Vector.foldl = Vector.reduce;
 
@@ -134,6 +128,13 @@ define(function(require) {
       }, 0, true);
       return Math.pow(res, 1 / p);
    };
+
+   Vector.dot = function dot(v1, v2) {
+      return Vector.reducePair(v1, v2, function(acc, val1, val2) {
+         return acc + val1 * val2;
+      }, 0, true);
+   };
+
 
    /* Vector.prototype methods */
 
