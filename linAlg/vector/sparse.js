@@ -49,12 +49,12 @@ return function(Vector) {
       return Vector;
    };
 
-   SparseV.map = function map(v1, f) {
+   SparseV.map = function map(v, f) {
       var newValues = {};
-      SparseV.forEach(v1, function(v, i) {
-         newValues[i] = f(v, i);
+      SparseV.forEach(v, function(val, i) {
+         newValues[i] = f(val, i);
       }, true);
-      return new Vector(newValues, v1.length);
+      return new Vector(newValues, v.length);
    };
 
    SparseV.mapPair = function mapPair(v1, v2, f) {

@@ -119,12 +119,12 @@ define(function(require) {
       var res;
       if (p == null) { p = 2; }
       if (p === Infinity) {
-         return v1.reduce(function(acc, v) {
-            return Math.max(acc, Math.abs(v));
+         return v1.reduce(function(acc, val) {
+            return Math.max(acc, Math.abs(val));
          }, 0, true);
       }
-      res = v1.reduce(function(acc, v) {
-         return acc + Math.pow(Math.abs(v), p);
+      res = v1.reduce(function(acc, val) {
+         return acc + Math.pow(Math.abs(val), p);
       }, 0, true);
       return Math.pow(res, 1 / p);
    };
@@ -220,7 +220,7 @@ define(function(require) {
 
    Vector.prototype.toArray = function toArray() {
       var arr = [];
-      this.forEach(function(v) { arr.push(v); });
+      this.forEach(function(val) { arr.push(val); });
       return arr;
    };
 
