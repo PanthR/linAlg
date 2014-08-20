@@ -145,6 +145,27 @@ define(function(require) {
       return new Vector(function(i) { return a + (i - 1) * step; }, length);
    };
 
+   // Pointwise vector operations
+
+   Vector.pAdd = function pAdd(v1, v2) {
+      return Vector.mapPair(v1, v2, add, false);
+   };
+
+   Vector.pSub = function pSub(v1, v2) {
+      return Vector.mapPair(v1, v2, sub, false);
+   };
+
+   Vector.sMult = function sMult(a, v) {
+      return Vector.map(v, function(val) { return a * val; }, true);
+   };
+
+   Vector.pMult = function pMult(v1, v2) {
+      return Vector.mapPair(v1, v2, mult, true);
+   };
+
+   Vector.pDiv = function pDiv(v1, v2) {
+      return Vector.mapPair(v1, v2, divide, false);
+   };
    /* Vector.prototype methods */
 
    // Get the entry at index `i` of the vector. Vector indexing begins from 1
@@ -223,6 +244,27 @@ define(function(require) {
       return arr;
    };
 
+   // Vector arithmetic operations
+
+   Vector.prototype.pAdd = function pAdd(v2) {
+      return Vector.pAdd(this, v2);
+   };
+
+   Vector.prototype.pSub = function pSub(v2) {
+      return Vector.pSub(this, v2);
+   };
+
+   Vector.prototype.sMult = function sMult(a) {
+      return Vector.sMult(a, this);
+   };
+
+   Vector.prototype.pMult = function pMult(v2) {
+      return Vector.pMult(this, v2);
+   };
+
+   Vector.prototype.pDiv = function pDiv(v2) {
+      return Vector.pDiv(this, v2);
+   };
    /* Helper functions */
 
    function sameLength(a, b) {
@@ -232,6 +274,13 @@ define(function(require) {
    function isSparse(a) {
       return a instanceof SparseV;
    }
+
+   // Arithmetic
+
+   function add(a, b) { return a + b; }
+   function sub(a, b) { return a - b; }
+   function mult(a, b) { return a * b; }
+   function divide(a, b) { return a / b; }
 
    return Vector;
 
