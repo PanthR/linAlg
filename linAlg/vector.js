@@ -166,6 +166,10 @@ define(function(require) {
    Vector.pDiv = function pDiv(v1, v2) {
       return Vector.mapPair(v1, v2, divide, false);
    };
+
+   Vector.pPow = function pPow(v, n) {
+      return Vector.map(v, function(val) { return Math.pow(val, n); }, n > 0);
+   };
    /* Vector.prototype methods */
 
    // Get the entry at index `i` of the vector. Vector indexing begins from 1
@@ -265,6 +269,11 @@ define(function(require) {
    Vector.prototype.pDiv = function pDiv(v2) {
       return Vector.pDiv(this, v2);
    };
+
+   Vector.prototype.pPow = function pPow(n) {
+      return Vector.pPow(this, n);
+   };
+
    /* Helper functions */
 
    function sameLength(a, b) {
