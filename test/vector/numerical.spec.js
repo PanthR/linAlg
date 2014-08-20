@@ -33,28 +33,42 @@ describe('Numerical computations', function() {
       expect(v5.dot(v1)).to.equal(-2);
       expect(v6.dot(v1)).to.equal(3);
    });
-   it('padd', function() {
-      expect(Vector.padd).to.exist;
-      expect(v1.padd(v1).toArray()).to.deep.equal([8, 4, 2]);
-      expect(v1.padd(v4).toArray()).to.deep.equal([4, 6, 1]);
-      expect(v4.padd(v1).toArray()).to.deep.equal([4, 6, 1]);
-      expect(v1.padd(v5).toArray()).to.deep.equal([4 + 1, 2 + 4, 1 + 9]);
-      expect(v5.padd(v1).toArray()).to.deep.equal([4 + 1, 2 + 4, 1 + 9]);
+   it('pAdd', function() {
+      expect(Vector.pAdd).to.exist;
+      expect(v1.pAdd(v1).toArray()).to.deep.equal([8, -4, 2]);
+      expect(v1.pAdd(v4).toArray()).to.deep.equal([5, 0, 4]);
+      expect(v4.pAdd(v1).toArray()).to.deep.equal([5, 0, 4]);
+      expect(v1.pAdd(v5).toArray()).to.deep.equal([4 + 0, -2 + 1, 1 + 0]);
+      expect(v5.pAdd(v1).toArray()).to.deep.equal([4 + 0, -2 + 1, 1 + 0]);
    });
-   it('psub', function() {
-      expect(Vector.psub).to.exist;
-      expect(v1.psub(v1).toArray()).to.deep.equal([0, 0, 0]);
-      expect(v1.psub(v4).toArray()).to.deep.equal([4 - 0, 2 - 4, 1 - 0]);
-      expect(v4.psub(v1).toArray()).to.deep.equal([0 - 4, 4 - 2, 0 - 1]);
-      expect(v1.psub(v5).toArray()).to.deep.equal([4 - 1, 2 - 4, 1 - 9]);
-      expect(v5.psub(v1).toArray()).to.deep.equal([1 - 4, 4 - 2, 9 - 1]);
+   it('pSub', function() {
+      expect(Vector.pSub).to.exist;
+      expect(v1.pSub(v1).toArray()).to.deep.equal([0, 0, 0]);
+      expect(v1.pSub(v4).toArray()).to.deep.equal([4 - 1, -2 - 2, 1 - 3]);
+      expect(v4.pSub(v1).toArray()).to.deep.equal([1 - 4, 2 + 2, 3 - 1]);
+      expect(v1.pSub(v5).toArray()).to.deep.equal([4 - 0, -2 - 1, 1 - 0]);
+      expect(v5.pSub(v1).toArray()).to.deep.equal([0 - 4, 1 + 2, 0 - 1]);
    });
-   it('pmult', function() {
-      expect(Vector.pmult).to.exist;
-      expect(v1.pmult(v1).toArray()).to.deep.equal([4 * 4, 2 * 2, 1 * 1]);
-      expect(v1.pmult(v4).toArray()).to.deep.equal([4 * 0, 2 * 4, 1 * 0]);
-      expect(v4.pmult(v1).toArray()).to.deep.equal([0 * 4, 4 * 2, 0 * 1]);
-      expect(v1.pmult(v5).toArray()).to.deep.equal([4 * 1, 2 * 4, 1 * 9]);
-      expect(v5.pmult(v1).toArray()).to.deep.equal([1 * 4, 4 * 2, 9 * 1]);
+   it('pMult', function() {
+      expect(Vector.pMult).to.exist;
+      expect(v1.pMult(v1).toArray()).to.deep.equal([4 * 4, -2 * -2, 1 * 1]);
+      expect(v1.pMult(v4).toArray()).to.deep.equal([4 * 1, -2 * 2, 1 * 3]);
+      expect(v4.pMult(v1).toArray()).to.deep.equal([1 * 4, 2 * -2, 3 * 1]);
+      expect(v1.pMult(v5).toArray()).to.deep.equal([4 * 0, -2 * 1, 1 * 0]);
+      expect(v5.pMult(v1).toArray()).to.deep.equal([0 * 4, 1 * -2, 0 * 1]);
+   });
+   it('pDiv', function() {
+      expect(Vector.pDiv).to.exist;
+      expect(v1.pDiv(v1).toArray()).to.deep.equal([4 / 4, -2 / -2, 1 / 1]);
+      expect(v1.pDiv(v4).toArray()).to.deep.equal([4 / 1, -2 / 2, 1 / 3]);
+      expect(v4.pDiv(v1).toArray()).to.deep.equal([1 / 4, 2 / -2, 3 / 1]);
+      expect(v1.pDiv(v5).toArray()).to.deep.equal([4 / 0, -2 / 1, 1 / 0]);
+      expect(v5.pDiv(v1).toArray()).to.deep.equal([0 / 4, 1 / -2, 0 / 1]);
+   });
+   it('sMult', function() {
+      expect(Vector.sMult).to.exist;
+      expect(v1.sMult(3).toArray()).to.deep.equal([4 * 3, -2 * 3, 1 * 3]);
+      expect(v4.sMult(3).toArray()).to.deep.equal([1 * 3,  2 * 3, 3 * 3]);
+      expect(v5.sMult(3).toArray()).to.deep.equal([0 * 3,  1 * 3, 0 * 3]);
    });
 });
