@@ -71,4 +71,21 @@ describe('Numerical computations', function() {
       expect(v4.sMult(3).toArray()).to.deep.equal([1 * 3,  2 * 3, 3 * 3]);
       expect(v5.sMult(3).toArray()).to.deep.equal([0 * 3,  1 * 3, 0 * 3]);
    });
+   it('pPow', function() {
+      expect(Vector.pPow).to.exist;
+      expect(v1.pPow(2).toArray()).to.deep.equal([4 * 4, -2 * -2, 1 * 1]);
+      expect(v4.pPow(2).toArray()).to.deep.equal([1 * 1,  2 * 2, 3 * 3]);
+      expect(v5.pPow(2)).to.be.instanceof(Vector.SparseV);
+      expect(v5.pPow(2).toArray()).to.deep.equal([0 * 0,  1 * 1, 0 * 0]);
+      expect(v1.pPow(-2).toArray())
+         .to.deep.equal([Math.pow(4, -2), Math.pow(-2, -2), Math.pow(1, -2)]);
+      expect(v4.pPow(-2).toArray())
+         .to.deep.equal([Math.pow(1, -2), Math.pow(2, -2), Math.pow(3, -2)]);
+      expect(v5.pPow(-2)).to.not.be.instanceof(Vector.SparseV);
+      expect(v1.pPow(1/2).toArray())
+         .to.deep.equal([Math.pow(4, 1/2), Math.pow(-2, 1/2), Math.pow(1, 1/2)]);
+      expect(v4.pPow(1/2).toArray())
+         .to.deep.equal([Math.pow(1, 1/2), Math.pow(2, 1/2), Math.pow(3, 1/2)]);
+      expect(v5.pPow(1/2)).to.be.instanceof(Vector.SparseV);
+   });
 });
