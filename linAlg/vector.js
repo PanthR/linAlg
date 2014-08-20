@@ -170,6 +170,45 @@ define(function(require) {
    Vector.pPow = function pPow(v, n) {
       return Vector.map(v, function(val) { return Math.pow(val, n); }, n > 0);
    };
+
+   // Other methods
+
+   Vector.diff = function diff(v) {
+      return new Vector(function(i) {
+         return v.get(i + 1) - v.get(i);
+      }, v.length - 1);
+   };
+
+   Vector.cumulative = function cumulative(v, f, initial) {
+      var arr = [];
+      v.reduce(function(acc, val, i) {
+         acc = f(acc, val, i);
+         arr.push(acc);
+         return acc;
+      }, initial || 0, false);
+      return new Vector(arr);
+   };
+
+   Vector.cumSum = function cumSum(v) {
+      return Vector.cumulative(v, add, 0);
+   };
+
+   Vector.cumProd = function cumProd(v) {
+      return Vector.cumulative(v, mult, 1);
+   };
+
+   Vector.cumMin = function cumMin(v) {
+      return Vector.cumulative(v, function(a, b) {
+         return Math.min(a, b);
+      }, Infinity);
+   };
+
+   Vector.cumMax = function cumMax(v) {
+      return Vector.cumulative(v, function(a, b) {
+         return Math.max(a, b);
+      }, -Infinity);
+   };
+
    /* Vector.prototype methods */
 
    // Get the entry at index `i` of the vector. Vector indexing begins from 1
@@ -274,6 +313,31 @@ define(function(require) {
       return Vector.pPow(this, n);
    };
 
+   // Other methods
+
+   Vector.prototype.diff = function diff() {
+      return Vector.diff(this);
+   };
+
+   Vector.prototype.cumulative = function cumulative(f, initial) {
+      return Vector.cumulative(this, f, initial);
+   };
+
+   Vector.prototype.cumSum = function cumSum() {
+      return Vector.cumSum(this);
+   };
+
+   Vector.prototype.cumProd = function cumProd() {
+      return Vector.cumProd(this);
+   };
+
+   Vector.prototype.cumMin = function cumMin() {
+      return Vector.cumMin(this);
+   };
+
+   Vector.prototype.cumMax = function cumMax() {
+      return Vector.cumMax(this);
+   };
    /* Helper functions */
 
    function sameLength(a, b) {
