@@ -147,7 +147,6 @@ define(function(require) {
    /* Vector.prototype methods */
 
    // Get the entry at index `i` of the vector. Vector indexing begins from 1
-   /* eslint-disable complexity */
    Vector.prototype.get = function get(i) {
       if ( i < 1 || i > this.length) { return 0; }
       if (!this.values) { this.values = []; }
@@ -156,7 +155,6 @@ define(function(require) {
       }
       return this.values[i - 1];
    };
-   /* eslint-enable */
 
    // Set the entry at index `i` of the vector. Users should avoid calling this method.
    Vector.prototype.set = function set(i, v) {
