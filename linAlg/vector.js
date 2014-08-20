@@ -137,6 +137,7 @@ define(function(require) {
 
    Vector.seq = function seq(a, b, step) {
       var length;
+      if (arguments.length === 0) { return new Vector([]); }
       if (arguments.length === 1) { b = a; a = 1; step = 1; length = b; }
       if (b === a) { return new Vector([a]); }
       step = step || (b > a ? 1 : -1);
