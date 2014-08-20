@@ -173,7 +173,7 @@ define(function(require) {
       if ( i < 1 || i > this.length) { return 0; }
       if (!this.values) { this.values = []; }
       if (this.values[i - 1] == null) {
-         this.values[i - 1] = this.compute(i) || 0;
+         this.values[i - 1] = this.compute(i);
       }
       return this.values[i - 1];
    };
