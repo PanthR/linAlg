@@ -32,6 +32,16 @@ return function(Vector) {
       return this.f(i);
    };
 
+   TabularV.prototype.force = function force() {
+      var i;
+      this.values = [];  // needed in case length 0 (get will not run)
+      for (i = 1; i <= this.length; i += 1) {
+         this.get(i);
+      }
+      this.constructor = Vector.DenseV;
+      return this;
+   };
+
    return TabularV;
 };
 

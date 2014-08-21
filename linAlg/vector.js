@@ -239,6 +239,11 @@ define(function(require) {
       return this;
    };
 
+   // Force a tabular vector to become dense
+   Vector.prototype.force = function force() {
+      return this;  // stub; overridden in some subclasses
+   };
+
    // Compute the entry at index `i` of the vector. This is meant to be used internally by
    // `Vector#get` to obtain the correct value in cases where the values are stored _lazily_.
    Vector.prototype.compute = function compute(i) {
