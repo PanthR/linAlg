@@ -19,10 +19,7 @@ return function(Vector) {
    TabularV.prototype = Object.create(Vector.prototype);
 
    TabularV.forEach = function forEach(v1, f) {
-      var i;
-      for (i = 1; i <= v1.length; i += 1) {
-         f(v1.get(i), i);
-      }
+      v1.force().forEach(f);
       return Vector;
    };
 
