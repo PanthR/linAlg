@@ -5,7 +5,7 @@ var delta = 1e-5;
 describe('Other methods', function() {
    var v1 = new Vector([4, -2, 1]);
    var v2 = new Vector({ 6: -2, 2: 4, 5: 1 }, 10);
-   var v3 = new Vector(function(x) { return x*x; }, 4);
+   var v3 = new Vector(function(x) { return x*x; }, 4);   
    it('diff', function() {
       expect(v1.diff().toArray()).to.deep.equal([-6, 3]);
       expect(v2.diff().toArray())
@@ -20,5 +20,14 @@ describe('Other methods', function() {
       expect(v1.cumSum().toArray()).to.deep.equal([4, 2, 3]);
       expect(v1.cumMax().toArray()).to.deep.equal([4, 4, 4]);
       expect(v1.cumMin().toArray()).to.deep.equal([4, -2, -2]);
+   });
+   it('force', function() {
+      var v = new Vector(function(x) { return x*x; }, 4);
+      var TabularV = Vector.TabularV;
+      var DenseV   = Vector.DenseV;
+      expect(v).to.be.instanceof(TabularV);
+      expect(v.constructor).to.equal(TabularV);
+      expect(v.force().constructor).to.equal(DenseV);
+      expect(v.constructor).to.equal(DenseV);
    });
 });
