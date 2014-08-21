@@ -7,7 +7,7 @@ define(function(require) {
    // author: Barb Wahl <wahl@hanover.edu>
    // Javascript implementation of Linear Algebra Vectors.
 
-   var DenseV, SparseV, TabularV;
+   var DenseV, SparseV, TabularV, ConstV;
 
    // `Vector` objects are Javascript representations of real-valued vectors.
    // They are constructed in one of three ways depending on the type of the first parameter `arr`:
@@ -34,6 +34,7 @@ define(function(require) {
    Vector.DenseV   = DenseV   = require('./vector/dense')(Vector);
    Vector.SparseV  = SparseV  = require('./vector/sparse')(Vector);
    Vector.TabularV = TabularV = require('./vector/tabular')(Vector);
+   Vector.ConstV   = ConstV   = require('./vector/const')(Vector);
 
 
    /* Vector dispatch class methods */
@@ -143,6 +144,14 @@ define(function(require) {
       step = step || (b > a ? 1 : -1);
       length = Math.floor((b - a) / step) + 1;
       return new Vector(function(i) { return a + (i - 1) * step; }, length);
+   };
+
+   Vector.const = function constant(val, len) {
+      return new ConstV(val, len);
+   };
+
+   Vector.ones = function ones(len) {
+      return new ConstV(1, len);
    };
 
    // Pointwise vector operations
