@@ -4,7 +4,8 @@
    "description": "linAlg\r ======",
    "main": "index.js",
    "scripts": {
-      "test": "eslint linAlg; mocha --reporter=progress --recursive --require=./test/stackFixer.js",
+      "test": "mocha --reporter=progress --recursive --require=./test/stackFixer.js",
+      "lint": "eslint linAlg",
       "doc": "node generateDoc.js"
    },
    "repository": {
