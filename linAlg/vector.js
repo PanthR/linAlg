@@ -15,10 +15,10 @@ define(function(require) {
     * 1. Based on an array of values. In this case, the resulting vector length `len` is optional.
     * 2. Based on a key-value object representing the non-zero indices and their values (sparse vectors)
     * 3. Based on a function `f(n)` describing how the i-th index is meant to be computed.
-    * 
+    *
     * `Vector` objects are 1-indexed. By default, they are immutable structures, they cannot be edited
     * once created. See {@linkcode Vector.MutableV} for a description of mutable vectors.
-    * 
+    *
     * @example
     * var v1 = new Vector([3, 5, 1, 2]);          // A length-4 vector
     * var v2 = new Vector({ 4: 10, 2: 12 }, 10);  // A length-10 sparse vector
