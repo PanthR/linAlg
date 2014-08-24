@@ -17,7 +17,7 @@ define(function(require) {
     * 3. Based on a function `f(n)` describing how the i-th index is meant to be computed.
     *
     * `Vector` objects are 1-indexed. By default, they are immutable structures, they cannot be edited
-    * once created. See {@linkcode Vector.MutableV} for a description of mutable vectors.
+    * once created. See `Vector.MutableV` for a description of mutable vectors.
     *
     * @example
     * var v1 = new Vector([3, 5, 1, 2]);          // A length-4 vector
@@ -43,6 +43,7 @@ define(function(require) {
     * Every vector has a fixed `length`. Vectors of length 0 are allowed,
     * though there is not much one can do with them.
     * @member length
+    * @instance
     */
 
    /** ## Vector dispatch class methods */
@@ -104,7 +105,7 @@ define(function(require) {
 
    /* eslint-disable max-params */
    /**
-    * Similar to {@linkcode Vector.reduce} but acts on a pair of vectors `v1`, `v2`.
+    * Similar to `Vector.reduce` but acts on a pair of vectors `v1`, `v2`.
     * The signature of the function `f` would be `f(acc, val1, val2, i)` where `acc`
     * is the accumulated value, `i` is the index, and `val1`, `val2` are the `i`-indexed
     * values from `v1`, `v2`. If `skipZeros` is `true`, the implementation _may_ avoid
@@ -124,7 +125,7 @@ define(function(require) {
    };
    /* eslint-enable */
 
-   /** Alias for {@linkcode Vector.reduce}. */
+   /** Alias for `Vector.reduce`. */
    Vector.foldl = Vector.reduce;
 
    /**
@@ -361,7 +362,7 @@ define(function(require) {
     * Compute the entry at index `i` of the vector. This method is used internally
     * by `Vector#get` to obtain the correct value in cases where the vector values
     * are stored _lazily_. Users should not call it directly.
-    * Use {@linkcode Vector.prototype.get} instead.
+    * Use `Vector.prototype.get` instead.
     * @private
     */
    Vector.prototype.compute = function compute(i) {
@@ -370,49 +371,49 @@ define(function(require) {
          this.constructor.name);
    };
 
-   /** Delegates to {@linkcode Vector.forEach}. Chainable. */
+   /** Delegates to `Vector.forEach`. Chainable. */
    Vector.prototype.forEach = function forEach(f, skipZeros) {
       Vector.forEach(this, f, skipZeros);
       return this;
    };
 
-   /** Delegates to {@linkcode Vector.forEachPair}. Chainable. */
+   /** Delegates to `Vector.forEachPair`. Chainable. */
    Vector.prototype.forEachPair = function forEachPair(v2, f, skipZeros) {
       Vector.forEachPair(this, v2, f, skipZeros);
       return this;
    };
 
-   /** Delegates to {@linkcode Vector.reduce}. */
+   /** Delegates to `Vector.reduce`. */
    Vector.prototype.reduce = function reduce(f, initial, skipZeros) {
       return Vector.reduce(this, f, initial, skipZeros);
    };
 
-   /** Delegates to {@linkcode Vector.reducePair}. */
+   /** Delegates to `Vector.reducePair`. */
    Vector.prototype.reducePair = function reduce(v2, f, initial, skipZeros) {
       return Vector.reducePair(this, v2, f, initial, skipZeros);
    };
 
-   /** Alias for {@linkcode Vector.prototype.reduce}. */
+   /** Alias for `Vector.prototype.reduce`. */
    Vector.prototype.foldl = Vector.prototype.reduce;
 
-   /** Delegates to {@linkcode Vector.map}. */
+   /** Delegates to `Vector.map`. */
    Vector.prototype.map = function map(f, skipZeros) {
       return Vector.map(this, f, skipZeros);
    };
 
-   /** Delegates to {@linkcode Vector.mapPair}. */
+   /** Delegates to `Vector.mapPair`. */
    Vector.prototype.mapPair = function mapPair(v2, f, skipZeros) {
       return Vector.mapPair(this, v2, f, skipZeros);
    };
 
    /** ## Vector operations */
 
-   /** Delegates to {@linkcode Vector.norm}. */
+   /** Delegates to `Vector.norm`. */
    Vector.prototype.norm = function norm(p) {
       return Vector.norm(this, p);
    };
 
-   /** Delegates to {@linkcode Vector.dot}. */
+   /** Delegates to `Vector.dot`. */
    Vector.prototype.dot = function dot(v2) {
       return Vector.dot(this, v2);
    };
@@ -426,64 +427,64 @@ define(function(require) {
 
    /** Vector arithmetic operations. */
 
-   /** Delegates to {@linkcode Vector.pAdd}. */
+   /** Delegates to `Vector.pAdd`. */
    Vector.prototype.pAdd = function pAdd(v2) {
       return Vector.pAdd(this, v2);
    };
 
-   /** Delegates to {@linkcode Vector.pSub}. */
+   /** Delegates to `Vector.pSub`. */
    Vector.prototype.pSub = function pSub(v2) {
       return Vector.pSub(this, v2);
    };
 
-   /** Delegates to {@linkcode Vector.sMult}. */
+   /** Delegates to `Vector.sMult`. */
    Vector.prototype.sMult = function sMult(a) {
       return Vector.sMult(a, this);
    };
 
-   /** Delegates to {@linkcode Vector.pMult}. */
+   /** Delegates to `Vector.pMult`. */
    Vector.prototype.pMult = function pMult(v2) {
       return Vector.pMult(this, v2);
    };
 
-   /** Delegates to {@linkcode Vector.pDiv}. */
+   /** Delegates to `Vector.pDiv`. */
    Vector.prototype.pDiv = function pDiv(v2) {
       return Vector.pDiv(this, v2);
    };
 
-   /** Delegates to {@linkcode Vector.pPow}. */
+   /** Delegates to `Vector.pPow`. */
    Vector.prototype.pPow = function pPow(n) {
       return Vector.pPow(this, n);
    };
 
    /** ## Other Vector prototype methods */
 
-   /** Delegates to {@linkcode Vector.diff}. */
+   /** Delegates to `Vector.diff`. */
    Vector.prototype.diff = function diff() {
       return Vector.diff(this);
    };
 
-   /** Delegates to {@linkcode Vector.cumulative}. */
+   /** Delegates to `Vector.cumulative`. */
    Vector.prototype.cumulative = function cumulative(f, initial) {
       return Vector.cumulative(this, f, initial);
    };
 
-   /** Delegates to {@linkcode Vector.cumSum}. */
+   /** Delegates to `Vector.cumSum`. */
    Vector.prototype.cumSum = function cumSum() {
       return Vector.cumSum(this);
    };
 
-   /** Delegates to {@linkcode Vector.cumProd}. */
+   /** Delegates to `Vector.cumProd`. */
    Vector.prototype.cumProd = function cumProd() {
       return Vector.cumProd(this);
    };
 
-   /** Delegates to {@linkcode Vector.cumMin}. */
+   /** Delegates to `Vector.cumMin`. */
    Vector.prototype.cumMin = function cumMin() {
       return Vector.cumMin(this);
    };
 
-   /** Delegates to {@linkcode Vector.cumMax}. */
+   /** Delegates to `Vector.cumMax`. */
    Vector.prototype.cumMax = function cumMax() {
       return Vector.cumMax(this);
    };
