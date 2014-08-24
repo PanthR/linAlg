@@ -6,7 +6,7 @@
    "scripts": {
       "test": "mocha --reporter=progress --recursive --require=./test/stackFixer.js",
       "lint": "eslint linAlg",
-      "doc": "node generateDoc.js"
+      "doc": "node ./node_modules/panthrdoc/run.js linAlg"
    },
    "repository": {
       "type": "git",
@@ -28,7 +28,7 @@
    "devDependencies": {
       "chai": "^1.9.1",
       "eslint": "^0.7.4",
-      "handlebars": "^2.0.0-alpha.4",
+      "panthrdoc": "*",
       "mocha": "~1.21.3",
       "mocha-jshint": "0.0.9"
    }
