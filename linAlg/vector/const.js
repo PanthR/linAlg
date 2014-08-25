@@ -3,15 +3,11 @@ define(function(require) {
 
 /* Returns a function which takes the Vector constructor and
  * creates the subclass ConstV of Vector
- * @module LinAlg
  */
 return function(Vector) {
 
-   // TODO update comments
-
-   // Subclass of `Vector` representing vectors whose values are specified via
-   // a function `f(i)` of the index.
-   // The values of the vector are computed lazily, only when they are accessed.
+   // Subclass of `Vector` representing efficiently vectors all of whose
+   // values are meant to be the same number.
    // Users should not need to access this directly.
    function ConstV(val, len) {
       this.val = val;

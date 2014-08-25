@@ -3,8 +3,7 @@ define(function(require) {
 
    /**
     * Javascript implementation of Linear Algebra Matrices.
-    * @module LinAlg
-    * @version 0.0.1
+    * @module Matrix
     * @author Haris Skiadas <skiadas@hanover.edu>, Barb Wahl <wahl@hanover.edu>
     */
    var DenseM, SparseM, TabularM, DiagM;
@@ -12,7 +11,6 @@ define(function(require) {
    /** Options may be:
     * 1. A number of rows (assumes row-wise)
     * 2. An object with possible keys: nrow, ncol, byRow (boolean)
-    * @memberof LinAlg
     */
    function Matrix(arr, options) {
       if (Array.isArray(arr)) {

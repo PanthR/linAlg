@@ -3,12 +3,10 @@ define(function(require) {
 
 /* Returns a function which takes the Matrix constructor and
  * creates the subclass DiagM of Matrix
- * @module LinAlg
  */
 return function(Matrix) {
 
-   /** Subclass of `Matrix` representing "Diag" matrices.
-    */
+   // Subclass of `Matrix` representing "Diag" matrices.
    function DiagM(arr, options) {
       this.constructor = DiagM;
    }

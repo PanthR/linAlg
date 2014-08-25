@@ -3,7 +3,8 @@ define(function(require) {
 
    /**
     * Javascript implementation of Linear Algebra Vectors.
-    * @module LinAlg
+    * @module Vector
+    * @author Haris Skiadas <skiadas@hanover.edu>, Barb Wahl <wahl@hanover.edu>
     */
    var DenseV, SparseV, TabularV, ConstV, ViewV;
 
@@ -16,6 +17,9 @@ define(function(require) {
     *
     * `Vector` objects are 1-indexed. By default, they are immutable structures, they cannot be edited
     * once created. See `Vector.MutableV` for a description of mutable vectors.
+    *
+    * Every vector has a fixed `length`, accessed as a property.
+    * Vectors of length 0 are allowed, though there is not much one can do with them.
     *
     * @example
     * var v1 = new Vector([3, 5, 1, 2]);          // A length-4 vector
@@ -32,19 +36,34 @@ define(function(require) {
       return new SparseV(arr, len);
    }
 
+   /** Subclass of `Vector` representing "dense" vectors.
+    * Dense vectors are internally stored simply as Javascript Arrays
+    * Users should not need to access this directly.
+    */
    Vector.DenseV   = DenseV   = require('./vector/dense')(Vector);
+
+   /** Subclass of `Vector` representing "sparse" vectors.
+    * Sparce vectors are stored as objects, whose keys represent the indices
+    * that have non-zero values.
+    * Users should not need to access this directly.
+    */
    Vector.SparseV  = SparseV  = require('./vector/sparse')(Vector);
+
+   /** Subclass of `Vector` representing vectors whose values are specified via
+    * a function `f(i)` of the index.
+    * The values of the vector are computed lazily, only when they are accessed.
+    * Users should not need to access this directly.
+    */
    Vector.TabularV = TabularV = require('./vector/tabular')(Vector);
+    /** Subclass of `Vector` representing efficiently vectors all of whose
+     * values are meant to be the same number.
+     * Users should not need to access this directly.
+     * Use `Vector.const` or `Vector.ones` instead.
+     */
    Vector.ConstV   = ConstV   = require('./vector/const')(Vector);
    Vector.ViewV    = ViewV    = require('./vector/view')(Vector);
-   /**
-    * Every vector has a fixed `length`. Vectors of length 0 are allowed,
-    * though there is not much one can do with them.
-    * @member length
-    * @instance
-    */
 
-   /** ## Vector dispatch class methods */
+   // Vector dispatch class methods
 
    /**
     * Execute the function `f` for each entry from the vector `v`,
@@ -218,7 +237,7 @@ define(function(require) {
       return new ConstV(1, len);
    };
 
-   /** ## Pointwise vector operations */
+   // Pointwise vector operations
 
    /** Pointwise add two vectors. */
    Vector.pAdd = function pAdd(v1, v2) {
@@ -250,7 +269,7 @@ define(function(require) {
       return Vector.map(v, function(val) { return Math.pow(val, n); }, n > 0);
    };
 
-   /** ## Other vector methods */
+   // Other vector methods
 
    /**
     * Compute consecutive differences of the values in the vector.
@@ -324,7 +343,7 @@ define(function(require) {
       }, -Infinity);
    };
 
-   /** Vector.prototype methods */
+   // Vector.prototype methods
 
    /**
     * Get the entry at index `i` of the vector. Vector indexing begins from 1.
@@ -404,7 +423,7 @@ define(function(require) {
       return Vector.mapPair(this, v, f, skipZeros);
    };
 
-   /** ## Vector operations */
+   // Vector operations
 
    /** Delegates to `Vector.norm`. */
    Vector.prototype.norm = function norm(p) {
@@ -423,7 +442,7 @@ define(function(require) {
       return arr;
    };
 
-   /** Vector arithmetic operations. */
+   // Vector arithmetic operations.
 
    /** Delegates to `Vector.pAdd`. */
    Vector.prototype.pAdd = function pAdd(v) {
@@ -455,7 +474,7 @@ define(function(require) {
       return Vector.pPow(this, n);
    };
 
-   /** ## Other Vector prototype methods */
+   // Other Vector prototype methods
 
    /** Delegates to `Vector.diff`. */
    Vector.prototype.diff = function diff() {

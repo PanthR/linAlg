@@ -7,11 +7,19 @@ define(function(require) {
     * @version 0.0.1
     * @author Haris Skiadas <skiadas@hanover.edu>, Barb Wahl <wahl@hanover.edu>
     */
-   var LinAlg = {};
+   var LinAlg;
    
-   /* Fixed length vectors */
+   /**
+    * Linear Algebra module offers a framework for Linear Algebra computations
+    * with a goal to making those operations reasonably efficient for large sizes.
+    * If you will only be using small matrices and/or vectors, but require a huge
+    * number of them, you might find this library unsuitable.
+    */
+   LinAlg = {};
+   
+   /** Implementation of fixed-length vectors. */
    LinAlg.Vector = require('./vector');
-   /* Fixed dimension 2-dimensional matrices */
+   /** Implementation of 2-dimensional matrices. */
    LinAlg.Matrix = require('./matrix');
 
    return LinAlg;

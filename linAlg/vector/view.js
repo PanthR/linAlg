@@ -3,7 +3,6 @@ define(function(require) {
 
 /* Returns a function which takes the Vector constructor and
  * creates the subclass ViewV of Vector
- * @module LinAlg
  */
 return function(Vector) {
 
@@ -17,14 +16,12 @@ return function(Vector) {
       return new MatrixView(target, indices, len, arguments[3]);
    }
 
-   /**
-    * target is a vector.
-    * indices can be
-    *   (1) an array, or
-    *   (2) a function which computes the translation from indexing in
-    *   the VectorView to indexing in the target.
-    * len is the length of the resulting vector.
-    */
+   // target is a vector.
+   // indices can be
+   //   (1) an array, or
+   //   (2) a function which computes the translation from indexing in
+   //   the VectorView to indexing in the target.
+   // len is the length of the resulting vector.
    function VectorView(target, indices, len) {
       this.target = target;
       if (typeof indices === 'function') {
@@ -38,13 +35,10 @@ return function(Vector) {
       return this;
    }
 
-
-   /**
-    * target is a matrix.
-    * rowIndex and colIndex are both either a pos integer or an array
-    * of indices or a function for calculating indices.
-    * len is optional if at least one of them is an array.
-    */
+   // target is a matrix.
+   // rowIndex and colIndex are both either a pos integer or an array
+   // of indices or a function for calculating indices.
+   // len is optional if at least one of them is an array.
    function MatrixView(target, rowIndex, colIndex, len) {
       this.target = target;
       function lookup(indices) {

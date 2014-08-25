@@ -3,14 +3,11 @@ define(function(require) {
 
 /* Returns a function which takes the Matrix constructor and
  * creates the subclass SparseM of Matrix
- * @module LinAlg
  */
 return function(Matrix) {
 
-   /** Subclass of `Matrix` representing "Sparse" matrices.
-    * Sparse matrices are "by row". TODO: Think about it.
-    * @memberof LinAlg.Matrix
-    */
+   // Subclass of `Matrix` representing "Sparse" matrices.
+   // Sparse matrices are "by row". TODO: Think about it.
    function SparseM(arr, options) {
       var values = {}, i, j;
       this.byRow = true;
