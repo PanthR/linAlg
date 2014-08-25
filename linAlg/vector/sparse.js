@@ -20,16 +20,16 @@ return function(Vector) {
 
    /* SparseV class methods */
 
-   SparseV.each = function each(v1, f, skipZeros) {
+   SparseV.each = function each(v, f, skipZeros) {
       var i, vals;
-      vals = v1._values;
+      vals = v._values;
       if (skipZeros) {
          Object.keys(vals).forEach(function(i) {
             f(vals[i], parseInt(i));
          });
       } else {
-         for (i = 1; i <= v1.length; i += 1) {
-            f(v1.get(i), i);
+         for (i = 1; i <= v.length; i += 1) {
+            f(v.get(i), i);
          }
       }
       return Vector;

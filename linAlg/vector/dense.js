@@ -20,8 +20,8 @@ return function(Vector) {
 
    /* DenseV class methods */
 
-   DenseV.each = function each(v1, f) {
-      v1.values.forEach(function(v, i) { f(v, i + 1); });
+   DenseV.each = function each(v, f) {
+      v.values.forEach(function(val, i) { f(val, i + 1); });
       return Vector;
    };
 

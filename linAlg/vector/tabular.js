@@ -18,8 +18,8 @@ return function(Vector) {
 
    TabularV.prototype = Object.create(Vector.prototype);
 
-   TabularV.each = function each(v1, f) {
-      v1.force().each(f);
+   TabularV.each = function each(v, f) {
+      v.force().each(f);
       return Vector;
    };
 

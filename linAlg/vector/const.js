@@ -17,10 +17,10 @@ return function(Vector) {
 
    ConstV.prototype = Object.create(Vector.prototype);
 
-   ConstV.each = function each(v1, f) {
+   ConstV.each = function each(v, f) {
       var i;
-      for (i = 1; i <= v1.length; i += 1) {
-         f(v1.val, i);
+      for (i = 1; i <= v.length; i += 1) {
+         f(v.val, i);
       }
       return Vector;
    };
