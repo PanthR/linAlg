@@ -162,15 +162,15 @@ define(function(require) {
     * Compute the p-norm of the vector `v1`. `p` should be a positive
     * number or `Infinity`. Defaults to the 2-norm.
     */
-   Vector.norm = function norm(v1, p) {
+   Vector.norm = function norm(v, p) {
       var res;
       if (p == null) { p = 2; }
       if (p === Infinity) {
-         return v1.reduce(function(acc, val) {
+         return v.reduce(function(acc, val) {
             return Math.max(acc, Math.abs(val));
          }, 0, true);
       }
-      res = v1.reduce(function(acc, val) {
+      res = v.reduce(function(acc, val) {
          return acc + Math.pow(Math.abs(val), p);
       }, 0, true);
       return Math.pow(res, 1 / p);
@@ -376,8 +376,8 @@ define(function(require) {
    };
 
    /** Delegates to `Vector.forEachPair`. Chainable. */
-   Vector.prototype.forEachPair = function forEachPair(v2, f, skipZeros) {
-      Vector.forEachPair(this, v2, f, skipZeros);
+   Vector.prototype.forEachPair = function forEachPair(v, f, skipZeros) {
+      Vector.forEachPair(this, v, f, skipZeros);
       return this;
    };
 
@@ -387,8 +387,8 @@ define(function(require) {
    };
 
    /** Delegates to `Vector.reducePair`. */
-   Vector.prototype.reducePair = function reduce(v2, f, initial, skipZeros) {
-      return Vector.reducePair(this, v2, f, initial, skipZeros);
+   Vector.prototype.reducePair = function reduce(v, f, initial, skipZeros) {
+      return Vector.reducePair(this, v, f, initial, skipZeros);
    };
 
    /** Alias for `Vector.prototype.reduce`. */
@@ -400,8 +400,8 @@ define(function(require) {
    };
 
    /** Delegates to `Vector.mapPair`. */
-   Vector.prototype.mapPair = function mapPair(v2, f, skipZeros) {
-      return Vector.mapPair(this, v2, f, skipZeros);
+   Vector.prototype.mapPair = function mapPair(v, f, skipZeros) {
+      return Vector.mapPair(this, v, f, skipZeros);
    };
 
    /** ## Vector operations */
@@ -412,8 +412,8 @@ define(function(require) {
    };
 
    /** Delegates to `Vector.dot`. */
-   Vector.prototype.dot = function dot(v2) {
-      return Vector.dot(this, v2);
+   Vector.prototype.dot = function dot(v) {
+      return Vector.dot(this, v);
    };
 
    /** Return a Javascript array of the vector's values. */
@@ -426,13 +426,13 @@ define(function(require) {
    /** Vector arithmetic operations. */
 
    /** Delegates to `Vector.pAdd`. */
-   Vector.prototype.pAdd = function pAdd(v2) {
-      return Vector.pAdd(this, v2);
+   Vector.prototype.pAdd = function pAdd(v) {
+      return Vector.pAdd(this, v);
    };
 
    /** Delegates to `Vector.pSub`. */
-   Vector.prototype.pSub = function pSub(v2) {
-      return Vector.pSub(this, v2);
+   Vector.prototype.pSub = function pSub(v) {
+      return Vector.pSub(this, v);
    };
 
    /** Delegates to `Vector.sMult`. */
@@ -441,13 +441,13 @@ define(function(require) {
    };
 
    /** Delegates to `Vector.pMult`. */
-   Vector.prototype.pMult = function pMult(v2) {
-      return Vector.pMult(this, v2);
+   Vector.prototype.pMult = function pMult(v) {
+      return Vector.pMult(this, v);
    };
 
    /** Delegates to `Vector.pDiv`. */
-   Vector.prototype.pDiv = function pDiv(v2) {
-      return Vector.pDiv(this, v2);
+   Vector.prototype.pDiv = function pDiv(v) {
+      return Vector.pDiv(this, v);
    };
 
    /** Delegates to `Vector.pPow`. */
