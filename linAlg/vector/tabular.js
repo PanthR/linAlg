@@ -19,8 +19,8 @@ return function(Vector) {
 
    TabularV.prototype = Object.create(Vector.prototype);
 
-   TabularV.forEach = function forEach(v1, f) {
-      v1.force().forEach(f);
+   TabularV.each = function each(v1, f) {
+      v1.force().each(f);
       return Vector;
    };
 

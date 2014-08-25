@@ -21,7 +21,7 @@ return function(Vector) {
 
    /* SparseV class methods */
 
-   SparseV.forEach = function forEach(v1, f, skipZeros) {
+   SparseV.each = function each(v1, f, skipZeros) {
       var i, vals;
       vals = v1._values;
       if (skipZeros) {
@@ -35,7 +35,7 @@ return function(Vector) {
       }
       return Vector;
    };
-   SparseV.forEachPair = function forEachPair(v1, v2, f, skipZeros) {
+   SparseV.eachPair = function eachPair(v1, v2, f, skipZeros) {
       var i, vals;
       vals = v1._values;
       if (skipZeros) {
@@ -52,7 +52,7 @@ return function(Vector) {
 
    SparseV.map = function map(v, f) {
       var newValues = {};
-      SparseV.forEach(v, function(val, i) {
+      SparseV.each(v, function(val, i) {
          newValues[i] = f(val, i);
       }, true);
       return new Vector(newValues, v.length);
@@ -60,7 +60,7 @@ return function(Vector) {
 
    SparseV.mapPair = function mapPair(v1, v2, f) {
       var newValues = {};
-      Vector.forEachPair(v1, v2, function(val1, val2, i) {
+      Vector.eachPair(v1, v2, function(val1, val2, i) {
          newValues[i] = f(val1, val2, i);
       }, true);
       return new Vector(newValues, v1.length);

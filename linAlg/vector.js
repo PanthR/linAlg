@@ -52,8 +52,8 @@ define(function(require) {
     * If `skipZeros` is `true`, then the system _may_ skip the execution
     * of `f` for zero-entries.
     */
-   Vector.forEach = function forEach(v, f, skipZeros) {
-      return v.constructor.forEach(v, f, skipZeros);
+   Vector.each = function each(v, f, skipZeros) {
+      return v.constructor.each(v, f, skipZeros);
    };
 
    /**
@@ -64,19 +64,19 @@ define(function(require) {
     * If `skipZeros` is `true`, then the system _may_ skip the execution of `f` when
     * one of the values is 0.
     */
-   Vector.forEachPair = function forEachPair(v1, v2, f, skipZeros) {
+   Vector.eachPair = function eachPair(v1, v2, f, skipZeros) {
       if (!sameLength(v1, v2)) {
-         throw new Error('Vector.forEachPair: vectors should be same langth');
+         throw new Error('Vector.eachPair: vectors should be same langth');
       }
       function swap(f) {
          return function(b, a, i) { return f(a, b, i); };
       }
       if (isSparse(v1)) {
-         SparseV.forEachPair(v1, v2, f, skipZeros);
+         SparseV.eachPair(v1, v2, f, skipZeros);
       } else if (isSparse(v2)) {
-         SparseV.forEachPair(v2, v1, swap(f), skipZeros);
+         SparseV.eachPair(v2, v1, swap(f), skipZeros);
       } else {
-         DenseV.forEachPair(v1, v2, f);
+         DenseV.eachPair(v1, v2, f);
       }
       return Vector;
    };
@@ -95,7 +95,7 @@ define(function(require) {
     */
    Vector.reduce = function reduce(v, f, initial, skipZeros) {
       initial = initial || 0;
-      v.forEach(function(val, i) {
+      v.each(function(val, i) {
          initial = f(initial, val, i);
       }, skipZeros);
       return initial;
@@ -116,7 +116,7 @@ define(function(require) {
     */
    Vector.reducePair = function reducePair(v1, v2, f, initial, skipZeros) {
       initial = initial || 0;
-      Vector.forEachPair(v1, v2, function(val1, val2, i) {
+      Vector.eachPair(v1, v2, function(val1, val2, i) {
          initial = f(initial, val1, val2, i);
       }, skipZeros);
       return initial;
@@ -369,15 +369,15 @@ define(function(require) {
          this.constructor.name);
    };
 
-   /** Delegates to `Vector.forEach`. Chainable. */
-   Vector.prototype.forEach = function forEach(f, skipZeros) {
-      Vector.forEach(this, f, skipZeros);
+   /** Delegates to `Vector.each`. Chainable. */
+   Vector.prototype.each = function each(f, skipZeros) {
+      Vector.each(this, f, skipZeros);
       return this;
    };
 
-   /** Delegates to `Vector.forEachPair`. Chainable. */
-   Vector.prototype.forEachPair = function forEachPair(v, f, skipZeros) {
-      Vector.forEachPair(this, v, f, skipZeros);
+   /** Delegates to `Vector.eachPair`. Chainable. */
+   Vector.prototype.eachPair = function eachPair(v, f, skipZeros) {
+      Vector.eachPair(this, v, f, skipZeros);
       return this;
    };
 
@@ -419,7 +419,7 @@ define(function(require) {
    /** Return a Javascript array of the vector's values. */
    Vector.prototype.toArray = function toArray() {
       var arr = [];
-      this.forEach(function(val) { arr.push(val); });
+      this.each(function(val) { arr.push(val); });
       return arr;
    };
 
