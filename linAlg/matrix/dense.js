@@ -3,6 +3,7 @@ define(function(require) {
 
 /* Returns a function which takes the Matrix constructor and
  * creates the subclass DenseM of Matrix
+ * @module LinAlg
  */
 return function(Matrix) {
 

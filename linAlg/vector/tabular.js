@@ -3,6 +3,7 @@ define(function(require) {
 
 /* Returns a function which takes the Vector constructor and
  * creates the subclass TabularV of Vector
+ * @module LinAlg
  */
 return function(Vector) {
 

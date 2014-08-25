@@ -4,8 +4,6 @@ define(function(require) {
    /**
     * Javascript implementation of Linear Algebra Vectors.
     * @module LinAlg
-    * @version 0.0.1
-    * @author Haris Skiadas <skiadas@hanover.edu>, Barb Wahl <wahl@hanover.edu>
     */
    var DenseV, SparseV, TabularV, ConstV;
 
