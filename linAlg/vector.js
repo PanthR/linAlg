@@ -5,7 +5,7 @@ define(function(require) {
     * Javascript implementation of Linear Algebra Vectors.
     * @module LinAlg
     */
-   var DenseV, SparseV, TabularV, ConstV;
+   var DenseV, SparseV, TabularV, ConstV, ViewV;
 
    /**
     * `Vector` objects are Javascript representations of real-valued vectors.
@@ -36,7 +36,7 @@ define(function(require) {
    Vector.SparseV  = SparseV  = require('./vector/sparse')(Vector);
    Vector.TabularV = TabularV = require('./vector/tabular')(Vector);
    Vector.ConstV   = ConstV   = require('./vector/const')(Vector);
-
+   Vector.ViewV    = ViewV    = require('./vector/view')(Vector);
    /**
     * Every vector has a fixed `length`. Vectors of length 0 are allowed,
     * though there is not much one can do with them.
