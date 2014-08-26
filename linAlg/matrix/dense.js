@@ -8,7 +8,7 @@ return function(Matrix) {
 
    // Subclass of `Matrix` representing 'dense' matrices.
    function DenseM(arr, options) {
-      if (arr.length === 0) { return new Error('Cannot create empty matrix yet.'); }
+      if (arr.length === 0) { throw new Error('Cannot create empty matrix yet.'); }
       // Storage defaults to 'by column'
       this.byRow = options && options.byRow === true;
       if (Array.isArray(arr[0])) {
@@ -30,7 +30,7 @@ return function(Matrix) {
             this.nrow = Math.floor(arr.length / this.ncol);
          }
          if (this.ncol * this.nrow !== arr.length) {
-            return new Error('Declared matrix dimensions invalid');
+            throw new Error('Declared matrix dimensions invalid');
          }
          this.values = new Matrix.Vector(arr);
       }
