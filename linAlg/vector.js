@@ -513,7 +513,7 @@ define(function(require) {
    }
 
    function isSparse(a) {
-      return a instanceof SparseV;
+      return a.constructor === SparseV;
    }
 
    // Arithmetic
