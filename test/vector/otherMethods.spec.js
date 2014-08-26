@@ -20,6 +20,9 @@ describe('Other methods', function() {
       expect(v1.cumSum().toArray()).to.deep.equal([4, 2, 3]);
       expect(v1.cumMax().toArray()).to.deep.equal([4, 4, 4]);
       expect(v1.cumMin().toArray()).to.deep.equal([4, -2, -2]);
+      expect(v2.cumSum().toArray()).to.deep.equal([0, 4, 4, 4, 5, 3, 3, 3, 3, 3]);
+      expect(v2.cumMax().toArray()).to.deep.equal([0, 4, 4, 4, 4, 4, 4, 4, 4, 4]);
+      expect(v2.cumMin().toArray()).to.deep.equal([0, 0, 0, 0, 0, -2, -2, -2, -2, -2]);
    });
    it('force', function() {
       var v = new Vector(function(x) { return x*x; }, 4);
