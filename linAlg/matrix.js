@@ -41,6 +41,7 @@ define(function(require) {
       return { i: (n - 1) % this.nrow + 1, j: Math.floor((n + 1) / this.nrow) };
    };
 
+   return Matrix;
 });
 
 }(typeof define === 'function' && define.amd ? define : function(factory) {
