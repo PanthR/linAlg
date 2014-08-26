@@ -6,9 +6,11 @@ define(function(require) {
  */
 return function(Vector) {
 
-   // Subclass of `Vector` representing vectors whose values are specified via...
+   // Subclass of `Vector` representing vectors that provide a "view" into
+   // another object, e.g. the row or column of a `Matrix`. Changes to a view
+   // vector cause changes to the corresponding "viewed" object and vice versa.
 
-   // target is either a vector or a matrix
+   // `target` can be either a Vector or a Matrix.
    function ViewV(target, indices, len) {
       if (target instanceof Vector) {
          return new VectorView(target, indices, len);
@@ -16,12 +18,13 @@ return function(Vector) {
       return new MatrixView(target, indices, len, arguments[3]);
    }
 
-   // target is a vector.
-   // indices can be
-   //   (1) an array, or
-   //   (2) a function which computes the translation from indexing in
-   //   the VectorView to indexing in the target.
-   // len is the length of the resulting vector.
+   // Constructs a view into a `Vector`. `target` must be a `Vector`.
+   // `indices` can be:
+   // 1. an array of indices, or
+   // 2. a function which computes the translation from VectorView-index
+   // to target-index
+   //
+   // `len` is the length of the resulting vector. Needed only in case 2.
    function VectorView(target, indices, len) {
       this.target = target;
       if (typeof indices === 'function') {
@@ -35,10 +38,13 @@ return function(Vector) {
       return this;
    }
 
-   // target is a matrix.
-   // rowIndex and colIndex are both either a pos integer or an array
-   // of indices or a function for calculating indices.
-   // len is optional if at least one of them is an array.
+   // Constructs a view into a `Matrix`. `target` must be a `Matrix`.
+   // `rowIndex` and `colIndex` can be:
+   // 1. A positive integer. Then the view is into elements in that row/column
+   // 2. A array of indices, or
+   // 3. A function for calculating indices.
+   //
+   // len is optional if at least one of `rowIndex` and `colIndex` is an array.
    function MatrixView(target, rowIndex, colIndex, len) {
       this.target = target;
       function lookup(indices) {
