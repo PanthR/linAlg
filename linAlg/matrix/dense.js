@@ -22,7 +22,7 @@ return function(Matrix) {
          this.values = new Matrix.Vector([].concat.apply([], arr));
          // TODO: Should we do more validation here?
       } else {
-         if (options && options.nrow !== 0) {
+         if (options && options.nrow != null) {
             this.nrow = options.nrow;
             this.ncol = Math.floor(arr.length / this.nrow);
          } else {
