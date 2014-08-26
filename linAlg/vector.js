@@ -21,10 +21,13 @@ define(function(require) {
     * Every vector has a fixed `length`, accessed as a property.
     * Vectors of length 0 are allowed, though there is not much one can do with them.
     *
-    * @example
-    * var v1 = new Vector([3, 5, 1, 2]);          // A length-4 vector
-    * var v2 = new Vector({ 4: 10, 2: 12 }, 10);  // A length-10 sparse vector
-    * var v3 = new Vector(Math.exp, 3);           // A length-3 vector with values e(1), e(2), e(3)
+    *     // A length-4 vector
+    *     var v1 = new Vector([3, 5, 1, 2]);
+    *     // A length-10 sparse vector
+    *     var v2 = new Vector({ 4: 10, 2: 12 }, 10);
+    *     // A length-3 vector with values exp(1), exp(2), exp(3)
+    *     var v3 = new Vector(Math.exp, 3);
+    *     v3.length === 3  // true
     */
    function Vector(arr, len) {
       if (Array.isArray(arr)) {
@@ -70,6 +73,9 @@ define(function(require) {
     * starting with the entry with index 1. `f` will be called as `f(value, index)`.
     * If `skipZeros` is `true`, then the system _may_ skip the execution
     * of `f` for zero-entries.
+    *
+    *     // Prints: 3 1, 5 2, 1 3, 2 4
+    *     Vector.each(v1, console.log);
     */
    Vector.each = function each(v, f, skipZeros) {
       return v.constructor.each(v, f, skipZeros);
@@ -82,6 +88,9 @@ define(function(require) {
     * are the entries of the vectors `v1`, `v2` at index `i`.
     * If `skipZeros` is `true`, then the system _may_ skip the execution of `f` when
     * one of the values is 0.
+    *
+    *     // Prints 3 3 1, 5 5 2, 1 1 3, 2 2 4
+    *     Vector.eachPair(v1, v1, console.log);
     */
    Vector.eachPair = function eachPair(v1, v2, f, skipZeros) {
       if (!sameLength(v1, v2)) {
@@ -107,10 +116,10 @@ define(function(require) {
     * If `skipZeros` is `true`, this operation _may_ skip any zero entries.
     * `initial` and `acc` do not have to be numbers, but they do need to have the
     * same type, and `f` should return that same type.
-    * @example
-    * var a = new Vector([1,2,3]);
-    * function add(acc, val) { return acc + val; };
-    * a.reduce(add, 4);     // Equivalent to (((4 + 1) + 2) + 3)
+    *
+    *     function add(acc, val) { return acc + val; };
+    *     // Equivalent to ((((4 + 3) + 5) + 1) + 2)
+    *     v1.reduce(add, 4);
     */
    Vector.reduce = function reduce(v, f, initial, skipZeros) {
       initial = initial || 0;
@@ -129,9 +138,10 @@ define(function(require) {
     * calling `f` for an index `i` if one of the values there is 0.
     *
     * The vectors `v1`, `v2` need to have the same length.
-    * @example
-    * function f(acc, val1, val2) = { return acc + val1 * val2; };
-    * a.reducePair(v1, v2, f, 0)   // Computes the dot product of v1, v2.
+    *
+    *     function f(acc, val1, val2) = { return acc + val1 * val2; };
+    *     // Computes the dot product of v1, v2.
+    *     a.reducePair(v1, v2, f, 0)
     */
    Vector.reducePair = function reducePair(v1, v2, f, initial, skipZeros) {
       initial = initial || 0;
@@ -154,6 +164,9 @@ define(function(require) {
     * `Vector.map` only returns a "promise" to compute the resulting vector.
     * The implementation may choose to not actually compute values `f` until
     * they are actually needed. Users should not rely on side-effects of `f`.
+    *
+    *     // Results in [4, 7, 4, 6];
+    *     Vector.map(v1, function(val, i) { return val + i; });
     */
    Vector.map = function map(v, f, skipZeros) {
       if (skipZeros && isSparse(v)) { return SparseV.map(v, f); }
@@ -180,6 +193,10 @@ define(function(require) {
    /**
     * Compute the p-norm of the vector `v1`. `p` should be a positive
     * number or `Infinity`. Defaults to the 2-norm.
+    *
+    *     Vector.norm(v1, 1)        // 1-norm (sum of absolute values)
+    *     Vector.norm(v1)           // 2 norm (usual formula)
+    *     Vector.norm(v1, Infinity) // Infinity (max) norm
     */
    Vector.norm = function norm(v, p) {
       var res;
@@ -195,7 +212,14 @@ define(function(require) {
       return Math.pow(res, 1 / p);
    };
 
-   /** Compute the dot product of two vectors `v1`, `v2`. */
+   /**
+    * Compute the dot product of two vectors `v1`, `v2`.
+    *
+    *     // Returns 3 * 3 + 5 * 5 + 1 * 1 + 2 * 2
+    *     Vector.dot(v1, v1);
+    *     // Prototype version:
+    *     v1.dot(v1);
+    */
    Vector.dot = function dot(v1, v2) {
       return Vector.reducePair(v1, v2, function(acc, val1, val2) {
          return acc + val1 * val2;
@@ -208,10 +232,10 @@ define(function(require) {
     *
     * If `step` is omitted, it defaults to 1 or -1 depending on the relation between
     * `a` and `b`. If `b` is also omitted, then the vector generated is `1,2,...,a`.
-    * @example
-    * Vector.seq(1,6,2)  // Produces [1, 3, 5]
-    * Vector.seq(5,1)    // Produces [5, 4, 3, 2, 1]
-    * Vector.seq(3)      // Produces [1, 2, 3]
+    *
+    *     Vector.seq(1, 6, 2)  // Produces [1, 3, 5]
+    *     Vector.seq(5, 1)     // Produces [5, 4, 3, 2, 1]
+    *     Vector.seq(3)        // Produces [1, 2, 3]
     */
    Vector.seq = function seq(a, b, step) {
       var length;
@@ -232,6 +256,9 @@ define(function(require) {
 
    /**
     * Generates a constant vector of length `len`, with all entries having value 1.
+    *
+    *     // Sums all elements of v1
+    *     Vector.ones(v1.length).dot(v1)
     */
    Vector.ones = function ones(len) {
       return new ConstV(1, len);
@@ -273,9 +300,11 @@ define(function(require) {
 
    /**
     * Compute consecutive differences of the values in the vector.
-    * @example
-    * var v = new Vector([1,1,3,4]);
-    * v.diff()   // Produces [0, 2, 1]
+    *
+    *     // Both produce: [2, -4, 1]
+    *     Vector.diff(v1);
+    *     v1.diff();
+    *     v1.diff().length === v1.length - 1 // true
     */
    Vector.diff = function diff(v) {
       return new Vector(function(i) {
@@ -288,10 +317,11 @@ define(function(require) {
     * `f(acc, val, i)` as `val` ranges over the values of the vector `v`,
     * starting with the value `initial`. This is effectively a version of
     * `Vector.reduce` where each intermediate step is stored.
-    * @example
-    * var v = new Vector([1, 2, 3]);
-    * function f(acc, val) { return acc + val * val; }
-    * Vector.cumulative(v, f, 2)  // Produces [3, 7, 16]
+    *
+    *     function f(acc, val) { return acc + val * val; }
+    *     // Both produce [11, 36, 37, 41]
+    *     Vector.cumulative(v1, f, 2);
+    *     v1.cumulative(f, 2);
     */
    Vector.cumulative = function cumulative(v, f, initial) {
       var arr = [];
@@ -305,8 +335,10 @@ define(function(require) {
 
    /**
     * Create a new vector from the partial sums in `v`.
-    * @example
-    * new Vector([1, 2, 3]).cumSum()  // Produces [1, 3, 6]
+    *
+    *     // Both produce [3, 8, 9, 11]
+    *     Vector.cumSum(v1);
+    *     v1.cumSum();
     */
    Vector.cumSum = function cumSum(v) {
       return Vector.cumulative(v, add, 0);
@@ -314,8 +346,10 @@ define(function(require) {
 
    /**
     * Create a new vector from the partial products in `v`.
-    * @example
-    * new Vector([2, 3, 3]).cumProd()  // Produces [2, 6, 18]
+    *
+    *     // Both produce [3, 15, 15, 30]
+    *     Vector.cumProd(v1);
+    *     v1.cumProd();
     */
    Vector.cumProd = function cumProd(v) {
       return Vector.cumulative(v, mult, 1);
@@ -323,8 +357,10 @@ define(function(require) {
 
    /**
     * Create a new vector from the partial minimums in `v`.
-    * @example
-    * new Vector([2, 1, 3]).cumMin()  // Produces [2, 1, 1]
+    *
+    *     // Both produce [3, 5, 1, 1]
+    *     Vector.cumMin(v1);
+    *     v1.cumMin();
     */
    Vector.cumMin = function cumMin(v) {
       return Vector.cumulative(v, function(a, b) {
@@ -334,8 +370,10 @@ define(function(require) {
 
    /**
     * Create a new vector from the partial maximums in `v`.
-    * @example
-    * new Vector([2, 1, 3]).cumMax()  // Produces [2, 2, 3]
+    *
+    *     // Both produce [3, 5, 5, 5]
+    *     Vector.cumMax(v1);
+    *     v1.cumMax();
     */
    Vector.cumMax = function cumMax(v) {
       return Vector.cumulative(v, function(a, b) {
@@ -348,6 +386,12 @@ define(function(require) {
    /**
     * Get the entry at index `i` of the vector. Vector indexing begins from 1.
     * Users should always go through this method when accessing values of the vector.
+    *
+    *     v1.get(1) === 3;
+    *     v1.get(2) === 5;
+    *     // Out of range defaults to 0
+    *     v1.get(0) === 0;
+    *     v1.get(5) === 0;
     */
    Vector.prototype.get = function get(i) {
       if ( i < 1 || i > this.length) { return 0; }
@@ -370,7 +414,10 @@ define(function(require) {
       return this;
    };
 
-   /** Force a vector to be evaluated. */
+   /**
+    * Force a vector to be evaluated. This resolves any deferred calculations
+    * needed for the computation of the vector's elements.
+    */
    Vector.prototype.force = function force() {
       return this;  // stub; overridden in some subclasses
    };
@@ -435,7 +482,10 @@ define(function(require) {
       return Vector.dot(this, v);
    };
 
-   /** Return a Javascript array of the vector's values. */
+   /**
+    * Return a Javascript array of the vector's values. Returns a new
+    * Array object every time.
+    */
    Vector.prototype.toArray = function toArray() {
       var arr = [];
       this.each(function(val) { arr.push(val); });
