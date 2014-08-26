@@ -11,9 +11,25 @@
       </h1>
     </div>
     <div id="sidebar">
+      <div>
+        <h3>Module Index</h3>
+      <ul>
+        
+        <a href="LinAlg.html"><li><code>LinAlg</code></li></a>
+        
+        <a href="Matrix.html"><li><code>Matrix</code></li></a>
+        
+        <a href="Vector.html"><li><code>Vector</code></li></a>
+        
+      </ul>
+      </div>
+      <div>
+        <h3>Contents</h3>
       <ul>
         
         <a href="#Vector"><li><code>Vector</code></li></a>
+        
+        <a href="#Vector.ConstV"><li><code>Vector.ConstV</code></li></a>
         
         <a href="#Vector.DenseV"><li><code>Vector.DenseV</code></li></a>
         
@@ -21,15 +37,25 @@
         
         <a href="#Vector.TabularV"><li><code>Vector.TabularV</code></li></a>
         
-        <a href="#Vector.ConstV"><li><code>Vector.ConstV</code></li></a>
+        <a href="#Vector.const"><li><code>Vector.const</code></li></a>
+        
+        <a href="#Vector.cumMax"><li><code>Vector.cumMax</code></li></a>
+        
+        <a href="#Vector.cumMin"><li><code>Vector.cumMin</code></li></a>
+        
+        <a href="#Vector.cumProd"><li><code>Vector.cumProd</code></li></a>
+        
+        <a href="#Vector.cumSum"><li><code>Vector.cumSum</code></li></a>
+        
+        <a href="#Vector.cumulative"><li><code>Vector.cumulative</code></li></a>
+        
+        <a href="#Vector.diff"><li><code>Vector.diff</code></li></a>
+        
+        <a href="#Vector.dot"><li><code>Vector.dot</code></li></a>
         
         <a href="#Vector.each"><li><code>Vector.each</code></li></a>
         
         <a href="#Vector.eachPair"><li><code>Vector.eachPair</code></li></a>
-        
-        <a href="#Vector.reduce"><li><code>Vector.reduce</code></li></a>
-        
-        <a href="#Vector.reducePair"><li><code>Vector.reducePair</code></li></a>
         
         <a href="#Vector.foldl"><li><code>Vector.foldl</code></li></a>
         
@@ -39,55 +65,51 @@
         
         <a href="#Vector.norm"><li><code>Vector.norm</code></li></a>
         
-        <a href="#Vector.dot"><li><code>Vector.dot</code></li></a>
-        
-        <a href="#Vector.seq"><li><code>Vector.seq</code></li></a>
-        
-        <a href="#Vector.const"><li><code>Vector.const</code></li></a>
-        
         <a href="#Vector.ones"><li><code>Vector.ones</code></li></a>
         
         <a href="#Vector.pAdd"><li><code>Vector.pAdd</code></li></a>
         
-        <a href="#Vector.pSub"><li><code>Vector.pSub</code></li></a>
-        
-        <a href="#Vector.sMult"><li><code>Vector.sMult</code></li></a>
+        <a href="#Vector.pDiv"><li><code>Vector.pDiv</code></li></a>
         
         <a href="#Vector.pMult"><li><code>Vector.pMult</code></li></a>
         
-        <a href="#Vector.pDiv"><li><code>Vector.pDiv</code></li></a>
-        
         <a href="#Vector.pPow"><li><code>Vector.pPow</code></li></a>
         
-        <a href="#Vector.diff"><li><code>Vector.diff</code></li></a>
+        <a href="#Vector.pSub"><li><code>Vector.pSub</code></li></a>
         
-        <a href="#Vector.cumulative"><li><code>Vector.cumulative</code></li></a>
+        <a href="#Vector.reduce"><li><code>Vector.reduce</code></li></a>
         
-        <a href="#Vector.cumSum"><li><code>Vector.cumSum</code></li></a>
+        <a href="#Vector.reducePair"><li><code>Vector.reducePair</code></li></a>
         
-        <a href="#Vector.cumProd"><li><code>Vector.cumProd</code></li></a>
+        <a href="#Vector.sMult"><li><code>Vector.sMult</code></li></a>
         
-        <a href="#Vector.cumMin"><li><code>Vector.cumMin</code></li></a>
-        
-        <a href="#Vector.cumMax"><li><code>Vector.cumMax</code></li></a>
-        
-        <a href="#Vector%25get"><li><code>Vector#get</code></li></a>
-        
-        <a href="#Vector%25set"><li><code>Vector#set</code></li></a>
-        
-        <a href="#Vector%25force"><li><code>Vector#force</code></li></a>
+        <a href="#Vector.seq"><li><code>Vector.seq</code></li></a>
         
         <a href="#Vector%25compute"><li><code>Vector#compute</code></li></a>
+        
+        <a href="#Vector%25cumMax"><li><code>Vector#cumMax</code></li></a>
+        
+        <a href="#Vector%25cumMin"><li><code>Vector#cumMin</code></li></a>
+        
+        <a href="#Vector%25cumProd"><li><code>Vector#cumProd</code></li></a>
+        
+        <a href="#Vector%25cumSum"><li><code>Vector#cumSum</code></li></a>
+        
+        <a href="#Vector%25cumulative"><li><code>Vector#cumulative</code></li></a>
+        
+        <a href="#Vector%25diff"><li><code>Vector#diff</code></li></a>
+        
+        <a href="#Vector%25dot"><li><code>Vector#dot</code></li></a>
         
         <a href="#Vector%25each"><li><code>Vector#each</code></li></a>
         
         <a href="#Vector%25eachPair"><li><code>Vector#eachPair</code></li></a>
         
-        <a href="#Vector%25reduce"><li><code>Vector#reduce</code></li></a>
-        
-        <a href="#Vector%25reducePair"><li><code>Vector#reducePair</code></li></a>
-        
         <a href="#Vector%25foldl"><li><code>Vector#foldl</code></li></a>
+        
+        <a href="#Vector%25force"><li><code>Vector#force</code></li></a>
+        
+        <a href="#Vector%25get"><li><code>Vector#get</code></li></a>
         
         <a href="#Vector%25map"><li><code>Vector#map</code></li></a>
         
@@ -95,35 +117,28 @@
         
         <a href="#Vector%25norm"><li><code>Vector#norm</code></li></a>
         
-        <a href="#Vector%25dot"><li><code>Vector#dot</code></li></a>
-        
-        <a href="#Vector%25toArray"><li><code>Vector#toArray</code></li></a>
-        
         <a href="#Vector%25pAdd"><li><code>Vector#pAdd</code></li></a>
-        
-        <a href="#Vector%25pSub"><li><code>Vector#pSub</code></li></a>
-        
-        <a href="#Vector%25sMult"><li><code>Vector#sMult</code></li></a>
-        
-        <a href="#Vector%25pMult"><li><code>Vector#pMult</code></li></a>
         
         <a href="#Vector%25pDiv"><li><code>Vector#pDiv</code></li></a>
         
+        <a href="#Vector%25pMult"><li><code>Vector#pMult</code></li></a>
+        
         <a href="#Vector%25pPow"><li><code>Vector#pPow</code></li></a>
         
-        <a href="#Vector%25diff"><li><code>Vector#diff</code></li></a>
+        <a href="#Vector%25pSub"><li><code>Vector#pSub</code></li></a>
         
-        <a href="#Vector%25cumulative"><li><code>Vector#cumulative</code></li></a>
+        <a href="#Vector%25reduce"><li><code>Vector#reduce</code></li></a>
         
-        <a href="#Vector%25cumSum"><li><code>Vector#cumSum</code></li></a>
+        <a href="#Vector%25reducePair"><li><code>Vector#reducePair</code></li></a>
         
-        <a href="#Vector%25cumProd"><li><code>Vector#cumProd</code></li></a>
+        <a href="#Vector%25sMult"><li><code>Vector#sMult</code></li></a>
         
-        <a href="#Vector%25cumMin"><li><code>Vector#cumMin</code></li></a>
+        <a href="#Vector%25set"><li><code>Vector#set</code></li></a>
         
-        <a href="#Vector%25cumMax"><li><code>Vector#cumMax</code></li></a>
+        <a href="#Vector%25toArray"><li><code>Vector#toArray</code></li></a>
         
       </ul>
+      </div>
     </div>
     <div id="main">
       <div class="moduleInfo">

@@ -49,6 +49,10 @@ h2 {
    font-weight: normal;
    font-size: 177%;
 }
+h3 {
+   font-weight: bold;
+   font-size: 133%;
+}
 h4 {
    font-weight: bold;
    font-size: 133%;
@@ -70,14 +74,25 @@ h1 code, h2 code {
    font-size: 42%;
 }
 /* sidebar */
+#sidebar div {
+   padding-top: 0.5em;
+   padding-bottom: 1em;
+}
 #sidebar ul {
-   padding: 10%;
+   margin-top: 0.5em;
 }
 #sidebar ul li {
    margin-bottom: 0.2em;
 }
 #sidebar ul li::before {
    content: "- ";
+}
+#sidebar h3 {
+   margin-left: 15%;
+   margin-right: 15%;
+   text-align: center;
+   padding-bottom: 0.1em;
+   border-bottom: 1px solid #EEE;
 }
 
 /* main */
@@ -88,7 +103,7 @@ h1 code, h2 code {
 }
 #main div:hover {
 /*   background-color: #EEE;*/
-   border-right: 2px solid #AAA;
+   border-right: 3px solid #777;
 }
 #main div h4 {
    margin-bottom: 0.3em;
