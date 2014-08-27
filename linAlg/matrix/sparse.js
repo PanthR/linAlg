@@ -23,7 +23,6 @@ return function(Matrix) {
          }
       }
       this.values = new Matrix.Vector(values, this.nrow * this.ncol);
-      this.constructor = SparseM;
    }
 
    SparseM.prototype = Object.create(Matrix.prototype);

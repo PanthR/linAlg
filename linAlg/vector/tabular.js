@@ -14,10 +14,9 @@ return function(Vector) {
       this.f = f;
       this.length = len;
       this.cached = false;
-      this.constructor = TabularV;
    }
 
-   TabularV.prototype = Object.create(Vector.prototype);
+   TabularV.prototype = Object.create(Vector.DenseV.prototype);
 
    TabularV.each = function each(v, f) {
       v.force().each(f);

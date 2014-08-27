@@ -11,7 +11,7 @@ describe('Sparse vectors', function() {
       expect(v1).to.be.instanceof(Vector);
    });
    it('are formed when the Vector constructor is fed an object', function() {
-      expect(new Vector(dict, 1000)).to.be.instanceof(SparseV);
+      expect(new Vector(dict, 1000).isSparse()).to.be.ok;
    });
    it('are 1-indexed', function() {
       var v1 = new Vector(dict, 1000);

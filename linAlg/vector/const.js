@@ -13,24 +13,23 @@ return function(Vector) {
       this.val = val;
       this.length = len;
       this.cached = false;
-      this.constructor = ConstV;
    }
 
    ConstV.prototype = Object.create(Vector.prototype);
-
-   ConstV.each = function each(v, f) {
-      var i;
-      for (i = 1; i <= v.length; i += 1) {
-         f(v.val, i);
-      }
-      return Vector;
-   };
 
    /* ConstV.prototype methods */
 
    ConstV.prototype.get = function get(i) {
       if ( i < 1 || i > this.length) { return 0; }
       return this.val;
+   };
+
+   ConstV.prototype.each = function each(f) {
+      var i;
+      for (i = 1; i <= this.length; i += 1) {
+         f(this.val, i);
+      }
+      return this;
    };
 
    return ConstV;

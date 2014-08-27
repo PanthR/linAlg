@@ -14,57 +14,9 @@ return function(Vector) {
       this._values = arr;
       this.length = len;
       this.cached = false;
-      this.constructor = SparseV;
    }
 
    SparseV.prototype = Object.create(Vector.prototype);
-
-   /* SparseV class methods */
-
-   SparseV.each = function each(v, f, skipZeros) {
-      var i, vals;
-      vals = v._values;
-      if (skipZeros) {
-         Object.keys(vals).forEach(function(i) {
-            f(vals[i], parseInt(i));
-         });
-      } else {
-         for (i = 1; i <= v.length; i += 1) {
-            f(v.get(i), i);
-         }
-      }
-      return Vector;
-   };
-   SparseV.eachPair = function eachPair(v1, v2, f, skipZeros) {
-      var i, vals;
-      vals = v1._values;
-      if (skipZeros) {
-         Object.keys(vals).forEach(function(i) {
-            f(vals[i], v2.get(parseInt(i)), parseInt(i));
-         });
-      } else {
-         for (i = 1; i <= v1.length; i += 1) {
-            f(v1.get(i), v2.get(i), i);
-         }
-      }
-      return Vector;
-   };
-
-   SparseV.map = function map(v, f) {
-      var newValues = {};
-      SparseV.each(v, function(val, i) {
-         newValues[i] = f(val, i);
-      }, true);
-      return new Vector(newValues, v.length);
-   };
-
-   SparseV.mapPair = function mapPair(v1, v2, f) {
-      var newValues = {};
-      Vector.eachPair(v1, v2, function(val1, val2, i) {
-         newValues[i] = f(val1, val2, i);
-      }, true);
-      return new Vector(newValues, v1.length);
-   };
 
    /* SparseV.prototype methods */
 
@@ -77,6 +29,68 @@ return function(Vector) {
          this._values[i] = v || 0;
       }
       return this;
+   };
+
+   SparseV.prototype.each = function each(f, skipZeros) {
+      var i, vals;
+      vals = this._values;
+      if (skipZeros) {
+         Object.keys(vals).forEach(function(i) {
+            f(vals[i], parseInt(i));
+         });
+      } else {
+         for (i = 1; i <= this.length; i += 1) {
+            f(this.get(i), i);
+         }
+      }
+      return this;
+   };
+
+   SparseV.prototype.eachPair = function eachPair(v2, f, skipZeros) {
+      var i, vals;
+      if (!this.sameLength(v2)) {
+         throw new Error('SparseV#eachPair: vectors should be same langth');
+      }
+      vals = this._values;
+      if (skipZeros) {
+         Object.keys(vals).forEach(function(i) {
+            f(vals[i], v2.get(parseInt(i)), parseInt(i));
+         });
+      } else {
+         for (i = 1; i <= this.length; i += 1) {
+            f(this.get(i), v2.get(i), i);
+         }
+      }
+      return Vector;
+   };
+
+   SparseV.prototype.map = function map(f, skipZeros) {
+      if (!skipZeros) { return Vector.prototype.map.call(this, f); }
+      var newValues = {};
+      this.each(function(val, i) {
+         newValues[i] = f(val, i);
+      }, true);
+      return new Vector(newValues, this.length);
+   };
+
+   SparseV.prototype.mapPair = function mapPair(v2, f, skipZeros) {
+      if (!this.sameLength(v2)) {
+         throw new Error('Vector.mapPair: vectors should be same langth');
+      }
+      var newValues = {};
+      if (!skipZeros && !v2.isSparse()) {
+         return new Vector(function(i) {
+            return f(this.get(i), v2.get(i), i);
+         }.bind(this), this.length);
+      }
+      this.eachPair(v2, function(val1, val2, i) {
+         newValues[i] = f(val1, val2, i);
+      }, true);
+      return new Vector(newValues, this.length);
+   };
+
+   SparseV.prototype.isSparse = function isSparse() {
+      return true;
    };
 
    return SparseV;

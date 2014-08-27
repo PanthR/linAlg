@@ -13,27 +13,18 @@ return function(Vector) {
       this.values = arr;
       this.length = arr.length;
       this.cached = true;
-      this.constructor = DenseV;
    }
 
    /* makes DenseV a "subclass" of Vector */
    DenseV.prototype = Object.create(Vector.prototype);
 
-   /* DenseV class methods */
-
-   DenseV.each = function each(v, f) {
-      (v.values || []).forEach(function(val, i) { f(val, i + 1); });
-      return Vector;
-   };
-
-   DenseV.eachPair = function eachPair(v1, v2, f) {
-      v1.each(function(val, i) {
-         f(val, v2.get(i), i);
-      });
-      return Vector;
-   };
-
    /* DenseV.prototype methods */
+
+   DenseV.prototype.each = function each(f) {
+      this.force();
+      (this.values || []).forEach(function(val, i) { f(val, i + 1); });
+      return this;
+   };
 
    return DenseV;
 };

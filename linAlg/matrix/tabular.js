@@ -16,7 +16,6 @@ return function(Matrix) {
          return f(indices.i, indices.j);
       }
       this.values = new Matrix.Vector(f2.bind(this), this.nrow * this.ncol);
-      this.constructor = TabularM;
    }
 
    TabularM.prototype = Object.create(Matrix.prototype);

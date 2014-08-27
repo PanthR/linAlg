@@ -35,7 +35,6 @@ return function(Vector) {
          this.length = indices.length;
       }
       this.cached = false;
-      this.constructor = VectorView;
       return this;
    }
 
@@ -59,7 +58,6 @@ return function(Vector) {
       this.j = lookup(colIndex);
       this.length = rowIndex.length || colIndex.length || len || 0;
       this.cached = false;
-      this.constructor = MatrixView;
       return this;
    }
 
@@ -67,16 +65,17 @@ return function(Vector) {
    VectorView.prototype = Object.create(ViewV.prototype);
    MatrixView.prototype = Object.create(ViewV.prototype);
 
-   ViewV.each = VectorView.each = MatrixView.each = function each(v, f) {
-      var i;
-      for (i = 1; i <= v.length; i += 1) {
-         f(v.get(i), i);
-      }
-      return Vector;
-   };
    ViewV.prototype.get = function get(i) {
       if ( i < 1 || i > this.length) { return 0; }
       return this.compute(i);
+   };
+
+   ViewV.prototype.each = function each(f) {
+      var i;
+      for (i = 1; i <= this.length; i += 1) {
+         f(this.get(i), i);
+      }
+      return Vector;
    };
 
    VectorView.prototype.compute = function compute(i) {

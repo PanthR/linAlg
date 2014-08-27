@@ -34,7 +34,6 @@ return function(Matrix) {
          }
          this.values = new Matrix.Vector(arr);
       }
-      this.constructor = DenseM;
    }
 
    DenseM.prototype = Object.create(Matrix.prototype);

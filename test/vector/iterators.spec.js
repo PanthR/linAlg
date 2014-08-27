@@ -161,7 +161,7 @@ describe('Iterations over vectors via', function() {
       it('the resulting vector has the correct values', function() {
          var f = function(val1, val2, i) { return val1 - val2; }
          expect(v1.mapPair(v4, f).toArray()).to.deep.equal([4, -2, 1]);
-         expect(v1.mapPair(v4, f, true)).to.be.instanceof(Vector.SparseV);
+         expect(v1.mapPair(v4, f, true).isSparse()).to.be.ok;
          expect(v1.mapPair(v4, f, true).toArray()).to.deep.equal([0, -2, 0]);
          expect(v1.mapPair(v5, f).toArray()).to.deep.equal([3, -2, -8]);
       });

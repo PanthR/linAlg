@@ -8,7 +8,7 @@ return function(Matrix) {
 
    // Subclass of `Matrix` representing "Diag" matrices.
    function DiagM(arr, options) {
-      this.constructor = DiagM;
+
    }
 
    DiagM.prototype = Object.create(Matrix.prototype);

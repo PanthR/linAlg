@@ -66,168 +66,6 @@ define(function(require) {
    Vector.ConstV   = ConstV   = require('./vector/const')(Vector);
    Vector.ViewV    = ViewV    = require('./vector/view')(Vector);
 
-   // Vector dispatch class methods
-
-   /**
-    * Execute the function `f` for each entry from the vector `v`,
-    * starting with the entry with index 1. `f` will be called as `f(value, index)`.
-    * If `skipZeros` is `true`, then the system _may_ skip the execution
-    * of `f` for zero-entries.
-    *
-    *     // Prints: 3 1, 5 2, 1 3, 2 4
-    *     Vector.each(v1, console.log);
-    */
-   Vector.each = function each(v, f, skipZeros) {
-      v.force();
-      if (v.cached) { return DenseV.each(v, f); }
-      return v.constructor.each(v, f, skipZeros);
-   };
-
-   /**
-    * Execute the function `f` for each pair of corresponding entries from the
-    * vectors `v1` and `v2`, starting with the entries with index 1.
-    * `f` will be called as `f(value1, value2, index)`, where `value1`, `value2`
-    * are the entries of the vectors `v1`, `v2` at index `i`.
-    * If `skipZeros` is `true`, then the system _may_ skip the execution of `f` when
-    * one of the values is 0.
-    *
-    *     // Prints 3 3 1, 5 5 2, 1 1 3, 2 2 4
-    *     Vector.eachPair(v1, v1, console.log);
-    */
-   Vector.eachPair = function eachPair(v1, v2, f, skipZeros) {
-      if (!sameLength(v1, v2)) {
-         throw new Error('Vector.eachPair: vectors should be same langth');
-      }
-      function swap(f) {
-         return function(b, a, i) { return f(a, b, i); };
-      }
-      if (isSparse(v1)) {
-         SparseV.eachPair(v1, v2, f, skipZeros);
-      } else if (isSparse(v2)) {
-         SparseV.eachPair(v2, v1, swap(f), skipZeros);
-      } else {
-         DenseV.eachPair(v1, v2, f);
-      }
-      return Vector;
-   };
-
-   /**
-    * Similar to `Array.prototype.reduce`. Given a function `f(acc, val, i)` and an
-    * `initial` value, it successively calls the function on the vector's entries,
-    * storing each result in the variable `acc`, then feeding that value back.
-    * If `skipZeros` is `true`, this operation _may_ skip any zero entries.
-    * `initial` and `acc` do not have to be numbers, but they do need to have the
-    * same type, and `f` should return that same type.
-    *
-    *     function add(acc, val) { return acc + val; };
-    *     // Equivalent to ((((4 + 3) + 5) + 1) + 2)
-    *     v1.reduce(add, 4);
-    */
-   Vector.reduce = function reduce(v, f, initial, skipZeros) {
-      initial = initial || 0;
-      v.each(function(val, i) {
-         initial = f(initial, val, i);
-      }, skipZeros);
-      return initial;
-   };
-
-   /* eslint-disable max-params */
-   /**
-    * Similar to `Vector.reduce` but acts on a pair of vectors `v1`, `v2`.
-    * The signature of the function `f` would be `f(acc, val1, val2, i)` where `acc`
-    * is the accumulated value, `i` is the index, and `val1`, `val2` are the `i`-indexed
-    * values from `v1`, `v2`. If `skipZeros` is `true`, the implementation _may_ avoid
-    * calling `f` for an index `i` if one of the values there is 0.
-    *
-    * The vectors `v1`, `v2` need to have the same length.
-    *
-    *     function f(acc, val1, val2) = { return acc + val1 * val2; };
-    *     // Computes the dot product of v1, v2.
-    *     a.reducePair(v1, v2, f, 0)
-    */
-   Vector.reducePair = function reducePair(v1, v2, f, initial, skipZeros) {
-      initial = initial || 0;
-      Vector.eachPair(v1, v2, function(val1, val2, i) {
-         initial = f(initial, val1, val2, i);
-      }, skipZeros);
-      return initial;
-   };
-   /* eslint-enable */
-
-   /** Alias for `Vector.reduce`. */
-   Vector.foldl = Vector.reduce;
-
-   /**
-    * Create a new vector by applying the function `f` to all elements of `v`.
-    * The function `f` has the signature `f(val, i)`.
-    * If `skipZeros` is `true`, the operation may assume that `f(0, i)=0` and
-    * may choose to skip those computations.
-    *
-    * `Vector.map` only returns a "promise" to compute the resulting vector.
-    * The implementation may choose to not actually compute values `f` until
-    * they are actually needed. Users should not rely on side-effects of `f`.
-    *
-    *     // Results in [4, 7, 4, 6];
-    *     Vector.map(v1, function(val, i) { return val + i; });
-    */
-   Vector.map = function map(v, f, skipZeros) {
-      if (skipZeros && isSparse(v)) { return SparseV.map(v, f); }
-      return new Vector(function(i) { return f(v.get(i), i); }, v.length);
-   };
-
-   /**
-    * Like `Vector.map`, but the function `f` acts on two vectors, with signature
-    * `f(val1, val2, i)`. If `skipZeros` is `true`, the implementation may
-    * assume that `f` will return 0 as long as one of the values is 0.
-    */
-   Vector.mapPair = function mapPair(v1, v2, f, skipZeros) {
-      if (!sameLength(v1, v2)) {
-         throw new Error('Vector.mapPair: vectors should be same langth');
-      }
-      if (skipZeros && (isSparse(v1) || isSparse(v2))) {
-         return SparseV.mapPair(v1, v2, f);
-      }
-      return new Vector(function(i) {
-         return f(v1.get(i), v2.get(i), i);
-      }, v1.length);
-   };
-
-   /**
-    * Compute the p-norm of the vector `v1`. `p` should be a positive
-    * number or `Infinity`. Defaults to the 2-norm.
-    *
-    *     Vector.norm(v1, 1)        // 1-norm (sum of absolute values)
-    *     Vector.norm(v1)           // 2 norm (usual formula)
-    *     Vector.norm(v1, Infinity) // Infinity (max) norm
-    */
-   Vector.norm = function norm(v, p) {
-      var res;
-      if (p == null) { p = 2; }
-      if (p === Infinity) {
-         return v.reduce(function(acc, val) {
-            return Math.max(acc, Math.abs(val));
-         }, 0, true);
-      }
-      res = v.reduce(function(acc, val) {
-         return acc + Math.pow(Math.abs(val), p);
-      }, 0, true);
-      return Math.pow(res, 1 / p);
-   };
-
-   /**
-    * Compute the dot product of two vectors `v1`, `v2`.
-    *
-    *     // Returns 3 * 3 + 5 * 5 + 1 * 1 + 2 * 2
-    *     Vector.dot(v1, v1);
-    *     // Prototype version:
-    *     v1.dot(v1);
-    */
-   Vector.dot = function dot(v1, v2) {
-      return Vector.reducePair(v1, v2, function(acc, val1, val2) {
-         return acc + val1 * val2;
-      }, 0, true);
-   };
-
    /**
     * Create a vector that follows a linear progression starting from `a` increasing
     * by `step` amount, and ending the moment `b` is exceeded.
@@ -266,124 +104,7 @@ define(function(require) {
       return new ConstV(1, len);
    };
 
-   // Pointwise vector operations
-
-   /** Pointwise add two vectors. */
-   Vector.pAdd = function pAdd(v1, v2) {
-      return Vector.mapPair(v1, v2, add, false);
-   };
-
-   /** Pointwise subtract two vectors. */
-   Vector.pSub = function pSub(v1, v2) {
-      return Vector.mapPair(v1, v2, sub, false);
-   };
-
-   /** Multiply the vector `v` by the constant `a`. */
-   Vector.sMult = function sMult(a, v) {
-      return Vector.map(v, function(val) { return a * val; }, true);
-   };
-
-   /** Pointwise multiply two vectors. */
-   Vector.pMult = function pMult(v1, v2) {
-      return Vector.mapPair(v1, v2, mult, true);
-   };
-
-   /** Pointwise divide two vectors. */
-   Vector.pDiv = function pDiv(v1, v2) {
-      return Vector.mapPair(v1, v2, divide, false);
-   };
-
-   /** Raise each entry in `v` to the `n`-th power. Return the resulting vector. */
-   Vector.pPow = function pPow(v, n) {
-      return Vector.map(v, function(val) { return Math.pow(val, n); }, n > 0);
-   };
-
-   // Other vector methods
-
-   /**
-    * Compute consecutive differences of the values in the vector.
-    *
-    *     // Both produce: [2, -4, 1]
-    *     Vector.diff(v1);
-    *     v1.diff();
-    *     v1.diff().length === v1.length - 1 // true
-    */
-   Vector.diff = function diff(v) {
-      return new Vector(function(i) {
-         return v.get(i + 1) - v.get(i);
-      }, v.length - 1);
-   };
-
-   /**
-    * Create a new vector by accumulating one by one the results
-    * `f(acc, val, i)` as `val` ranges over the values of the vector `v`,
-    * starting with the value `initial`. This is effectively a version of
-    * `Vector.reduce` where each intermediate step is stored.
-    *
-    *     function f(acc, val) { return acc + val * val; }
-    *     // Both produce [11, 36, 37, 41]
-    *     Vector.cumulative(v1, f, 2);
-    *     v1.cumulative(f, 2);
-    */
-   Vector.cumulative = function cumulative(v, f, initial) {
-      var arr = [];
-      v.reduce(function(acc, val, i) {
-         acc = f(acc, val, i);
-         arr.push(acc);
-         return acc;
-      }, initial || 0, false);
-      return new Vector(arr);
-   };
-
-   /**
-    * Create a new vector from the partial sums in `v`.
-    *
-    *     // Both produce [3, 8, 9, 11]
-    *     Vector.cumSum(v1);
-    *     v1.cumSum();
-    */
-   Vector.cumSum = function cumSum(v) {
-      return Vector.cumulative(v, add, 0);
-   };
-
-   /**
-    * Create a new vector from the partial products in `v`.
-    *
-    *     // Both produce [3, 15, 15, 30]
-    *     Vector.cumProd(v1);
-    *     v1.cumProd();
-    */
-   Vector.cumProd = function cumProd(v) {
-      return Vector.cumulative(v, mult, 1);
-   };
-
-   /**
-    * Create a new vector from the partial minimums in `v`.
-    *
-    *     // Both produce [3, 5, 1, 1]
-    *     Vector.cumMin(v1);
-    *     v1.cumMin();
-    */
-   Vector.cumMin = function cumMin(v) {
-      return Vector.cumulative(v, function(a, b) {
-         return Math.min(a, b);
-      }, Infinity);
-   };
-
-   /**
-    * Create a new vector from the partial maximums in `v`.
-    *
-    *     // Both produce [3, 5, 5, 5]
-    *     Vector.cumMax(v1);
-    *     v1.cumMax();
-    */
-   Vector.cumMax = function cumMax(v) {
-      return Vector.cumulative(v, function(a, b) {
-         return Math.max(a, b);
-      }, -Infinity);
-   };
-
-   // Vector.prototype methods
+  // Vector.prototype methods
 
    /**
     * Get the entry at index `i` of the vector. Vector indexing begins from 1.
@@ -432,56 +153,162 @@ define(function(require) {
     * @private
     */
    Vector.prototype.compute = function compute(i) {
-
       throw new Error('Subclasses of Vector need to implement compute: ' +
          this.constructor.name);
    };
 
-   /** Delegates to `Vector.each`. Chainable. */
+   /**
+    * Execute the function `f` for each entry from `this`,
+    * starting with the entry with index 1. `f` will be called as `f(value, index)`.
+    * If `skipZeros` is `true`, then the system _may_ skip the execution
+    * of `f` for zero-entries.
+    *
+    *     // Prints: 3 1, 5 2, 1 3, 2 4
+    *     v.each(console.log);
+    */
    Vector.prototype.each = function each(f, skipZeros) {
-      Vector.each(this, f, skipZeros);
+      throw new Error('Subclasses of Vector need to implement each: ' +
+         this.constructor.name);
+   };
+
+   /**
+    * Execute the function `f` for each pair of corresponding entries from the
+    * vectors `v1` and `v2`, starting with the entries with index 1.
+    * `f` will be called as `f(value1, value2, index)`, where `value1`, `value2`
+    * are the entries of the vectors `v1`, `v2` at index `i`.
+    * If `skipZeros` is `true`, then the system _may_ skip the execution of `f` when
+    * one of the values is 0.
+    *
+    *     // Prints 3 3 1, 5 5 2, 1 1 3, 2 2 4
+    *     v1.eachPair(v1, console.log);
+    */
+   Vector.prototype.eachPair = function eachPair(v2, f, skipZeros) {
+      if (!this.sameLength(v2)) {
+         throw new Error('Vector#eachPair: vectors should be same langth');
+      }
+      if (v2.isSparse()) {
+         v2.eachPair(this, swap(f), skipZeros); return this;
+      }
+      this.each(function(val, i) {
+         f(val, v2.get(i), i);
+      });
       return this;
    };
 
-   /** Delegates to `Vector.eachPair`. Chainable. */
-   Vector.prototype.eachPair = function eachPair(v, f, skipZeros) {
-      Vector.eachPair(this, v, f, skipZeros);
-      return this;
-   };
-
-   /** Delegates to `Vector.reduce`. */
+   /**
+    * Similar to `Array.prototype.reduce`. Given a function `f(acc, val, i)` and an
+    * `initial` value, it successively calls the function on the vector's entries,
+    * storing each result in the variable `acc`, then feeding that value back.
+    * If `skipZeros` is `true`, this operation _may_ skip any zero entries.
+    * `initial` and `acc` do not have to be numbers, but they do need to have the
+    * same type, and `f` should return that same type.
+    *
+    *     function add(acc, val) { return acc + val; };
+    *     // Equivalent to ((((4 + 3) + 5) + 1) + 2)
+    *     v1.reduce(add, 4);
+    */
    Vector.prototype.reduce = function reduce(f, initial, skipZeros) {
-      return Vector.reduce(this, f, initial, skipZeros);
+      initial = initial || 0;
+      this.each(function(val, i) {
+         initial = f(initial, val, i);
+      }, skipZeros);
+      return initial;
    };
 
-   /** Delegates to `Vector.reducePair`. */
-   Vector.prototype.reducePair = function reduce(v, f, initial, skipZeros) {
-      return Vector.reducePair(this, v, f, initial, skipZeros);
+   /**
+    * Similar to `Vector.reduce` but acts on a pair of vectors `v1`, `v2`.
+    * The signature of the function `f` would be `f(acc, val1, val2, i)` where `acc`
+    * is the accumulated value, `i` is the index, and `val1`, `val2` are the `i`-indexed
+    * values from `v1`, `v2`. If `skipZeros` is `true`, the implementation _may_ avoid
+    * calling `f` for an index `i` if one of the values there is 0.
+    *
+    * The vectors `v1`, `v2` need to have the same length.
+    *
+    *     function f(acc, val1, val2) = { return acc + val1 * val2; };
+    *     // Computes the dot product of v1, v2.
+    *     v1.reducePair(v2, f, 0)
+    */
+   Vector.prototype.reducePair = function reducePair(v2, f, initial, skipZeros) {
+      initial = initial || 0;
+      this.eachPair(v2, function(val1, val2, i) {
+         initial = f(initial, val1, val2, i);
+      }, skipZeros);
+      return initial;
    };
 
    /** Alias for `Vector.prototype.reduce`. */
    Vector.prototype.foldl = Vector.prototype.reduce;
 
-   /** Delegates to `Vector.map`. */
+   /**
+    * Create a new vector by applying the function `f` to all elements of `this`.
+    * The function `f` has the signature `f(val, i)`.
+    * If `skipZeros` is `true`, the operation may assume that `f(0, i)=0` and
+    * may choose to skip those computations.
+    *
+    * `Vector#map` only returns a "promise" to compute the resulting vector.
+    * The implementation may choose to not actually compute values `f` until
+    * they are actually needed. Users should not rely on side-effects of `f`.
+    *
+    *     // Results in [4, 7, 4, 6];
+    *     v.map(function(val, i) { return val + i; });
+    */
    Vector.prototype.map = function map(f, skipZeros) {
-      return Vector.map(this, f, skipZeros);
+      var f2 = function(i) { return f(this.get(i), i); }.bind(this);
+      return new Vector(f2, this.length);
    };
 
-   /** Delegates to `Vector.mapPair`. */
-   Vector.prototype.mapPair = function mapPair(v, f, skipZeros) {
-      return Vector.mapPair(this, v, f, skipZeros);
+
+   /**
+    * Like `Vector.map`, but the function `f` acts on two vectors, with signature
+    * `f(val1, val2, i)`. If `skipZeros` is `true`, the implementation may
+    * assume that `f` will return 0 as long as one of the values is 0.
+    */
+   Vector.prototype.mapPair = function mapPair(v2, f, skipZeros) {
+      if (!this.sameLength(v2)) {
+         throw new Error('Vector.mapPair: vectors should be same langth');
+      }
+      if (skipZeros && v2.isSparse()) {
+         return v2.mapPair(this, swap(f), skipZeros);
+      }
+      return new Vector(function(i) {
+         return f(this.get(i), v2.get(i), i);
+      }.bind(this), this.length);
    };
 
    // Vector operations
 
-   /** Delegates to `Vector.norm`. */
+   /**
+    * Compute the p-norm of the vector. `p` should be a positive
+    * number or `Infinity`. Defaults to the 2-norm.
+    *
+    *     v.norm(1)        // 1-norm (sum of absolute values)
+    *     v.norm()           // 2 norm (usual formula)
+    *     v.norm(Infinity) // Infinity (max) norm
+    */
    Vector.prototype.norm = function norm(p) {
-      return Vector.norm(this, p);
+      var res;
+      if (p == null) { p = 2; }
+      if (p === Infinity) {
+         return this.reduce(function(acc, val) {
+            return Math.max(acc, Math.abs(val));
+         }, 0, true);
+      }
+      res = this.reduce(function(acc, val) {
+         return acc + Math.pow(Math.abs(val), p);
+      }, 0, true);
+      return Math.pow(res, 1 / p);
    };
 
-   /** Delegates to `Vector.dot`. */
+   /**
+    * Compute the dot product of `this` with `v`.
+    *
+    *     // Returns 3 * 3 + 5 * 5 + 1 * 1 + 2 * 2
+    *     v1.dot(v1);
+    */
    Vector.prototype.dot = function dot(v) {
-      return Vector.dot(this, v);
+      return this.reducePair(v, function(acc, val1, val2) {
+         return acc + val1 * val2;
+      }, 0, true);
    };
 
    /**
@@ -496,76 +323,125 @@ define(function(require) {
 
    // Vector arithmetic operations.
 
-   /** Delegates to `Vector.pAdd`. */
+   /** Pointwise add two vectors. */
    Vector.prototype.pAdd = function pAdd(v) {
-      return Vector.pAdd(this, v);
+      return this.mapPair(v, add, false);
    };
 
-   /** Delegates to `Vector.pSub`. */
+   /** Pointwise subtract two vectors. */
    Vector.prototype.pSub = function pSub(v) {
-      return Vector.pSub(this, v);
+      return this.mapPair(v, sub, false);
    };
 
-   /** Delegates to `Vector.sMult`. */
+   /** Multiply the vector `v` by the constant `a`. */
    Vector.prototype.sMult = function sMult(a) {
-      return Vector.sMult(a, this);
+      return this.map(function(val) { return a * val; }, true);
    };
 
-   /** Delegates to `Vector.pMult`. */
+   /** Pointwise multiply two vectors. */
    Vector.prototype.pMult = function pMult(v) {
-      return Vector.pMult(this, v);
+      return this.mapPair(v, mult, true);
    };
 
-   /** Delegates to `Vector.pDiv`. */
+   /** Pointwise divide two vectors. */
    Vector.prototype.pDiv = function pDiv(v) {
-      return Vector.pDiv(this, v);
+      return this.mapPair(v, divide, false);
    };
 
-   /** Delegates to `Vector.pPow`. */
+   /** Raise each entry in `v` to the `n`-th power. Return the resulting vector. */
    Vector.prototype.pPow = function pPow(n) {
-      return Vector.pPow(this, n);
+      return this.map(function(val) { return Math.pow(val, n); }, n > 0);
    };
 
    // Other Vector prototype methods
 
-   /** Delegates to `Vector.diff`. */
+   /**
+    * Compute consecutive differences of the values in the vector.
+    *
+    *     // Both produce: [2, -4, 1]
+    *     Vector.diff(v1);
+    *     v1.diff();
+    *     v1.diff().length === v1.length - 1 // true
+    */
    Vector.prototype.diff = function diff() {
-      return Vector.diff(this);
+      return new Vector(function(i) {
+         return this.get(i + 1) - this.get(i);
+      }.bind(this), this.length - 1);
    };
 
-   /** Delegates to `Vector.cumulative`. */
+   /**
+    * Create a new vector by accumulating one by one the results
+    * `f(acc, val, i)` as `val` ranges over the values of the vector,
+    * starting with the value `initial`. This is effectively a version of
+    * `Vector.reduce` where each intermediate step is stored.
+    *
+    *     function f(acc, val) { return acc + val * val; }
+    *     v1.cumulative(f, 2);  // Produces [11, 36, 37, 41]
+    */
    Vector.prototype.cumulative = function cumulative(f, initial) {
-      return Vector.cumulative(this, f, initial);
+      var arr = [];
+      this.reduce(function(acc, val, i) {
+         acc = f(acc, val, i);
+         arr.push(acc);
+         return acc;
+      }, initial || 0, false);
+      return new Vector(arr);
    };
 
-   /** Delegates to `Vector.cumSum`. */
+   /**
+    * Create a new vector from the partial sums in the vector.
+    *
+    *     // Both produce [3, 8, 9, 11]
+    *     Vector.prototype.cumSum(v1);
+    *     v1.cumSum();
+    */
    Vector.prototype.cumSum = function cumSum() {
-      return Vector.cumSum(this);
+      return this.cumulative(add, 0);
    };
 
-   /** Delegates to `Vector.cumProd`. */
+   /**
+    * Create a new vector from the partial products in the vector.
+    *
+    *     v1.cumProd(); // Produces [3, 15, 15, 30]
+    */
    Vector.prototype.cumProd = function cumProd() {
-      return Vector.cumProd(this);
+      return this.cumulative(mult, 1);
    };
 
-   /** Delegates to `Vector.cumMin`. */
+   /**
+    * Create a new vector from the partial minimums in the vector.
+    *
+    *     v1.cumMin(); // Produces [3, 5, 1, 1]
+    */
    Vector.prototype.cumMin = function cumMin() {
-      return Vector.cumMin(this);
+      return this.cumulative(function(a, b) {
+         return Math.min(a, b);
+      }, Infinity);
    };
 
-   /** Delegates to `Vector.cumMax`. */
+   /**
+    * Create a new vector from the partial maximums in the vector.
+    *
+    *     v1.cumMax(); // Produces [3, 5, 5, 5]
+    */
    Vector.prototype.cumMax = function cumMax() {
-      return Vector.cumMax(this);
+      return this.cumulative(function(a, b) {
+         return Math.max(a, b);
+      }, -Infinity);
+   };
+
+   Vector.prototype.isSparse = function isSparse() {
+      return false;
+   };
+
+   Vector.prototype.sameLength = function sameLength(b) {
+      return this.length === b.length;
    };
 
    // Helper functions
 
-   function sameLength(a, b) {
-      return a.length === b.length;
-   }
-
-   function isSparse(a) {
-      return a.constructor === SparseV;
+   function swap(f) {
+      return function(b, a, i) { return f(a, b, i); };
    }
 
    // Arithmetic

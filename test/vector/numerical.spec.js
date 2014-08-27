@@ -34,7 +34,6 @@ describe('Numerical computations', function() {
       expect(v6.dot(v1)).to.equal(3);
    });
    it('pAdd', function() {
-      expect(Vector.pAdd).to.exist;
       expect(v1.pAdd(v1).toArray()).to.deep.equal([8, -4, 2]);
       expect(v1.pAdd(v4).toArray()).to.deep.equal([5, 0, 4]);
       expect(v4.pAdd(v1).toArray()).to.deep.equal([5, 0, 4]);
@@ -42,7 +41,6 @@ describe('Numerical computations', function() {
       expect(v5.pAdd(v1).toArray()).to.deep.equal([4 + 0, -2 + 1, 1 + 0]);
    });
    it('pSub', function() {
-      expect(Vector.pSub).to.exist;
       expect(v1.pSub(v1).toArray()).to.deep.equal([0, 0, 0]);
       expect(v1.pSub(v4).toArray()).to.deep.equal([4 - 1, -2 - 2, 1 - 3]);
       expect(v4.pSub(v1).toArray()).to.deep.equal([1 - 4, 2 + 2, 3 - 1]);
@@ -50,7 +48,6 @@ describe('Numerical computations', function() {
       expect(v5.pSub(v1).toArray()).to.deep.equal([0 - 4, 1 + 2, 0 - 1]);
    });
    it('pMult', function() {
-      expect(Vector.pMult).to.exist;
       expect(v1.pMult(v1).toArray()).to.deep.equal([4 * 4, -2 * -2, 1 * 1]);
       expect(v1.pMult(v4).toArray()).to.deep.equal([4 * 1, -2 * 2, 1 * 3]);
       expect(v4.pMult(v1).toArray()).to.deep.equal([1 * 4, 2 * -2, 3 * 1]);
@@ -58,7 +55,6 @@ describe('Numerical computations', function() {
       expect(v5.pMult(v1).toArray()).to.deep.equal([0 * 4, 1 * -2, 0 * 1]);
    });
    it('pDiv', function() {
-      expect(Vector.pDiv).to.exist;
       expect(v1.pDiv(v1).toArray()).to.deep.equal([4 / 4, -2 / -2, 1 / 1]);
       expect(v1.pDiv(v4).toArray()).to.deep.equal([4 / 1, -2 / 2, 1 / 3]);
       expect(v4.pDiv(v1).toArray()).to.deep.equal([1 / 4, 2 / -2, 3 / 1]);
@@ -66,13 +62,11 @@ describe('Numerical computations', function() {
       expect(v5.pDiv(v1).toArray()).to.deep.equal([0 / 4, 1 / -2, 0 / 1]);
    });
    it('sMult', function() {
-      expect(Vector.sMult).to.exist;
       expect(v1.sMult(3).toArray()).to.deep.equal([4 * 3, -2 * 3, 1 * 3]);
       expect(v4.sMult(3).toArray()).to.deep.equal([1 * 3,  2 * 3, 3 * 3]);
       expect(v5.sMult(3).toArray()).to.deep.equal([0 * 3,  1 * 3, 0 * 3]);
    });
    it('pPow', function() {
-      expect(Vector.pPow).to.exist;
       expect(v1.pPow(2).toArray()).to.deep.equal([4 * 4, -2 * -2, 1 * 1]);
       expect(v4.pPow(2).toArray()).to.deep.equal([1 * 1,  2 * 2, 3 * 3]);
       expect(v5.pPow(2)).to.be.instanceof(Vector.SparseV);
