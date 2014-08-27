@@ -1,5 +1,10 @@
 var Vector = require('../../linAlg/vector');
-var expect = require('chai').expect;
+var chai = require('chai');
+var expect = chai.expect;
+var sinon = require("sinon");
+var sinonChai = require("sinon-chai");
+chai.use(sinonChai);
+
 
 describe('Iterations over vectors via', function() {
    var v1 = new Vector([4, 2, 1]);
@@ -133,20 +138,19 @@ describe('Iterations over vectors via', function() {
          expect(function() { v3.mapPair(v4, function() {}); }).to.throw(Error);
       });
       it('provides the correct parameters', function() {
-         var a;
-         var f = function(val1, val2, i) { a.push([val1, val2, i]); };
-         a = []; v1.mapPair(v4, f).toArray();
-            expect(a).to.deep.equal([[4, 0, 1], [2, 4, 2], [1, 0, 3]]);
-         a = []; v1.mapPair(v4, f, true).toArray();
-            expect(a).to.deep.equal([[2, 4, 2]]);
-         a = []; v1.mapPair(v5, f).toArray();
-            expect(a).to.deep.equal([[4, 1, 1], [2, 4, 2], [1, 9, 3]]);
-         a = []; v4.mapPair(v1, f, false).toArray();
-            expect(a).to.deep.equal([[0, 4, 1], [4, 2, 2], [0, 1, 3]]);
-         a = []; v4.mapPair(v1, f, true).toArray();
-            expect(a).to.deep.equal([[4, 2, 2]]);
-         a = []; v5.mapPair(v1, f).toArray();
-            expect(a).to.deep.equal([[1, 4, 1], [4, 2, 2], [9, 1, 3]]);
+         var f;
+         f = sinon.spy(); v1.mapPair(v4, f).toArray();
+         expect(f.args).to.deep.equal([[4, 0, 1], [2, 4, 2], [1, 0, 3]]);
+         f = sinon.spy(); v1.mapPair(v4, f, true).toArray();
+         expect(f.args).to.deep.equal([[2, 4, 2]]);
+         f = sinon.spy(); v1.mapPair(v5, f).toArray();
+         expect(f.args).to.deep.equal([[4, 1, 1], [2, 4, 2], [1, 9, 3]]);
+         f = sinon.spy(); v4.mapPair(v1, f, false).toArray();
+         expect(f.args).to.deep.equal([[0, 4, 1], [4, 2, 2], [0, 1, 3]]);
+         f = sinon.spy(); v4.mapPair(v1, f, true).toArray();
+         expect(f.args).to.deep.equal([[4, 2, 2]]);
+         f = sinon.spy(); v5.mapPair(v1, f).toArray();
+         expect(f.args).to.deep.equal([[1, 4, 1], [4, 2, 2], [9, 1, 3]]);
       });
       it('returns a vector of the same length', function() {
          var f = function(val1, val2) { return val1 + val2; }
