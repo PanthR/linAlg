@@ -28,8 +28,10 @@
    "devDependencies": {
       "chai": "^1.9.1",
       "eslint": "^0.7.4",
-      "panthrdoc": "*",
       "mocha": "~1.21.3",
-      "mocha-jshint": "0.0.9"
+      "mocha-jshint": "0.0.9",
+      "panthrdoc": "*",
+      "sinon": "^1.10.3",
+      "sinon-chai": "^2.5.0"
    }
 }
