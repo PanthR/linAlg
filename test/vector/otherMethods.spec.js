@@ -24,13 +24,4 @@ describe('Other methods', function() {
       expect(v2.cumMax().toArray()).to.deep.equal([0, 4, 4, 4, 4, 4, 4, 4, 4, 4]);
       expect(v2.cumMin().toArray()).to.deep.equal([0, 0, 0, 0, 0, -2, -2, -2, -2, -2]);
    });
-   it('force', function() {
-      var v = new Vector(function(x) { return x*x; }, 4);
-      var TabularV = Vector.TabularV;
-      var DenseV   = Vector.DenseV;
-      expect(v).to.be.instanceof(TabularV);
-      expect(v.constructor).to.equal(TabularV);
-      expect(v.force().constructor).to.equal(DenseV);
-      expect(v.constructor).to.equal(DenseV);
-   });
 });
