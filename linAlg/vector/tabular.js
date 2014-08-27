@@ -31,10 +31,10 @@ return function(Vector) {
 
    TabularV.prototype.force = function force() {
       var i;
-      for (i = 1; i <= this.length; i += 1) {
-         this.get(i);
+      if (!this.cached) {
+         for (i = 1; i <= this.length; i += 1) { this.get(i); }
+         this.cached = true;
       }
-      this.cached = true;
       return this;
    };
 
