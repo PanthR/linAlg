@@ -6,7 +6,7 @@ define(function(require) {
     * @module Vector
     * @author Haris Skiadas <skiadas@hanover.edu>, Barb Wahl <wahl@hanover.edu>
     */
-   var DenseV, SparseV, TabularV, ConstV, ViewV;
+   var Vector;
 
    /**
     * `Vector` objects are Javascript representations of real-valued vectors.
@@ -31,40 +31,40 @@ define(function(require) {
     */
    function Vector(arr, len) {
       if (Array.isArray(arr)) {
-         return new DenseV(arr);
+         return new Vector.DenseV(arr);
       }
       if (typeof arr === 'function') {
-         return new TabularV(arr, len);
+         return new Vector.TabularV(arr, len);
       }
-      return new SparseV(arr, len);
+      return new Vector.SparseV(arr, len);
    }
 
    /** Subclass of `Vector` representing "dense" vectors.
     * Dense vectors are internally stored simply as Javascript Arrays
     * Users should not need to access this directly.
     */
-   Vector.DenseV   = DenseV   = require('./vector/dense')(Vector);
+   Vector.DenseV = require('./vector/dense')(Vector);
 
    /** Subclass of `Vector` representing "sparse" vectors.
     * Sparce vectors are stored as objects, whose keys represent the indices
     * that have non-zero values.
     * Users should not need to access this directly.
     */
-   Vector.SparseV  = SparseV  = require('./vector/sparse')(Vector);
+   Vector.SparseV = require('./vector/sparse')(Vector);
 
    /** Subclass of `Vector` representing vectors whose values are specified via
     * a function `f(i)` of the index.
     * The values of the vector are computed lazily, only when they are accessed.
     * Users should not need to access this directly.
     */
-   Vector.TabularV = TabularV = require('./vector/tabular')(Vector);
+   Vector.TabularV = require('./vector/tabular')(Vector);
     /** Subclass of `Vector` representing efficiently vectors all of whose
      * values are meant to be the same number.
      * Users should not need to access this directly.
      * Use `Vector.const` or `Vector.ones` instead.
      */
-   Vector.ConstV   = ConstV   = require('./vector/const')(Vector);
-   Vector.ViewV    = ViewV    = require('./vector/view')(Vector);
+   Vector.ConstV = require('./vector/const')(Vector);
+   Vector.ViewV = require('./vector/view')(Vector);
 
    /**
     * Create a vector that follows a linear progression starting from `a` increasing
@@ -91,7 +91,7 @@ define(function(require) {
     * Generates a constant vector of length `len`, with all entries having value `val`.
     */
    Vector.const = function constant(val, len) {
-      return new ConstV(val, len);
+      return new Vector.ConstV(val, len);
    };
 
    /**
@@ -101,7 +101,7 @@ define(function(require) {
     *     Vector.ones(v1.length).dot(v1)
     */
    Vector.ones = function ones(len) {
-      return new ConstV(1, len);
+      return new Vector.ConstV(1, len);
    };
 
   // Vector.prototype methods
