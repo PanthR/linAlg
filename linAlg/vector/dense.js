@@ -21,7 +21,7 @@ return function(Vector) {
    /* DenseV class methods */
 
    DenseV.each = function each(v, f) {
-      v.values.forEach(function(val, i) { f(val, i + 1); });
+      (v.values || []).forEach(function(val, i) { f(val, i + 1); });
       return Vector;
    };
 
