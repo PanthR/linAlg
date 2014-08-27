@@ -18,9 +18,9 @@ define(function(require) {
    LinAlg = {};
    
    /** Implementation of fixed-length vectors. */
-   LinAlg.Vector = require('./vector');
+   LinAlg.Vector = require('./linAlg/vector');
    /** Implementation of 2-dimensional matrices. */
-   LinAlg.Matrix = require('./matrix');
+   LinAlg.Matrix = require('./linAlg/matrix');
 
    return LinAlg;
 
