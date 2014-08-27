@@ -12,6 +12,7 @@ return function(Vector) {
    function ConstV(val, len) {
       this.val = val;
       this.length = len;
+      this.cached = false;
       this.constructor = ConstV;
    }
 

@@ -34,6 +34,7 @@ return function(Vector) {
          this.i = function(i) { return indices[i - 1]; };
          this.length = indices.length;
       }
+      this.cached = false;
       this.constructor = VectorView;
       return this;
    }
@@ -57,6 +58,7 @@ return function(Vector) {
       this.i = lookup(rowIndex);
       this.j = lookup(colIndex);
       this.length = rowIndex.length || colIndex.length || len || 0;
+      this.cached = false;
       this.constructor = MatrixView;
       return this;
    }

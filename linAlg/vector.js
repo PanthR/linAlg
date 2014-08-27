@@ -78,6 +78,8 @@ define(function(require) {
     *     Vector.each(v1, console.log);
     */
    Vector.each = function each(v, f, skipZeros) {
+      v.force();
+      if (v.cached) { return DenseV.each(v, f); }
       return v.constructor.each(v, f, skipZeros);
    };
 
@@ -396,7 +398,7 @@ define(function(require) {
    Vector.prototype.get = function get(i) {
       if ( i < 1 || i > this.length) { return 0; }
       if (!this.values) { this.values = []; }
-      if (this.values[i - 1] == null) {
+      if (!this.cached && this.values[i - 1] == null) {
          this.values[i - 1] = this.compute(i);
       }
       return this.values[i - 1];

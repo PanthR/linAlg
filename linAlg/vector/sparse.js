@@ -13,6 +13,7 @@ return function(Vector) {
    function SparseV(arr, len) {
       this._values = arr;
       this.length = len;
+      this.cached = false;
       this.constructor = SparseV;
    }
 

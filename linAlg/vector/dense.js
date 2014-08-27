@@ -12,6 +12,7 @@ return function(Vector) {
    function DenseV(arr) {
       this.values = arr;
       this.length = arr.length;
+      this.cached = true;
       this.constructor = DenseV;
    }
 

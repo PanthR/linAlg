@@ -13,6 +13,7 @@ return function(Vector) {
    function TabularV(f, len) {
       this.f = f;
       this.length = len;
+      this.cached = false;
       this.constructor = TabularV;
    }
 
@@ -34,7 +35,7 @@ return function(Vector) {
       for (i = 1; i <= this.length; i += 1) {
          this.get(i);
       }
-      this.constructor = Vector.DenseV;
+      this.cached = true;
       return this;
    };
 
