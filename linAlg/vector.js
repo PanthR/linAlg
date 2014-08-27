@@ -316,6 +316,7 @@ define(function(require) {
     * Array object every time.
     */
    Vector.prototype.toArray = function toArray() {
+      if (this.cached) { return this.values.slice(); }
       var arr = [];
       this.each(function(val) { arr.push(val); });
       return arr;
