@@ -28,6 +28,15 @@ define(function(require) {
    Matrix.TabularM = TabularM = require('./matrix/tabular')(Matrix);
    Matrix.DiagM    = DiagM    = require('./matrix/diag')(Matrix);
 
+   Matrix.prototype.get = function get(i, j) {
+      return this._get(i, j);
+   };
+   Matrix.prototype._get = function _get(i, j) {
+      var n;
+      if ( i < 1 || i > this.nrow) { return 0; }
+      if ( j < 1 || j > this.ncol) { return 0; }
+      return this.values.get(this.toIndex(i, j));
+   };
    /** 'this' is set to the matrix
     * Returns the vector index that would correspond to the i-th row and j-th column
     */

@@ -30,5 +30,15 @@ describe('Dense matrices', function() {
       expect(A1.get(2, 1)).to.equal(6);
       expect(A1.get(1, 2)).to.equal(7);
       expect(A1.get(2, 2)).to.equal(2);
+      expect(A2.get(1, 1)).to.equal(4);
+      expect(A2.get(2, 1)).to.equal(6);
+      expect(A2.get(1, 2)).to.equal(2);
+      expect(A2.get(3, 2)).to.equal(3);
+      expect(A3.get(2, 1)).to.equal(6);
+      expect(A3.get(1, 2)).to.equal(2);
+      expect(A3.get(3, 2)).to.equal(3);
+      expect(A4.get(1, 2)).to.equal(6);
+      expect(A4.get(2, 1)).to.equal(2);
+      expect(A4.get(2, 3)).to.equal(3);
    });
 })
