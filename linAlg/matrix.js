@@ -1,12 +1,10 @@
+/**
+ * Javascript implementation of Linear Algebra Matrices.
+ * @module Matrix
+ * @author Haris Skiadas <skiadas@hanover.edu>, Barb Wahl <wahl@hanover.edu>
+ */
 (function(define) {'use strict';
 define(function(require) {
-
-   /**
-    * Javascript implementation of Linear Algebra Matrices.
-    * @module Matrix
-    * @author Haris Skiadas <skiadas@hanover.edu>, Barb Wahl <wahl@hanover.edu>
-    */
-   var DenseM, SparseM, TabularM, DiagM;
 
    /** Options may be:
     * 1. A number of rows (assumes row-wise)
@@ -14,19 +12,19 @@ define(function(require) {
     */
    function Matrix(arr, options) {
       if (Array.isArray(arr)) {
-         return new DenseM(arr, options);
+         return new Matrix.DenseM(arr, options);
       }
       if (typeof arr === 'function') {
-         return new TabularM(arr, options);
+         return new Matrix.TabularM(arr, options);
       }
-      return new SparseM(arr, options);
+      return new Matrix.SparseM(arr, options);
    }
 
    Matrix.Vector   = require('./vector');
-   Matrix.DenseM   = DenseM   = require('./matrix/dense')(Matrix);
-   Matrix.SparseM  = SparseM  = require('./matrix/sparse')(Matrix);
-   Matrix.TabularM = TabularM = require('./matrix/tabular')(Matrix);
-   Matrix.DiagM    = DiagM    = require('./matrix/diag')(Matrix);
+   Matrix.DenseM   = require('./matrix/dense')(Matrix);
+   Matrix.SparseM  = require('./matrix/sparse')(Matrix);
+   Matrix.TabularM = require('./matrix/tabular')(Matrix);
+   Matrix.DiagM    = require('./matrix/diag')(Matrix);
 
    Matrix.prototype.get = function get(i, j) {
       return this._get(i, j);
