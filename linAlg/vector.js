@@ -99,7 +99,7 @@ define(function(require) {
     *     Vector.ones(v1.length).dot(v1)
     */
    Vector.ones = function ones(len) {
-      return new Vector.ConstV(1, len);
+      return Vector.const(1, len);
    };
 
    // Vector.prototype methods
