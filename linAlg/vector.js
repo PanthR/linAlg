@@ -1,13 +1,11 @@
+/**
+ * Javascript implementation of Linear Algebra Vectors.
+ * @module Vector
+ * @author Haris Skiadas <skiadas@hanover.edu>, Barb Wahl <wahl@hanover.edu>
+ */
+
 (function(define) {'use strict';
 define(function(require) {
-
-   /**
-    * Javascript implementation of Linear Algebra Vectors.
-    * @module Vector
-    * @author Haris Skiadas <skiadas@hanover.edu>, Barb Wahl <wahl@hanover.edu>
-    */
-   var Vector;
-
    /**
     * `Vector` objects are Javascript representations of real-valued vectors.
     * They are constructed in one of three ways depending on the type of the first parameter `arr`:
