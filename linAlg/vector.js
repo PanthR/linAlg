@@ -156,6 +156,13 @@ define(function(require) {
    };
 
    /**
+    * Return a view vector on the `arr` indices of this.
+    */
+   Vector.prototype.view = function view(arr) {
+      return new Vector.ViewV(this, arr);
+   };
+
+   /**
     * Execute the function `f` for each entry from `this`,
     * starting with the entry with index 1. `f` will be called as `f(value, index)`.
     * If `skipZeros` is `true`, then the system _may_ skip the execution
