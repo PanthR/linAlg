@@ -41,4 +41,11 @@ describe('Dense matrices', function() {
       expect(A4.get(2, 1)).to.equal(2);
       expect(A4.get(2, 3)).to.equal(3);
    });
+   it('return 0 for out-of-bounds indices', function() {
+      expect(A1.get(0, 1)).to.equal(0);
+      expect(A1.get(2, 0)).to.equal(0);
+      expect(A1.get(3, 1)).to.equal(0);
+      expect(A1.get(1, 4)).to.equal(0);
+      expect(A1.get(4, 1)).to.equal(0);
+   });
 })
