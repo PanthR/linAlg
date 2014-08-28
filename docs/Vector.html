@@ -39,49 +39,7 @@
         
         <a href="#Vector.const"><li><code>Vector.const</code></li></a>
         
-        <a href="#Vector.cumMax"><li><code>Vector.cumMax</code></li></a>
-        
-        <a href="#Vector.cumMin"><li><code>Vector.cumMin</code></li></a>
-        
-        <a href="#Vector.cumProd"><li><code>Vector.cumProd</code></li></a>
-        
-        <a href="#Vector.cumSum"><li><code>Vector.cumSum</code></li></a>
-        
-        <a href="#Vector.cumulative"><li><code>Vector.cumulative</code></li></a>
-        
-        <a href="#Vector.diff"><li><code>Vector.diff</code></li></a>
-        
-        <a href="#Vector.dot"><li><code>Vector.dot</code></li></a>
-        
-        <a href="#Vector.each"><li><code>Vector.each</code></li></a>
-        
-        <a href="#Vector.eachPair"><li><code>Vector.eachPair</code></li></a>
-        
-        <a href="#Vector.foldl"><li><code>Vector.foldl</code></li></a>
-        
-        <a href="#Vector.map"><li><code>Vector.map</code></li></a>
-        
-        <a href="#Vector.mapPair"><li><code>Vector.mapPair</code></li></a>
-        
-        <a href="#Vector.norm"><li><code>Vector.norm</code></li></a>
-        
         <a href="#Vector.ones"><li><code>Vector.ones</code></li></a>
-        
-        <a href="#Vector.pAdd"><li><code>Vector.pAdd</code></li></a>
-        
-        <a href="#Vector.pDiv"><li><code>Vector.pDiv</code></li></a>
-        
-        <a href="#Vector.pMult"><li><code>Vector.pMult</code></li></a>
-        
-        <a href="#Vector.pPow"><li><code>Vector.pPow</code></li></a>
-        
-        <a href="#Vector.pSub"><li><code>Vector.pSub</code></li></a>
-        
-        <a href="#Vector.reduce"><li><code>Vector.reduce</code></li></a>
-        
-        <a href="#Vector.reducePair"><li><code>Vector.reducePair</code></li></a>
-        
-        <a href="#Vector.sMult"><li><code>Vector.sMult</code></li></a>
         
         <a href="#Vector.seq"><li><code>Vector.seq</code></li></a>
         
@@ -201,97 +159,6 @@ Use <a href="#Vector.const"><code>Vector.const</code></a> or <a href="#Vector.on
       </div>
       
       <div>
-        <h4 id="Vector.each"><code>Vector.each(v, f, skipZeros)</code></h4>
-        <p>Execute the function <code>f</code> for each entry from the vector <code>v</code>,
-starting with the entry with index 1. <code>f</code> will be called as <code>f(value, index)</code>.
-If <code>skipZeros</code> is <code>true</code>, then the system <em>may</em> skip the execution
-of <code>f</code> for zero-entries.</p>
-<pre class="prettyprint source"><code>// Prints: 3 1, 5 2, 1 3, 2 4
-Vector.each(v1, console.log);</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Vector.eachPair"><code>Vector.eachPair(v1, v2, f, skipZeros)</code></h4>
-        <p>Execute the function <code>f</code> for each pair of corresponding entries from the
-vectors <code>v1</code> and <code>v2</code>, starting with the entries with index 1.
-<code>f</code> will be called as <code>f(value1, value2, index)</code>, where <code>value1</code>, <code>value2</code>
-are the entries of the vectors <code>v1</code>, <code>v2</code> at index <code>i</code>.
-If <code>skipZeros</code> is <code>true</code>, then the system <em>may</em> skip the execution of <code>f</code> when
-one of the values is 0.</p>
-<pre class="prettyprint source"><code>// Prints 3 3 1, 5 5 2, 1 1 3, 2 2 4
-Vector.eachPair(v1, v1, console.log);</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Vector.reduce"><code>Vector.reduce(v, f, initial, skipZeros)</code></h4>
-        <p>Similar to <code>Array.prototype.reduce</code>. Given a function <code>f(acc, val, i)</code> and an
-<code>initial</code> value, it successively calls the function on the vector's entries,
-storing each result in the variable <code>acc</code>, then feeding that value back.
-If <code>skipZeros</code> is <code>true</code>, this operation <em>may</em> skip any zero entries.
-<code>initial</code> and <code>acc</code> do not have to be numbers, but they do need to have the
-same type, and <code>f</code> should return that same type.</p>
-<pre class="prettyprint source"><code>function add(acc, val) { return acc + val; };
-// Equivalent to ((((4 + 3) + 5) + 1) + 2)
-v1.reduce(add, 4);</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Vector.reducePair"><code>Vector.reducePair(v1, v2, f, initial, skipZeros)</code></h4>
-        <p>Similar to <a href="#Vector.reduce"><code>Vector.reduce</code></a> but acts on a pair of vectors <code>v1</code>, <code>v2</code>.
-The signature of the function <code>f</code> would be <code>f(acc, val1, val2, i)</code> where <code>acc</code>
-is the accumulated value, <code>i</code> is the index, and <code>val1</code>, <code>val2</code> are the <code>i</code>-indexed
-values from <code>v1</code>, <code>v2</code>. If <code>skipZeros</code> is <code>true</code>, the implementation <em>may</em> avoid
-calling <code>f</code> for an index <code>i</code> if one of the values there is 0.</p>
-<p>The vectors <code>v1</code>, <code>v2</code> need to have the same length.</p>
-<pre class="prettyprint source"><code>function f(acc, val1, val2) = { return acc + val1 * val2; };
-// Computes the dot product of v1, v2.
-a.reducePair(v1, v2, f, 0)</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Vector.foldl"><code>Vector.foldl</code></h4>
-        <p>Alias for <a href="#Vector.reduce"><code>Vector.reduce</code></a>.</p>
-      </div>
-      
-      <div>
-        <h4 id="Vector.map"><code>Vector.map(v, f, skipZeros)</code></h4>
-        <p>Create a new vector by applying the function <code>f</code> to all elements of <code>v</code>.
-The function <code>f</code> has the signature <code>f(val, i)</code>.
-If <code>skipZeros</code> is <code>true</code>, the operation may assume that <code>f(0, i)=0</code> and
-may choose to skip those computations.</p>
-<p><a href="#Vector.map"><code>Vector.map</code></a> only returns a &quot;promise&quot; to compute the resulting vector.
-The implementation may choose to not actually compute values <code>f</code> until
-they are actually needed. Users should not rely on side-effects of <code>f</code>.</p>
-<pre class="prettyprint source"><code>// Results in [4, 7, 4, 6];
-Vector.map(v1, function(val, i) { return val + i; });</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Vector.mapPair"><code>Vector.mapPair(v1, v2, f, skipZeros)</code></h4>
-        <p>Like <a href="#Vector.map"><code>Vector.map</code></a>, but the function <code>f</code> acts on two vectors, with signature
-<code>f(val1, val2, i)</code>. If <code>skipZeros</code> is <code>true</code>, the implementation may
-assume that <code>f</code> will return 0 as long as one of the values is 0.</p>
-      </div>
-      
-      <div>
-        <h4 id="Vector.norm"><code>Vector.norm(v, p)</code></h4>
-        <p>Compute the p-norm of the vector <code>v1</code>. <code>p</code> should be a positive
-number or <code>Infinity</code>. Defaults to the 2-norm.</p>
-<pre class="prettyprint source"><code>Vector.norm(v1, 1)        // 1-norm (sum of absolute values)
-Vector.norm(v1)           // 2 norm (usual formula)
-Vector.norm(v1, Infinity) // Infinity (max) norm</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Vector.dot"><code>Vector.dot(v1, v2)</code></h4>
-        <p>Compute the dot product of two vectors <code>v1</code>, <code>v2</code>.</p>
-<pre class="prettyprint source"><code>// Returns 3 * 3 + 5 * 5 + 1 * 1 + 2 * 2
-Vector.dot(v1, v1);
-// Prototype version:
-v1.dot(v1);</code></pre>
-      </div>
-      
-      <div>
         <h4 id="Vector.seq"><code>Vector.seq(a, b, step)</code></h4>
         <p>Create a vector that follows a linear progression starting from <code>a</code> increasing
 by <code>step</code> amount, and ending the moment <code>b</code> is exceeded.</p>
@@ -312,89 +179,6 @@ Vector.seq(3)        // Produces [1, 2, 3]</code></pre>
         <p>Generates a constant vector of length <code>len</code>, with all entries having value 1.</p>
 <pre class="prettyprint source"><code>// Sums all elements of v1
 Vector.ones(v1.length).dot(v1)</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Vector.pAdd"><code>Vector.pAdd(v1, v2)</code></h4>
-        <p>Pointwise add two vectors.</p>
-      </div>
-      
-      <div>
-        <h4 id="Vector.pSub"><code>Vector.pSub(v1, v2)</code></h4>
-        <p>Pointwise subtract two vectors.</p>
-      </div>
-      
-      <div>
-        <h4 id="Vector.sMult"><code>Vector.sMult(a, v)</code></h4>
-        <p>Multiply the vector <code>v</code> by the constant <code>a</code>.</p>
-      </div>
-      
-      <div>
-        <h4 id="Vector.pMult"><code>Vector.pMult(v1, v2)</code></h4>
-        <p>Pointwise multiply two vectors.</p>
-      </div>
-      
-      <div>
-        <h4 id="Vector.pDiv"><code>Vector.pDiv(v1, v2)</code></h4>
-        <p>Pointwise divide two vectors.</p>
-      </div>
-      
-      <div>
-        <h4 id="Vector.pPow"><code>Vector.pPow(v, n)</code></h4>
-        <p>Raise each entry in <code>v</code> to the <code>n</code>-th power. Return the resulting vector.</p>
-      </div>
-      
-      <div>
-        <h4 id="Vector.diff"><code>Vector.diff(v)</code></h4>
-        <p>Compute consecutive differences of the values in the vector.</p>
-<pre class="prettyprint source"><code>// Both produce: [2, -4, 1]
-Vector.diff(v1);
-v1.diff();
-v1.diff().length === v1.length - 1 // true</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Vector.cumulative"><code>Vector.cumulative(v, f, initial)</code></h4>
-        <p>Create a new vector by accumulating one by one the results
-<code>f(acc, val, i)</code> as <code>val</code> ranges over the values of the vector <code>v</code>,
-starting with the value <code>initial</code>. This is effectively a version of
-<a href="#Vector.reduce"><code>Vector.reduce</code></a> where each intermediate step is stored.</p>
-<pre class="prettyprint source"><code>function f(acc, val) { return acc + val * val; }
-// Both produce [11, 36, 37, 41]
-Vector.cumulative(v1, f, 2);
-v1.cumulative(f, 2);</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Vector.cumSum"><code>Vector.cumSum(v)</code></h4>
-        <p>Create a new vector from the partial sums in <code>v</code>.</p>
-<pre class="prettyprint source"><code>// Both produce [3, 8, 9, 11]
-Vector.cumSum(v1);
-v1.cumSum();</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Vector.cumProd"><code>Vector.cumProd(v)</code></h4>
-        <p>Create a new vector from the partial products in <code>v</code>.</p>
-<pre class="prettyprint source"><code>// Both produce [3, 15, 15, 30]
-Vector.cumProd(v1);
-v1.cumProd();</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Vector.cumMin"><code>Vector.cumMin(v)</code></h4>
-        <p>Create a new vector from the partial minimums in <code>v</code>.</p>
-<pre class="prettyprint source"><code>// Both produce [3, 5, 1, 1]
-Vector.cumMin(v1);
-v1.cumMin();</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Vector.cumMax"><code>Vector.cumMax(v)</code></h4>
-        <p>Create a new vector from the partial maximums in <code>v</code>.</p>
-<pre class="prettyprint source"><code>// Both produce [3, 5, 5, 5]
-Vector.cumMax(v1);
-v1.cumMax();</code></pre>
       </div>
       
       <div>
@@ -423,29 +207,57 @@ needed for the computation of the vector's elements.</p>
       <div>
         <h4 id="Vector%25compute"><code>Vector#compute(i)</code></h4>
         <p>Compute the entry at index <code>i</code> of the vector. This method is used internally
-by <a href="#Vector%25get"><code>Vector#get</code></a> to obtain the correct value in cases where the vector values
-are stored <em>lazily</em>. Users should not call it directly.
+by <a href="#Vector%25get"><code>Vector.prototype.get</code></a> to obtain the correct value in cases where the vector
+values are stored <em>lazily</em>. Users should not call it directly.
 Use <a href="#Vector%25get"><code>Vector.prototype.get</code></a> instead.</p>
       </div>
       
       <div>
         <h4 id="Vector%25each"><code>Vector#each(f, skipZeros)</code></h4>
-        <p>Delegates to <a href="#Vector.each"><code>Vector.each</code></a>. Chainable.</p>
+        <p>Execute the function <code>f</code> for each entry from <code>this</code>,
+starting with the entry with index 1. <code>f</code> will be called as <code>f(value, index)</code>.
+If <code>skipZeros</code> is <code>true</code>, then the system <em>may</em> skip the execution
+of <code>f</code> for zero-entries.</p>
+<pre class="prettyprint source"><code>// Prints: 3 1, 5 2, 1 3, 2 4
+v.each(console.log);</code></pre>
       </div>
       
       <div>
-        <h4 id="Vector%25eachPair"><code>Vector#eachPair(v, f, skipZeros)</code></h4>
-        <p>Delegates to <a href="#Vector.eachPair"><code>Vector.eachPair</code></a>. Chainable.</p>
+        <h4 id="Vector%25eachPair"><code>Vector#eachPair(v2, f, skipZeros)</code></h4>
+        <p>Execute the function <code>f</code> for each pair of corresponding entries from the
+vectors <code>v1</code> and <code>v2</code>, starting with the entries with index 1.
+<code>f</code> will be called as <code>f(value1, value2, index)</code>, where <code>value1</code>, <code>value2</code>
+are the entries of the vectors <code>v1</code>, <code>v2</code> at index <code>i</code>.
+If <code>skipZeros</code> is <code>true</code>, then the system <em>may</em> skip the execution of <code>f</code> when
+one of the values is 0.</p>
+<pre class="prettyprint source"><code>// Prints 3 3 1, 5 5 2, 1 1 3, 2 2 4
+v1.eachPair(v1, console.log);</code></pre>
       </div>
       
       <div>
         <h4 id="Vector%25reduce"><code>Vector#reduce(f, initial, skipZeros)</code></h4>
-        <p>Delegates to <a href="#Vector.reduce"><code>Vector.reduce</code></a>.</p>
+        <p>Similar to <code>Array.prototype.reduce</code>. Given a function <code>f(acc, val, i)</code> and an
+<code>initial</code> value, it successively calls the function on the vector's entries,
+storing each result in the variable <code>acc</code>, then feeding that value back.
+If <code>skipZeros</code> is <code>true</code>, this operation <em>may</em> skip any zero entries.
+<code>initial</code> and <code>acc</code> do not have to be numbers, but they do need to have the
+same type, and <code>f</code> should return that same type.</p>
+<pre class="prettyprint source"><code>function add(acc, val) { return acc + val; };
+// Equivalent to ((((4 + 3) + 5) + 1) + 2)
+v1.reduce(add, 4);</code></pre>
       </div>
       
       <div>
-        <h4 id="Vector%25reducePair"><code>Vector#reducePair(v, f, initial, skipZeros)</code></h4>
-        <p>Delegates to <a href="#Vector.reducePair"><code>Vector.reducePair</code></a>.</p>
+        <h4 id="Vector%25reducePair"><code>Vector#reducePair(v2, f, initial, skipZeros)</code></h4>
+        <p>Similar to <a href="#Vector%25reduce"><code>Vector.prototype.reduce</code></a> but acts on a pair of vectors <code>v1</code>, <code>v2</code>.
+The signature of the function <code>f</code> would be <code>f(acc, val1, val2, i)</code> where <code>acc</code>
+is the accumulated value, <code>i</code> is the index, and <code>val1</code>, <code>val2</code> are the <code>i</code>-indexed
+values from <code>v1</code>, <code>v2</code>. If <code>skipZeros</code> is <code>true</code>, the implementation <em>may</em> avoid
+calling <code>f</code> for an index <code>i</code> if one of the values there is 0.</p>
+<p>The vectors <code>v1</code>, <code>v2</code> need to have the same length.</p>
+<pre class="prettyprint source"><code>function f(acc, val1, val2) = { return acc + val1 * val2; };
+// Computes the dot product of v1, v2.
+v1.reducePair(v2, f, 0)</code></pre>
       </div>
       
       <div>
@@ -455,22 +267,38 @@ Use <a href="#Vector%25get"><code>Vector.prototype.get</code></a> instead.</p>
       
       <div>
         <h4 id="Vector%25map"><code>Vector#map(f, skipZeros)</code></h4>
-        <p>Delegates to <a href="#Vector.map"><code>Vector.map</code></a>.</p>
+        <p>Create a new vector by applying the function <code>f</code> to all elements of <code>this</code>.
+The function <code>f</code> has the signature <code>f(val, i)</code>.
+If <code>skipZeros</code> is <code>true</code>, the operation may assume that <code>f(0, i)=0</code> and
+may choose to skip those computations.</p>
+<p><a href="#Vector%25map"><code>Vector#map</code></a> only returns a &quot;promise&quot; to compute the resulting vector.
+The implementation may choose to not actually compute values <code>f</code> until
+they are actually needed. Users should not rely on side-effects of <code>f</code>.</p>
+<pre class="prettyprint source"><code>// Results in [4, 7, 4, 6];
+v1.map(function(val, i) { return val + i; });</code></pre>
       </div>
       
       <div>
-        <h4 id="Vector%25mapPair"><code>Vector#mapPair(v, f, skipZeros)</code></h4>
-        <p>Delegates to <a href="#Vector.mapPair"><code>Vector.mapPair</code></a>.</p>
+        <h4 id="Vector%25mapPair"><code>Vector#mapPair(v2, f, skipZeros)</code></h4>
+        <p>Like <code>Vector.map</code>, but the function <code>f</code> acts on two vectors, with signature
+<code>f(val1, val2, i)</code>. If <code>skipZeros</code> is <code>true</code>, the implementation may
+assume that <code>f</code> will return 0 as long as one of the values is 0.</p>
       </div>
       
       <div>
         <h4 id="Vector%25norm"><code>Vector#norm(p)</code></h4>
-        <p>Delegates to <a href="#Vector.norm"><code>Vector.norm</code></a>.</p>
+        <p>Compute the p-norm of the vector. <code>p</code> should be a positive
+number or <code>Infinity</code>. Defaults to the 2-norm.</p>
+<pre class="prettyprint source"><code>v.norm(1)        // 1-norm (sum of absolute values)
+v.norm()           // 2 norm (usual formula)
+v.norm(Infinity) // Infinity (max) norm</code></pre>
       </div>
       
       <div>
         <h4 id="Vector%25dot"><code>Vector#dot(v)</code></h4>
-        <p>Delegates to <a href="#Vector.dot"><code>Vector.dot</code></a>.</p>
+        <p>Compute the dot product of <code>this</code> with <code>v</code>.</p>
+<pre class="prettyprint source"><code>// Returns 3 * 3 + 5 * 5 + 1 * 1 + 2 * 2
+v1.dot(v1);</code></pre>
       </div>
       
       <div>
@@ -481,62 +309,77 @@ Array object every time.</p>
       
       <div>
         <h4 id="Vector%25pAdd"><code>Vector#pAdd(v)</code></h4>
-        <p>Delegates to <a href="#Vector.pAdd"><code>Vector.pAdd</code></a>.</p>
+        <p>Pointwise add two vectors.</p>
       </div>
       
       <div>
         <h4 id="Vector%25pSub"><code>Vector#pSub(v)</code></h4>
-        <p>Delegates to <a href="#Vector.pSub"><code>Vector.pSub</code></a>.</p>
+        <p>Pointwise subtract two vectors.</p>
       </div>
       
       <div>
         <h4 id="Vector%25sMult"><code>Vector#sMult(a)</code></h4>
-        <p>Delegates to <a href="#Vector.sMult"><code>Vector.sMult</code></a>.</p>
+        <p>Multiply the vector <code>v</code> by the constant <code>a</code>.</p>
       </div>
       
       <div>
         <h4 id="Vector%25pMult"><code>Vector#pMult(v)</code></h4>
-        <p>Delegates to <a href="#Vector.pMult"><code>Vector.pMult</code></a>.</p>
+        <p>Pointwise multiply two vectors.</p>
       </div>
       
       <div>
         <h4 id="Vector%25pDiv"><code>Vector#pDiv(v)</code></h4>
-        <p>Delegates to <a href="#Vector.pDiv"><code>Vector.pDiv</code></a>.</p>
+        <p>Pointwise divide two vectors.</p>
       </div>
       
       <div>
         <h4 id="Vector%25pPow"><code>Vector#pPow(n)</code></h4>
-        <p>Delegates to <a href="#Vector.pPow"><code>Vector.pPow</code></a>.</p>
+        <p>Raise each entry in <code>v</code> to the <code>n</code>-th power. Return the resulting vector.</p>
       </div>
       
       <div>
         <h4 id="Vector%25diff"><code>Vector#diff()</code></h4>
-        <p>Delegates to <a href="#Vector.diff"><code>Vector.diff</code></a>.</p>
+        <p>Compute consecutive differences of the values in the vector.</p>
+<pre class="prettyprint source"><code>// Both produce: [2, -4, 1]
+Vector.diff(v1);
+v1.diff();
+v1.diff().length === v1.length - 1 // true</code></pre>
       </div>
       
       <div>
         <h4 id="Vector%25cumulative"><code>Vector#cumulative(f, initial)</code></h4>
-        <p>Delegates to <a href="#Vector.cumulative"><code>Vector.cumulative</code></a>.</p>
+        <p>Create a new vector by accumulating one by one the results
+<code>f(acc, val, i)</code> as <code>val</code> ranges over the values of the vector,
+starting with the value <code>initial</code>. This is effectively a version of
+<code>Vector.reduce</code> where each intermediate step is stored.</p>
+<pre class="prettyprint source"><code>function f(acc, val) { return acc + val * val; }
+v1.cumulative(f, 2);  // Produces [11, 36, 37, 41]</code></pre>
       </div>
       
       <div>
         <h4 id="Vector%25cumSum"><code>Vector#cumSum()</code></h4>
-        <p>Delegates to <a href="#Vector.cumSum"><code>Vector.cumSum</code></a>.</p>
+        <p>Create a new vector from the partial sums in the vector.</p>
+<pre class="prettyprint source"><code>// Both produce [3, 8, 9, 11]
+Vector.prototype.cumSum(v1);
+v1.cumSum();</code></pre>
       </div>
       
       <div>
         <h4 id="Vector%25cumProd"><code>Vector#cumProd()</code></h4>
-        <p>Delegates to <a href="#Vector.cumProd"><code>Vector.cumProd</code></a>.</p>
+        <p>Create a new vector from the partial products in the vector.</p>
+<pre class="prettyprint source"><code>v1.cumProd(); // Produces [3, 15, 15, 30]</code></pre>
       </div>
       
       <div>
         <h4 id="Vector%25cumMin"><code>Vector#cumMin()</code></h4>
-        <p>Delegates to <a href="#Vector.cumMin"><code>Vector.cumMin</code></a>.</p>
+        <p>Create a new vector from the partial minimums in the vector.</p>
+<pre class="prettyprint source"><code>v1.cumMin(); // Produces [3, 5, 1, 1]</code></pre>
       </div>
       
       <div>
         <h4 id="Vector%25cumMax"><code>Vector#cumMax()</code></h4>
-        <p>Delegates to <a href="#Vector.cumMax"><code>Vector.cumMax</code></a>.</p>
+        <p>Create a new vector from the partial maximums in the vector.</p>
+<pre class="prettyprint source"><code>v1.cumMax(); // Produces [3, 5, 5, 5]</code></pre>
       </div>
       
       <div>

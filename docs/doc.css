@@ -102,7 +102,6 @@ h1 code, h2 code {
    width: 80%;
 }
 #main div:hover {
-/*   background-color: #EEE;*/
    border-right: 3px solid #777;
 }
 #main div h4 {
@@ -111,13 +110,12 @@ h1 code, h2 code {
 #main div h4 ~ p {
    padding-left: 1em;
 }
-#main p code {
-   background-color: #DDD;
-   padding: 0.1em 0.2em;
-}
 #main p a code {
    background-color: #FFF;
-   color: #350001;
+   color: #780002;
+}
+#main p a code:hover {
+   border-bottom: 1px dotted #780002;
 }
 
 p {

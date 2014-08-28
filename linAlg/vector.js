@@ -104,7 +104,7 @@ define(function(require) {
       return new Vector.ConstV(1, len);
    };
 
-  // Vector.prototype methods
+   // Vector.prototype methods
 
    /**
     * Get the entry at index `i` of the vector. Vector indexing begins from 1.
@@ -147,8 +147,8 @@ define(function(require) {
 
    /**
     * Compute the entry at index `i` of the vector. This method is used internally
-    * by `Vector#get` to obtain the correct value in cases where the vector values
-    * are stored _lazily_. Users should not call it directly.
+    * by `Vector.prototype.get` to obtain the correct value in cases where the vector
+    * values are stored _lazily_. Users should not call it directly.
     * Use `Vector.prototype.get` instead.
     * @private
     */
@@ -216,7 +216,7 @@ define(function(require) {
    };
 
    /**
-    * Similar to `Vector.reduce` but acts on a pair of vectors `v1`, `v2`.
+    * Similar to `Vector.prototype.reduce` but acts on a pair of vectors `v1`, `v2`.
     * The signature of the function `f` would be `f(acc, val1, val2, i)` where `acc`
     * is the accumulated value, `i` is the index, and `val1`, `val2` are the `i`-indexed
     * values from `v1`, `v2`. If `skipZeros` is `true`, the implementation _may_ avoid
@@ -250,7 +250,7 @@ define(function(require) {
     * they are actually needed. Users should not rely on side-effects of `f`.
     *
     *     // Results in [4, 7, 4, 6];
-    *     v.map(function(val, i) { return val + i; });
+    *     v1.map(function(val, i) { return val + i; });
     */
    Vector.prototype.map = function map(f, skipZeros) {
       var f2 = function(i) { return f(this.get(i), i); }.bind(this);
