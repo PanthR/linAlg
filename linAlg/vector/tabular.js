@@ -32,7 +32,7 @@ return function(Vector) {
    TabularV.prototype.force = function force() {
       var i;
       if (!this.cached) {
-         for (i = 1; i <= this.length; i += 1) { this.get(i); }
+         for (i = 1; i <= this.length; i += 1) { this._get(i); }
          this.cached = true;
       }
       return this;

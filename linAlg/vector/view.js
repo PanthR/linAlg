@@ -65,7 +65,7 @@ return function(Vector) {
    VectorView.prototype = Object.create(ViewV.prototype);
    MatrixView.prototype = Object.create(ViewV.prototype);
 
-   ViewV.prototype.get = function get(i) {
+   ViewV.prototype._get = function _get(i) {
       if ( i < 1 || i > this.length) { return 0; }
       return this.compute(i);
    };
@@ -73,17 +73,17 @@ return function(Vector) {
    ViewV.prototype.each = function each(f) {
       var i;
       for (i = 1; i <= this.length; i += 1) {
-         f(this.get(i), i);
+         f(this._get(i), i);
       }
       return Vector;
    };
 
    VectorView.prototype.compute = function compute(i) {
-      return this.target.get(this.i(i));
+      return this.target._get(this.i(i));
    };
 
    MatrixView.prototype.compute = function compute(i) {
-      return this.target.get(this.i(i), this.j(i));
+      return this.target._get(this.i(i), this.j(i));
    };
 
    return ViewV;

@@ -19,7 +19,7 @@ return function(Vector) {
 
    /* ConstV.prototype methods */
 
-   ConstV.prototype.get = function get(i) {
+   ConstV.prototype._get = function _get(i) {
       if ( i < 1 || i > this.length) { return 0; }
       return this.val;
    };

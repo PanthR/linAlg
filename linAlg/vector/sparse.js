@@ -20,7 +20,7 @@ return function(Vector) {
 
    /* SparseV.prototype methods */
 
-   SparseV.prototype.get = function get(i) {
+   SparseV.prototype._get = function _get(i) {
       return this._values[i] || 0;
    };
 
@@ -40,7 +40,7 @@ return function(Vector) {
          });
       } else {
          for (i = 1; i <= this.length; i += 1) {
-            f(this.get(i), i);
+            f(this._get(i), i);
          }
       }
       return this;
@@ -54,11 +54,11 @@ return function(Vector) {
       vals = this._values;
       if (skipZeros) {
          Object.keys(vals).forEach(function(i) {
-            f(vals[i], v2.get(parseInt(i)), parseInt(i));
+            f(vals[i], v2._get(parseInt(i)), parseInt(i));
          });
       } else {
          for (i = 1; i <= this.length; i += 1) {
-            f(this.get(i), v2.get(i), i);
+            f(this._get(i), v2._get(i), i);
          }
       }
       return Vector;
@@ -80,7 +80,7 @@ return function(Vector) {
       var newValues = {};
       if (!skipZeros && !v2.isSparse()) {
          return new Vector(function(i) {
-            return f(this.get(i), v2.get(i), i);
+            return f(this._get(i), v2._get(i), i);
          }.bind(this), this.length);
       }
       this.eachPair(v2, function(val1, val2, i) {

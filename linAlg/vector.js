@@ -105,8 +105,17 @@ define(function(require) {
    // Vector.prototype methods
 
    /**
-    * Get the entry at index `i` of the vector. Vector indexing begins from 1.
-    * Users should always go through this method when accessing values of the vector.
+    * We can get...
+    *    value for a single index
+    *    values for an array of indices
+    *    entire array of values (when called with no args)
+    *
+    * Vector indexing begins at 1.
+    *
+    * Basic usage: Get the entry at index `i` of the vector.
+    *
+    * Users should always go through this method when accessing
+    * values of the vector unless they really know what they're doing.
     *
     *     v1.get(1) === 3;
     *     v1.get(2) === 5;
@@ -115,6 +124,13 @@ define(function(require) {
     *     v1.get(5) === 0;
     */
    Vector.prototype.get = function get(i) {
+      if (i == null) { return this.toArray(); }
+      if (!Array.isArray(i)) { return this._get(i); }
+      // else, i is an array
+      return this.view(i).toArray();
+   };
+
+   Vector.prototype._get = function _get(i) {
       if ( i < 1 || i > this.length) { return 0; }
       if (!this.values) { this.values = []; }
       if (!this.cached && this.values[i - 1] == null) {
@@ -145,9 +161,9 @@ define(function(require) {
 
    /**
     * Compute the entry at index `i` of the vector. This method is used internally
-    * by `Vector.prototype.get` to obtain the correct value in cases where the vector
+    * by `Vector.prototype._get` to obtain the correct value in cases where the vector
     * values are stored _lazily_. Users should not call it directly.
-    * Use `Vector.prototype.get` instead.
+    * Use `Vector.prototype._get` instead.
     * @private
     */
    Vector.prototype.compute = function compute(i) {
@@ -195,7 +211,7 @@ define(function(require) {
          v2.eachPair(this, swap(f), skipZeros); return this;
       }
       this.each(function(val, i) {
-         f(val, v2.get(i), i);
+         f(val, v2._get(i), i);
       });
       return this;
    };
@@ -258,7 +274,7 @@ define(function(require) {
     *     v1.map(function(val, i) { return val + i; });
     */
    Vector.prototype.map = function map(f, skipZeros) {
-      var f2 = function(i) { return f(this.get(i), i); }.bind(this);
+      var f2 = function(i) { return f(this._get(i), i); }.bind(this);
       return new Vector(f2, this.length);
    };
 
@@ -276,7 +292,7 @@ define(function(require) {
          return v2.mapPair(this, swap(f), skipZeros);
       }
       return new Vector(function(i) {
-         return f(this.get(i), v2.get(i), i);
+         return f(this._get(i), v2._get(i), i);
       }.bind(this), this.length);
    };
 
@@ -371,7 +387,7 @@ define(function(require) {
     */
    Vector.prototype.diff = function diff() {
       return new Vector(function(i) {
-         return this.get(i + 1) - this.get(i);
+         return this._get(i + 1) - this._get(i);
       }.bind(this), this.length - 1);
    };
 
