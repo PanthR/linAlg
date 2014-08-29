@@ -128,13 +128,14 @@ define(function(require) {
     * number of different forms:
     *
     * 1. With no argument present, an array of all vector values is returned.
-    * 2. If called with an integer `i`, the `i`-th entry from the vector is returned (indexing starts at 1).
+    * 2. If called with an integer `i`, the `i`-th entry from the vector is returned
+    * (indexing starts at 1).
     * 3. If called with an array of integers, an array of the correspondigly indexed entries is returned.
     *
     * Users should always go through this method when accessing
     * values of the vector unless they really know what they're doing.
-    * You may use `Vector.prototype._get` for slightly more efficient access, if you will always be accessing
-    * values via an integer.
+    * You may use `Vector.prototype._get` for slightly more efficient access, if you will always
+    * be accessing values via an integer.
     *
     *     v1.get() === [3, 5, 1, 2];
     *     v1.get([2, 3]) === [5, 1];

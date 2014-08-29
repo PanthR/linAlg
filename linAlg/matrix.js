@@ -10,26 +10,27 @@ define(function(require) {
     * The `Matrix` class is a representation of 2-dimensional algebraic matrices
     * with real entries. Their values are internally represented as `Vector`s.
     * Matrices contain the following properties:
-    * 
+    *
     * - A `values` property, containing a vector representing the values.
     * - `nrow` and `ncol` integer properties, representing the number of rows and columns respectively.
     * - A `byRow` boolean property, determining if the matrix's values are stored in the vector
-    * "1 row at a time" or "1 column at a time". This defaults to false for most matrices, meaning column-wise storage.
+    * "1 row at a time" or "1 column at a time". This defaults to false for most matrices, meaning
+    * column-wise storage.
     *
-    * New `Matrix` objects are created via the `Matrix` constructor, which accepts a number of options for its first
-    * argument, `arr`:
+    * New `Matrix` objects are created via the `Matrix` constructor, which accepts a number of options
+    * for its first argument, `arr`:
     *
     * 1. Called with another `Matrix`, returns a "copy/clone".
     * 2. Called with a single array of values, constructs a matrix based on these values. The dimensions
-    * and other properties of this array are determined by the second argument, which is an object `options`
-    * containg one or more of the keys `nrow`, `ncol`, `byRow`.
+    * and other properties of this array are determined by the second argument, which is an object
+    * `options` containg one or more of the keys `nrow`, `ncol`, `byRow`.
     * 3. Called with an array of arrays of values, it constructs a matrix with columns based on arrays.
     * The number of arrays (length of `arr`) becomes `ncol`. The arrays in `arr` are expected to have
     * the same length, and that becomes `nrow`. The options object is optional, but may contain a "byRow"
-    * entry, which if `true` indicates that the roles of `column` and `row` would be interchanged, i.e. the
-    * arrays in `arr` would become rows instead of columns.
-    * 4. Called with a function `f(i,j)`, it uses that function to determine the `Matrix`'s values. In that case
-    * an `options` second argument specifying `nrow` and `ncol` is needed.
+    * entry, which if `true` indicates that the roles of `column` and `row` would be interchanged, i.e.
+    * the arrays in `arr` would become rows instead of columns.
+    * 4. Called with a function `f(i,j)`, it uses that function to determine the `Matrix`'s values. In
+    * that case an `options` second argument specifying `nrow` and `ncol` is needed.
     *
     */
    function Matrix(arr, options) {
