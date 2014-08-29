@@ -151,7 +151,7 @@ define(function(require) {
       return this.view(i).toArray();
    };
 
-   /*
+   /**
     * Same as `Vector.prototype.get`, but only works with an integer argument.
     */
    Vector.prototype._get = function _get(i) {
@@ -163,6 +163,23 @@ define(function(require) {
       return this.values[i - 1];
    };
 
+   /**
+    * Set the entries of the vector that are specified by the parameter `i` to the value(s)
+    * specified by the parameter `vals`. Can only be used on a vector that is set to
+    * be mutable. The parameters can take various forms:
+    *
+    * 1. If `i` is a single numeric index, and `vals` is the value that should be placed
+    * at that index.
+    * 2. If `i` is an array of indices, or a vector holding indices, then `vals` needs to be
+    * an array or vector of equal length, with the values to be placed at the corresponding
+    * indices.
+    * 3. If the parameter `i` is omitted, i.e. `vals` is the first argument, then it needs to
+    * be an array or vector of equal length to `this`, and it will be used to set all the
+    * vector's values.
+    *
+    * You may use `Vector.prototype._set` if efficiency is an issue and you are certain that
+    * you are in the single-index case.
+    */
    Vector.prototype.set = function set(i, vals) {
       function makeChanges(target, vals) {
          if (!target.sameLength(vals)) { throw new Error('Incompatible vector lengths'); }
@@ -178,8 +195,8 @@ define(function(require) {
       return this;
    };
    /**
-    * Set the entry at index `i` of the vector. Users should avoid calling this method.
-    * TODO: FIX NOTES
+    * Set the entry at index `i` of the vector. Can only be used on a vector that is set to
+    * be mutable.
     */
    Vector.prototype._set = function _set(i, val) {
       if (!this.mutable()) { throw new Error('Trying to set in an immutable vector.'); }
@@ -228,7 +245,9 @@ define(function(require) {
    };
 
    /**
-    * Return a view vector on the `arr` indices.
+    * Return a view vector on the `arr` indices. View vectors reflect the values on their
+    * target, but allow one to access those locations via a different indexing.
+    * Changing the values of a view vector actually changes the values of their target.
     */
    Vector.prototype.view = function view(arr) {
       return new Vector.ViewV(this, arr);

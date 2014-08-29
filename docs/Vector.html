@@ -41,9 +41,15 @@
         
         <a href="#Vector.const"><li><code>Vector.const</code></li></a>
         
+        <a href="#Vector.fill"><li><code>Vector.fill</code></li></a>
+        
         <a href="#Vector.ones"><li><code>Vector.ones</code></li></a>
         
         <a href="#Vector.seq"><li><code>Vector.seq</code></li></a>
+        
+        <a href="#Vector%25_get"><li><code>Vector#_get</code></li></a>
+        
+        <a href="#Vector%25_set"><li><code>Vector#_set</code></li></a>
         
         <a href="#Vector%25compute"><li><code>Vector#compute</code></li></a>
         
@@ -65,6 +71,8 @@
         
         <a href="#Vector%25eachPair"><li><code>Vector#eachPair</code></li></a>
         
+        <a href="#Vector%25fill"><li><code>Vector#fill</code></li></a>
+        
         <a href="#Vector%25foldl"><li><code>Vector#foldl</code></li></a>
         
         <a href="#Vector%25force"><li><code>Vector#force</code></li></a>
@@ -74,6 +82,8 @@
         <a href="#Vector%25map"><li><code>Vector#map</code></li></a>
         
         <a href="#Vector%25mapPair"><li><code>Vector#mapPair</code></li></a>
+        
+        <a href="#Vector%25mutable"><li><code>Vector#mutable</code></li></a>
         
         <a href="#Vector%25norm"><li><code>Vector#norm</code></li></a>
         
@@ -182,13 +192,19 @@ Vector.seq(3)        // Produces [1, 2, 3]</code></pre>
       
       <div>
         <h4 id="Vector.const"><code>Vector.const(val, len)</code></h4>
-        <p>Generates a constant vector of length <code>len</code>, with all entries having value <code>val</code>.
+        <p>Generate a constant vector of length <code>len</code>, with all entries having value <code>val</code>.
 Constant vectors are immutable.</p>
       </div>
       
       <div>
+        <h4 id="Vector.fill"><code>Vector.fill(val, len)</code></h4>
+        <p>Generate a vector of length <code>len</code>, with all entries having value <code>val</code>.
+This vector can become mutable. Use this to set starting values for a vector.</p>
+      </div>
+      
+      <div>
         <h4 id="Vector.ones"><code>Vector.ones(len)</code></h4>
-        <p>Generates a constant vector of length <code>len</code>, with all entries having value 1.
+        <p>Generate a constant vector of length <code>len</code>, with all entries having value 1.
 Constant vectors are immutable.</p>
 <pre class="prettyprint source"><code>// Sums all elements of v1
 Vector.ones(v1.length).dot(v1)</code></pre>
@@ -205,7 +221,7 @@ number of different forms:</p>
 </ol>
 <p>Users should always go through this method when accessing
 values of the vector unless they really know what they're doing.
-You may use <code>Vector.prototype._get</code> for slightly more efficient access, if you will always be accessing
+You may use <a href="#Vector%25_get"><code>Vector.prototype._get</code></a> for slightly more efficient access, if you will always be accessing
 values via an integer.</p>
 <pre class="prettyprint source"><code>v1.get() === [3, 5, 1, 2];
 v1.get([2, 3]) === [5, 1];
@@ -217,9 +233,40 @@ v1.get(5) === 0;</code></pre>
       </div>
       
       <div>
-        <h4 id="Vector%25set"><code>Vector#set(i, v)</code></h4>
-        <p>Set the entry at index <code>i</code> of the vector. Users should avoid calling this method.
-TODO: This will be moved to the MutableV subclass</p>
+        <h4 id="Vector%25_get"><code>Vector#_get(i)</code></h4>
+        <p>Same as <a href="#Vector%25get"><code>Vector.prototype.get</code></a>, but only works with an integer argument.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25set"><code>Vector#set(i, vals)</code></h4>
+        <p>Set the entries of the vector that are specified by the parameter <code>i</code> to the value(s)
+specified by the parameter <code>vals</code>. Can only be used on a vector that is set to
+be mutable. The parameters can take various forms:</p>
+<ol>
+<li>If <code>i</code> is a single numeric index, and <code>vals</code> is the value that should be placed
+at that index.</li>
+<li>If <code>i</code> is an array of indices, or a vector holding indices, then <code>vals</code> needs to be
+an array or vector of equal length, with the values to be placed at the corresponding
+indices.</li>
+<li>If the parameter <code>i</code> is omitted, i.e. <code>vals</code> is the first argument, then it needs to
+be an array or vector of equal length to <code>this</code>, and it will be used to set all the
+vector's values.</li>
+</ol>
+<p>You may use <a href="#Vector%25_set"><code>Vector.prototype._set</code></a> if efficiency is an issue and you are certain that
+you are in the single-index case.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25_set"><code>Vector#_set(i, val)</code></h4>
+        <p>Set the entry at index <code>i</code> of the vector. Can only be used on a vector that is set to
+be mutable.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25mutable"><code>Vector#mutable(newSetting)</code></h4>
+        <p>Called with no arguments (or with undefined/null argument), return the mutable
+state of the vector.</p>
+<p>Called with a boolean argument <code>newSetting</code>, set the mutable state to that.</p>
       </div>
       
       <div>
@@ -231,14 +278,22 @@ needed for the computation of the vector's elements.</p>
       <div>
         <h4 id="Vector%25compute"><code>Vector#compute(i)</code></h4>
         <p>Compute the entry at index <code>i</code> of the vector. This method is used internally
-by <a href="#Vector%25get"><code>Vector.prototype.get</code></a> and <code>Vector.prototype._get</code> to obtain the correct
+by <a href="#Vector%25get"><code>Vector.prototype.get</code></a> and <a href="#Vector%25_get"><code>Vector.prototype._get</code></a> to obtain the correct
 value in cases where the vector values are stored <em>lazily</em>. Users should not
-call it directly. Use <a href="#Vector%25get"><code>Vector.prototype.get</code></a> or <code>Vector.prototype._get</code> instead.</p>
+call it directly. Use <a href="#Vector%25get"><code>Vector.prototype.get</code></a> or <a href="#Vector%25_get"><code>Vector.prototype._get</code></a> instead.</p>
       </div>
       
       <div>
         <h4 id="Vector%25view"><code>Vector#view(arr)</code></h4>
-        <p>Return a view vector on the <code>arr</code> indices.</p>
+        <p>Return a view vector on the <code>arr</code> indices. View vectors reflect the values on their
+target, but allow one to access those locations via a different indexing.
+Changing the values of a view vector actually changes the values of their target.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25fill"><code>Vector#fill(val, start, end)</code></h4>
+        <p>Fill in the segment of the vector's values from <code>start</code> to <code>end</code> with <code>val</code>.
+If <code>start</code> is an array or vector, use its values as the indices to fill.</p>
       </div>
       
       <div>
