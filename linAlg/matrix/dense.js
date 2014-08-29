@@ -9,30 +9,37 @@ return function(Matrix) {
    // Subclass of `Matrix` representing 'dense' matrices.
    function DenseM(arr, options) {
       if (arr.length === 0) { throw new Error('Cannot create empty matrix yet.'); }
-      // Storage defaults to 'by column'
-      this.byRow = options && options.byRow === true;
+      if (typeof options === 'boolean') { options = { byRow: options }; }
+      if (options == null) { options = {}; }
+      this.byRow = options.byRow === true;
       if (Array.isArray(arr[0])) {
-         if (this.byRow) {
-            this.nrow = arr.length;
-            this.ncol = arr[0].length;
-         } else {
-            this.nrow = arr[0].length;
-            this.ncol = arr.length;
-         }
-         this.values = new Matrix.Vector([].concat.apply([], arr));
-         // TODO: Should we do more validation here?
+         setFromDoubleArray(this, arr, options.byRow);
       } else {
-         if (options && options.nrow != null) {
-            this.nrow = options.nrow;
-            this.ncol = Math.floor(arr.length / this.nrow);
+         setFromSingleArray(this, arr, options);
+      }
+      console.log(this.ncol, this.nrow, this.values);
+      if (this.ncol * this.nrow !== this.values.length) {
+         throw new Error('Declared matrix dimensions invalid');
+      }
+      return this;
+
+      function setFromDoubleArray(obj, arr, byRow) {
+         obj.values = new Matrix.Vector([].concat.apply([], arr));
+         if (byRow) {
+            obj.nrow = arr.length; obj.ncol = arr[0].length;
          } else {
-            this.ncol = options.ncol;
-            this.nrow = Math.floor(arr.length / this.ncol);
+            obj.nrow = arr[0].length; obj.ncol = arr.length;
          }
-         if (this.ncol * this.nrow !== arr.length) {
-            throw new Error('Declared matrix dimensions invalid');
+      }
+      function setFromSingleArray(obj, arr, options) {
+         obj.values = new Matrix.Vector(arr);
+         if (options.nrow == null) {
+            obj.ncol = options.ncol;
+            obj.nrow = Math.floor(arr.length / options.ncol);
+         } else if (options.ncol == null) {
+            obj.nrow = options.nrow;
+            obj.ncol = Math.floor(arr.length / options.nrow);
          }
-         this.values = new Matrix.Vector(arr);
       }
    }
 
