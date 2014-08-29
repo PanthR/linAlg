@@ -21,20 +21,20 @@ describe('Vectors', function() {
       expect(function() { v4.set(1, 234); }).to.throw(Error);
       expect(function() { v5.set(1, 234); }).to.throw(Error);
    });
-   it('can be made immutable, unless constant', function() {
+   it('can be made mutable, unless constant', function() {
       expect(function() { v1.mutable(true); }).to.not.throw(Error);
       expect(function() { v2.mutable(true); }).to.not.throw(Error);
       expect(function() { v3.mutable(true); }).to.not.throw(Error);
       expect(function() { v4.mutable(true); }).to.not.throw(Error);
       expect(function() { v5.mutable(true); }).to.throw(Error);
    });
-   it('can have their values set while they are immutable', function() {
+   it('can have their values set while they are mutable', function() {
       v1.set(1, 234); expect(v1.get(1)).to.equal(234);
       v1.set(1, 235); expect(v1.get(1)).to.equal(235);
       v2.set(2, 234); expect(v2.get(2)).to.equal(234);
       v3.set(1, 234); expect(v3.get(1)).to.equal(234);
    });
-   it('affect the viewed vector if they are ViewVs', function() {
+   it('set() affects the viewed vector if they are ViewVs', function() {
       v4.set(1, 233);
       expect(v1.get(2)).to.equal(233);
       expect(v4.get(1)).to.equal(233);
