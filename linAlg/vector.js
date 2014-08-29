@@ -183,7 +183,7 @@ define(function(require) {
    Vector.prototype.set = function set(i, vals) {
       function makeChanges(target, vals) {
          if (!target.sameLength(vals)) { throw new Error('Incompatible vector lengths'); }
-         vals.forEach(function(val, i) { target._set(i, val); }.bind(target));
+         vals.forEach(function(val, i) { target._set(i, val); });
       }
       if (arguments.length === 1) {
          makeChanges(this, i);  // i is the values
