@@ -30,6 +30,24 @@ describe('Iterations over vectors via', function() {
          a = []; v3.each(f);       expect(a).to.deep.equal([1, 2, 3, 4]);
       });
    })
+   describe('forEach', function() {
+      it('provides the correct values', function() {
+         var a;
+         var f = function(v, i) { a.push(v); }
+         a = []; v1.forEach(f);        expect(a).to.deep.equal([4, 2, 1]);
+         a = []; v2.forEach(f, false); expect(a).to.deep.equal([0, 4, 0, 0, 1, 2, 0, 0, 0, 0]);
+         a = []; v2.forEach(f, true);  expect(a).to.deep.equal([4, 1, 2]);
+         a = []; v3.forEach(f);        expect(a).to.deep.equal([1, 4, 9, 16]);
+      });
+      it('provides the correct indices', function() {
+         var a;
+         var f = function(v, i) { a.push(i); }
+         a = []; v1.forEach(f);       expect(a).to.deep.equal([1, 2, 3]);
+         a = []; v2.forEach(f);       expect(a).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+         a = []; v2.forEach(f, true); expect(a).to.deep.equal([2, 5, 6]);
+         a = []; v3.forEach(f);       expect(a).to.deep.equal([1, 2, 3, 4]);
+      });
+   })
    describe('eachPair', function() {
       it('requires a pair of vectors of same length', function() {
          expect(function() { v1.eachPair(v2, function() {}); }).to.throw(Error);

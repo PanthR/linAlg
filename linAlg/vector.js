@@ -95,7 +95,7 @@ define(function(require) {
    };
 
    /**
-    * Generates a constant vector of length `len`, with all entries having value `val`.
+    * Generate a constant vector of length `len`, with all entries having value `val`.
     * Constant vectors are immutable.
     */
    Vector.const = function constant(val, len) {
@@ -103,7 +103,15 @@ define(function(require) {
    };
 
    /**
-    * Generates a constant vector of length `len`, with all entries having value 1.
+    * Generate a vector of length `len`, with all entries having value `val`.
+    * This vector can become mutable. Use this to set starting values for a vector.
+    */
+   Vector.fill = function fill(val, len) {
+      return new Vector(function() { return val; }, len);
+   };
+
+   /**
+    * Generate a constant vector of length `len`, with all entries having value 1.
     * Constant vectors are immutable.
     *
     *     // Sums all elements of v1
@@ -224,6 +232,27 @@ define(function(require) {
     */
    Vector.prototype.view = function view(arr) {
       return new Vector.ViewV(this, arr);
+   };
+
+   /**
+    * Fill in the segment of the vector's values from `start` to `end` with `val`.
+    * If `start` is an array or vector, use its values as the indices to fill.
+    */
+   Vector.prototype.fill = function fill(val, start, end) {
+      var currentMutable, i;
+      currentMutable = this.mutable();
+      this.mutable(true);
+      if (start && start.forEach != null) {
+         start.forEach(function(ind) { this._set(ind, val); }.bind(this));
+      } else {
+         if (end == null || end > this.length) { end = this.length; }
+         if (start == null || start < 1) { start = 1; }
+         for (i = start; i <= end; i += 1) {
+            this.change(i, val); // No need for the _set checks at this point
+         }
+      }
+      this.mutable(currentMutable);
+      return this;
    };
 
    /**

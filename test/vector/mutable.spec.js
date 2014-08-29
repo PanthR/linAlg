@@ -58,4 +58,14 @@ describe('Vectors', function() {
       expect(function() { v1.set(1, 233); }).to.throw(Error);
       expect(v1.get(1)).to.equal(235);
    });
+   it('can be filled, if not constant', function() {
+      expect(function() { v1.fill(10); }).to.not.throw(Error);
+      expect(function() { v5.fill(10); }).to.throw(Error);
+      expect(v1.fill(11, 3).get()).to.deep.equal([10, 10, 11, 11]);
+      expect(v1.fill(12, 0, 1).get()).to.deep.equal([12, 10, 11, 11]);
+      expect(v1.fill(13, 2, 3).get()).to.deep.equal([12, 13, 13, 11]);
+      expect(v1.fill(14, [1, 4]).get()).to.deep.equal([14, 13, 13, 14]);
+      expect(v1.fill(15, Vector([1, 4])).get()).to.deep.equal([15, 13, 13, 15]);
+      expect(Vector.fill(5, 4).fill(6, 2, 3).toArray()).to.deep.equal([5, 6, 6, 5]);
+   });
 });
