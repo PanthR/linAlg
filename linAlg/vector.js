@@ -155,16 +155,48 @@ define(function(require) {
       return this.values[i - 1];
    };
 
-   /**
-    * Set the entry at index `i` of the vector. Users should avoid calling this method.
-    * TODO: This will be moved to the MutableV subclass
-    */
-   Vector.prototype.set = function set(i, v) {
-      if ( i >= 1 && i <= this.length) {
-         if (!this.values) { this.values = []; }
-         this.values[i - 1] = v || 0;
+   Vector.prototype.set = function set(i, vals) {
+      function makeChanges(target, vals) {
+         if (!target.sameLength(vals)) { throw new Error('Incompatible vector lengths'); }
+         vals.forEach(function(val, i) { target._set(i, val); }.bind(target));
+      }
+      if (arguments.length === 1) {
+         makeChanges(this, i);  // i is the values
+      } else if (Array.isArray(i)) {
+         makeChanges(this.view(i), vals);
+      } else {
+         this._set(i, vals);
       }
       return this;
+   };
+   /**
+    * Set the entry at index `i` of the vector. Users should avoid calling this method.
+    * TODO: FIX NOTES
+    */
+   Vector.prototype._set = function _set(i, val) {
+      if (!this.mutable()) { throw new Error('Trying to set in an immutable vector.'); }
+      if (i < 1 || i > this.length) {
+         throw new Error('Trying to set value out of bounds');
+      }
+      this.change(i, val);
+      return this;
+   };
+
+   Vector.prototype.change = function change(i, val) {
+      throw new Error('Subclasses of Vector need to implement change: ' +
+         this.constructor.name);
+   };
+
+   /**
+    * Called with no arguments (or with undefined/null argument), return the mutable
+    * state of the vector.
+    *
+    * Called with a boolean argument `newSetting`, set the mutable state to that.
+    */
+   Vector.prototype.mutable = function mutable(newSetting) {
+      if (!this.hasOwnProperty('_mutable')) { this._mutable = false; }
+      if (newSetting != null) { this._mutable = newSetting === true; }
+      return this._mutable;
    };
 
    /**
@@ -208,6 +240,9 @@ define(function(require) {
          this.constructor.name);
    };
 
+   Vector.prototype.forEach = function(f, skipZeros) {
+      return this.each.apply(this, [].slice.call(arguments));
+   };
    /**
     * Execute the function `f` for each pair of corresponding entries from the
     * vector and `v2`, starting with the entries with index 1.

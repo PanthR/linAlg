@@ -24,6 +24,12 @@ return function(Vector) {
       return this.val;
    };
 
+   // Constant vectors are always immutable
+   ConstV.prototype.mutable = function mutable(newSetting) {
+      if (newSetting == null) { return false; }
+      throw new Error('Cannot set a constant to be mutable');
+   };
+
    ConstV.prototype.each = function each(f) {
       var i;
       for (i = 1; i <= this.length; i += 1) {

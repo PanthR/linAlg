@@ -22,14 +22,4 @@ describe('Tabular vectors', function() {
       expect(v1.get(11)).to.equal(0);
       expect(v1.get(6)).to.equal(36);
    });
-   it('have settable values within their range', function() {
-      var v1 = new Vector(f, 10);
-      expect(v1).to.respondTo('set');
-      v1.set(1, 5).set(2,12).set(11, 10).set(10, 10);
-      expect(v1.get(1)).to.equal(5);
-      expect(v1.get(2)).to.equal(12);
-      expect(v1.get(3)).to.equal(9);
-      expect(v1.get(10)).to.equal(10);
-      expect(v1.get(11)).to.equal(0);
-   });
 });

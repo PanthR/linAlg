@@ -20,6 +20,12 @@ return function(Vector) {
 
    /* DenseV.prototype methods */
 
+   DenseV.prototype.change = function change(i, val) {
+      if (!this.values) { this.values = []; }
+      this.values[i - 1] = val | 0;
+      return this;
+   };
+
    DenseV.prototype.each = function each(f) {
       this.force();
       (this.values || []).forEach(function(val, i) { f(val, i + 1); });

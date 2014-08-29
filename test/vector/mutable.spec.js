@@ -29,19 +29,33 @@ describe('Vectors', function() {
       expect(function() { v5.mutable(true); }).to.throw(Error);
    });
    it('can have their values set while they are mutable', function() {
-      v1.set(1, 234); expect(v1.get(1)).to.equal(234);
-      v1.set(1, 235); expect(v1.get(1)).to.equal(235);
-      v2.set(2, 234); expect(v2.get(2)).to.equal(234);
-      v3.set(1, 234); expect(v3.get(1)).to.equal(234);
+      expect(v1.set(1, 234).get(1)).to.equal(234);
+      expect(v1.set(1, 235).get(1)).to.equal(235);
+      expect(v2.set(2, 234).get(2)).to.equal(234);
+      expect(v3.set(1, 234).get(1)).to.equal(234);
    });
    it('set() affects the viewed vector if they are ViewVs', function() {
-      v4.set(1, 233);
-      expect(v1.get(2)).to.equal(233);
-      expect(v4.get(1)).to.equal(233);
+      expect(v4.set(1, 233).get(1)).to.equal(233);
+      expect(v1.get(3)).to.equal(233);
+      expect(v4.view([2]).set(1, 20).get(1)).to.equal(20);
+      expect(v1.get(4)).to.equal(20);
+      expect(v4.get(2)).to.equal(20);
+   });
+   it('cannot set values out of range', function() {
+      expect(function() { v1.set(5, 2); }).to.throw(Error);
+      expect(function() { v1.set(0, 2); }).to.throw(Error);
+      expect(function() { v2.set(5, 2); }).to.throw(Error);
+      expect(function() { v2.set(0, 2); }).to.throw(Error);
+      expect(function() { v3.set(5, 2); }).to.throw(Error);
+      expect(function() { v3.set(0, 2); }).to.throw(Error);
+      expect(function() { v4.set(3, 2); }).to.throw(Error);
+      expect(function() {
+         v1.view([5, 2]).mutable(true).set(1, 4);
+      }).to.throw(Error);
    });
    it('can be set back to being immutable', function() {
       expect(function() { v1.mutable(false); }).to.not.throw(Error);
-      expect(function() { v1.set(1, 233); }).to.not.throw(Error);
+      expect(function() { v1.set(1, 233); }).to.throw(Error);
       expect(v1.get(1)).to.equal(235);
    });
 });

@@ -21,13 +21,11 @@ return function(Vector) {
    /* SparseV.prototype methods */
 
    SparseV.prototype._get = function _get(i) {
-      return this._values[i] || 0;
+      return this._values[i] | 0;
    };
 
-   SparseV.prototype.set = function set(i, v) {
-      if ( i >= 1 && i <= this.length) {
-         this._values[i] = v || 0;
-      }
+   SparseV.prototype.change = function change(i, val) {
+      this._values[i] = val | 0;
       return this;
    };
 

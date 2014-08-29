@@ -70,6 +70,11 @@ return function(Vector) {
       return this.compute(i);
    };
 
+   // A ViewV's mutability is directly tied to its target's mutability.
+   ViewV.prototype.mutable = function mutable(newSetting) {
+      return this.target.mutable(newSetting);
+   };
+
    ViewV.prototype.each = function each(f) {
       var i;
       for (i = 1; i <= this.length; i += 1) {
@@ -82,8 +87,18 @@ return function(Vector) {
       return this.target._get(this.i(i));
    };
 
+   VectorView.prototype.change = function change(i, val) {
+      this.target._set(this.i(i), val);
+      return this;
+   };
+
    MatrixView.prototype.compute = function compute(i) {
       return this.target._get(this.i(i), this.j(i));
+   };
+
+   MatrixView.prototype.change = function change(i, val) {
+      this.target._set(this.i(i), this.j(i), val);
+      return this;
    };
 
    return ViewV;

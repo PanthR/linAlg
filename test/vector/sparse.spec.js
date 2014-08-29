@@ -23,12 +23,4 @@ describe('Sparse vectors', function() {
       expect(v1.get(15)).to.equal(6);
       expect(v1.get(104)).to.equal(0);
    });
-   it('have settable values within their range', function() {
-      var v1 = new Vector(dict, 1000);
-      expect(v1).to.respondTo('set');
-      v1.set(1, 5).set(2,12).set(1001, 10);
-      expect(v1.get(1)).to.equal(5);
-      expect(v1.get(2)).to.equal(12);
-      expect(v1.get(1001)).to.equal(0);
-   });
 })

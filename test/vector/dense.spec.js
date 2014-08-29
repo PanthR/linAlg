@@ -21,12 +21,4 @@ describe('Dense vectors', function() {
       expect(v1.get(3)).to.equal(7);
       expect(v1.get(10)).to.equal(0);
    });
-   it('have settable values within their range', function() {
-      var v1 = new Vector([4,6,7]);
-      expect(v1).to.respondTo('set');
-      v1.set(1, 5).set(3,12).set(4, 10);
-      expect(v1.get(1)).to.equal(5);
-      expect(v1.get(3)).to.equal(12);
-      expect(v1.get(4)).to.equal(0);
-   });
 })
