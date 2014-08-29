@@ -37,6 +37,8 @@
         
         <a href="#Vector.TabularV"><li><code>Vector.TabularV</code></li></a>
         
+        <a href="#Vector.ViewV"><li><code>Vector.ViewV</code></li></a>
+        
         <a href="#Vector.const"><li><code>Vector.const</code></li></a>
         
         <a href="#Vector.ones"><li><code>Vector.ones</code></li></a>
@@ -95,6 +97,8 @@
         
         <a href="#Vector%25toArray"><li><code>Vector#toArray</code></li></a>
         
+        <a href="#Vector%25view"><li><code>Vector#view</code></li></a>
+        
       </ul>
       </div>
     </div>
@@ -130,7 +134,7 @@ v3.length === 3  // true</code></pre>
       <div>
         <h4 id="Vector.DenseV"><code>Vector.DenseV</code></h4>
         <p>Subclass of <a href="#Vector"><code>Vector</code></a> representing &quot;dense&quot; vectors.
-Dense vectors are internally stored simply as Javascript Arrays
+Dense vectors are internally stored simply as Javascript Arrays.
 Users should not need to access this directly.</p>
       </div>
       
@@ -159,6 +163,13 @@ Use <a href="#Vector.const"><code>Vector.const</code></a> or <a href="#Vector.on
       </div>
       
       <div>
+        <h4 id="Vector.ViewV"><code>Vector.ViewV</code></h4>
+        <p>Subclass of <a href="#Vector"><code>Vector</code></a> representing vectors that provide a &quot;view&quot; into
+another object, e.g. the row or column of a <a href="#Matrix"><code>Matrix</code></a>. Changes to a view
+vector cause changes to the corresponding &quot;viewed&quot; object and vice versa.</p>
+      </div>
+      
+      <div>
         <h4 id="Vector.seq"><code>Vector.seq(a, b, step)</code></h4>
         <p>Create a vector that follows a linear progression starting from <code>a</code> increasing
 by <code>step</code> amount, and ending the moment <code>b</code> is exceeded.</p>
@@ -171,21 +182,34 @@ Vector.seq(3)        // Produces [1, 2, 3]</code></pre>
       
       <div>
         <h4 id="Vector.const"><code>Vector.const(val, len)</code></h4>
-        <p>Generates a constant vector of length <code>len</code>, with all entries having value <code>val</code>.</p>
+        <p>Generates a constant vector of length <code>len</code>, with all entries having value <code>val</code>.
+Constant vectors are immutable.</p>
       </div>
       
       <div>
         <h4 id="Vector.ones"><code>Vector.ones(len)</code></h4>
-        <p>Generates a constant vector of length <code>len</code>, with all entries having value 1.</p>
+        <p>Generates a constant vector of length <code>len</code>, with all entries having value 1.
+Constant vectors are immutable.</p>
 <pre class="prettyprint source"><code>// Sums all elements of v1
 Vector.ones(v1.length).dot(v1)</code></pre>
       </div>
       
       <div>
         <h4 id="Vector%25get"><code>Vector#get(i)</code></h4>
-        <p>Get the entry at index <code>i</code> of the vector. Vector indexing begins from 1.
-Users should always go through this method when accessing values of the vector.</p>
-<pre class="prettyprint source"><code>v1.get(1) === 3;
+        <p>Generic accessor method to obtain the values in the vector. The argument <code>i</code> can take a
+number of different forms:</p>
+<ol>
+<li>With no argument present, an array of all vector values is returned.</li>
+<li>If called with an integer <code>i</code>, the <code>i</code>-th entry from the vector is returned (indexing starts at 1).</li>
+<li>If called with an array of integers, an array of the correspondigly indexed entries is returned.</li>
+</ol>
+<p>Users should always go through this method when accessing
+values of the vector unless they really know what they're doing.
+You may use <code>Vector.prototype._get</code> for slightly more efficient access, if you will always be accessing
+values via an integer.</p>
+<pre class="prettyprint source"><code>v1.get() === [3, 5, 1, 2];
+v1.get([2, 3]) === [5, 1];
+v1.get(1) === 3;
 v1.get(2) === 5;
 // Out of range defaults to 0
 v1.get(0) === 0;
@@ -207,17 +231,22 @@ needed for the computation of the vector's elements.</p>
       <div>
         <h4 id="Vector%25compute"><code>Vector#compute(i)</code></h4>
         <p>Compute the entry at index <code>i</code> of the vector. This method is used internally
-by <a href="#Vector%25get"><code>Vector.prototype.get</code></a> to obtain the correct value in cases where the vector
-values are stored <em>lazily</em>. Users should not call it directly.
-Use <a href="#Vector%25get"><code>Vector.prototype.get</code></a> instead.</p>
+by <a href="#Vector%25get"><code>Vector.prototype.get</code></a> and <code>Vector.prototype._get</code> to obtain the correct
+value in cases where the vector values are stored <em>lazily</em>. Users should not
+call it directly. Use <a href="#Vector%25get"><code>Vector.prototype.get</code></a> or <code>Vector.prototype._get</code> instead.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25view"><code>Vector#view(arr)</code></h4>
+        <p>Return a view vector on the <code>arr</code> indices.</p>
       </div>
       
       <div>
         <h4 id="Vector%25each"><code>Vector#each(f, skipZeros)</code></h4>
-        <p>Execute the function <code>f</code> for each entry from <code>this</code>,
+        <p>Execute the function <code>f</code> for each entry of the vector,
 starting with the entry with index 1. <code>f</code> will be called as <code>f(value, index)</code>.
 If <code>skipZeros</code> is <code>true</code>, then the system <em>may</em> skip the execution
-of <code>f</code> for zero-entries.</p>
+of <code>f</code> for zero entries.</p>
 <pre class="prettyprint source"><code>// Prints: 3 1, 5 2, 1 3, 2 4
 v.each(console.log);</code></pre>
       </div>
@@ -225,9 +254,9 @@ v.each(console.log);</code></pre>
       <div>
         <h4 id="Vector%25eachPair"><code>Vector#eachPair(v2, f, skipZeros)</code></h4>
         <p>Execute the function <code>f</code> for each pair of corresponding entries from the
-vectors <code>v1</code> and <code>v2</code>, starting with the entries with index 1.
+vector and <code>v2</code>, starting with the entries with index 1.
 <code>f</code> will be called as <code>f(value1, value2, index)</code>, where <code>value1</code>, <code>value2</code>
-are the entries of the vectors <code>v1</code>, <code>v2</code> at index <code>i</code>.
+are the entries of the vectors <code>this</code>, <code>v2</code> at index <code>i</code>.
 If <code>skipZeros</code> is <code>true</code>, then the system <em>may</em> skip the execution of <code>f</code> when
 one of the values is 0.</p>
 <pre class="prettyprint source"><code>// Prints 3 3 1, 5 5 2, 1 1 3, 2 2 4
@@ -249,12 +278,12 @@ v1.reduce(add, 4);</code></pre>
       
       <div>
         <h4 id="Vector%25reducePair"><code>Vector#reducePair(v2, f, initial, skipZeros)</code></h4>
-        <p>Similar to <a href="#Vector%25reduce"><code>Vector.prototype.reduce</code></a> but acts on a pair of vectors <code>v1</code>, <code>v2</code>.
+        <p>Similar to <a href="#Vector%25reduce"><code>Vector.prototype.reduce</code></a> but acts on a pair of vectors <code>this</code>, <code>v2</code>.
 The signature of the function <code>f</code> would be <code>f(acc, val1, val2, i)</code> where <code>acc</code>
 is the accumulated value, <code>i</code> is the index, and <code>val1</code>, <code>val2</code> are the <code>i</code>-indexed
-values from <code>v1</code>, <code>v2</code>. If <code>skipZeros</code> is <code>true</code>, the implementation <em>may</em> avoid
+values from <code>this</code>, <code>v2</code>. If <code>skipZeros</code> is <code>true</code>, the implementation <em>may</em> avoid
 calling <code>f</code> for an index <code>i</code> if one of the values there is 0.</p>
-<p>The vectors <code>v1</code>, <code>v2</code> need to have the same length.</p>
+<p>The vectors <code>this</code>, <code>v2</code> need to have the same length.</p>
 <pre class="prettyprint source"><code>function f(acc, val1, val2) = { return acc + val1 * val2; };
 // Computes the dot product of v1, v2.
 v1.reducePair(v2, f, 0)</code></pre>

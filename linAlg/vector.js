@@ -37,31 +37,40 @@ define(function(require) {
       return new Vector.SparseV(arr, len);
    }
 
-   /** Subclass of `Vector` representing "dense" vectors.
-    * Dense vectors are internally stored simply as Javascript Arrays
+   /**
+    * Subclass of `Vector` representing "dense" vectors.
+    * Dense vectors are internally stored simply as Javascript Arrays.
     * Users should not need to access this directly.
     */
    Vector.DenseV = require('./vector/dense')(Vector);
 
-   /** Subclass of `Vector` representing "sparse" vectors.
+   /**
+    * Subclass of `Vector` representing "sparse" vectors.
     * Sparce vectors are stored as objects, whose keys represent the indices
     * that have non-zero values.
     * Users should not need to access this directly.
     */
    Vector.SparseV = require('./vector/sparse')(Vector);
 
-   /** Subclass of `Vector` representing vectors whose values are specified via
+   /**
+    * Subclass of `Vector` representing vectors whose values are specified via
     * a function `f(i)` of the index.
     * The values of the vector are computed lazily, only when they are accessed.
     * Users should not need to access this directly.
     */
    Vector.TabularV = require('./vector/tabular')(Vector);
-    /** Subclass of `Vector` representing efficiently vectors all of whose
+    /**
+     * Subclass of `Vector` representing efficiently vectors all of whose
      * values are meant to be the same number.
      * Users should not need to access this directly.
      * Use `Vector.const` or `Vector.ones` instead.
      */
    Vector.ConstV = require('./vector/const')(Vector);
+   /**
+    * Subclass of `Vector` representing vectors that provide a "view" into
+    * another object, e.g. the row or column of a `Matrix`. Changes to a view
+    * vector cause changes to the corresponding "viewed" object and vice versa.
+    */
    Vector.ViewV = require('./vector/view')(Vector);
 
    /**
@@ -87,6 +96,7 @@ define(function(require) {
 
    /**
     * Generates a constant vector of length `len`, with all entries having value `val`.
+    * Constant vectors are immutable.
     */
    Vector.const = function constant(val, len) {
       return new Vector.ConstV(val, len);
@@ -94,6 +104,7 @@ define(function(require) {
 
    /**
     * Generates a constant vector of length `len`, with all entries having value 1.
+    * Constant vectors are immutable.
     *
     *     // Sums all elements of v1
     *     Vector.ones(v1.length).dot(v1)
@@ -105,18 +116,20 @@ define(function(require) {
    // Vector.prototype methods
 
    /**
-    * We can get...
-    *    value for a single index
-    *    values for an array of indices
-    *    entire array of values (when called with no args)
+    * Generic accessor method to obtain the values in the vector. The argument `i` can take a
+    * number of different forms:
     *
-    * Vector indexing begins at 1.
-    *
-    * Basic usage: Get the entry at index `i` of the vector.
+    * 1. With no argument present, an array of all vector values is returned.
+    * 2. If called with an integer `i`, the `i`-th entry from the vector is returned (indexing starts at 1).
+    * 3. If called with an array of integers, an array of the correspondigly indexed entries is returned.
     *
     * Users should always go through this method when accessing
     * values of the vector unless they really know what they're doing.
+    * You may use `Vector.prototype._get` for slightly more efficient access, if you will always be accessing
+    * values via an integer.
     *
+    *     v1.get() === [3, 5, 1, 2];
+    *     v1.get([2, 3]) === [5, 1];
     *     v1.get(1) === 3;
     *     v1.get(2) === 5;
     *     // Out of range defaults to 0
@@ -130,6 +143,9 @@ define(function(require) {
       return this.view(i).toArray();
    };
 
+   /*
+    * Same as `Vector.prototype.get`, but only works with an integer argument.
+    */
    Vector.prototype._get = function _get(i) {
       if ( i < 1 || i > this.length) { return 0; }
       if (!this.values) { this.values = []; }
@@ -161,9 +177,9 @@ define(function(require) {
 
    /**
     * Compute the entry at index `i` of the vector. This method is used internally
-    * by `Vector.prototype._get` to obtain the correct value in cases where the vector
-    * values are stored _lazily_. Users should not call it directly.
-    * Use `Vector.prototype._get` instead.
+    * by `Vector.prototype.get` and `Vector.prototype._get` to obtain the correct
+    * value in cases where the vector values are stored _lazily_. Users should not
+    * call it directly. Use `Vector.prototype.get` or `Vector.prototype._get` instead.
     * @private
     */
    Vector.prototype.compute = function compute(i) {
@@ -172,17 +188,17 @@ define(function(require) {
    };
 
    /**
-    * Return a view vector on the `arr` indices of this.
+    * Return a view vector on the `arr` indices.
     */
    Vector.prototype.view = function view(arr) {
       return new Vector.ViewV(this, arr);
    };
 
    /**
-    * Execute the function `f` for each entry from `this`,
+    * Execute the function `f` for each entry of the vector,
     * starting with the entry with index 1. `f` will be called as `f(value, index)`.
     * If `skipZeros` is `true`, then the system _may_ skip the execution
-    * of `f` for zero-entries.
+    * of `f` for zero entries.
     *
     *     // Prints: 3 1, 5 2, 1 3, 2 4
     *     v.each(console.log);
@@ -194,9 +210,9 @@ define(function(require) {
 
    /**
     * Execute the function `f` for each pair of corresponding entries from the
-    * vectors `v1` and `v2`, starting with the entries with index 1.
+    * vector and `v2`, starting with the entries with index 1.
     * `f` will be called as `f(value1, value2, index)`, where `value1`, `value2`
-    * are the entries of the vectors `v1`, `v2` at index `i`.
+    * are the entries of the vectors `this`, `v2` at index `i`.
     * If `skipZeros` is `true`, then the system _may_ skip the execution of `f` when
     * one of the values is 0.
     *
@@ -237,13 +253,13 @@ define(function(require) {
    };
 
    /**
-    * Similar to `Vector.prototype.reduce` but acts on a pair of vectors `v1`, `v2`.
+    * Similar to `Vector.prototype.reduce` but acts on a pair of vectors `this`, `v2`.
     * The signature of the function `f` would be `f(acc, val1, val2, i)` where `acc`
     * is the accumulated value, `i` is the index, and `val1`, `val2` are the `i`-indexed
-    * values from `v1`, `v2`. If `skipZeros` is `true`, the implementation _may_ avoid
+    * values from `this`, `v2`. If `skipZeros` is `true`, the implementation _may_ avoid
     * calling `f` for an index `i` if one of the values there is 0.
     *
-    * The vectors `v1`, `v2` need to have the same length.
+    * The vectors `this`, `v2` need to have the same length.
     *
     *     function f(acc, val1, val2) = { return acc + val1 * val2; };
     *     // Computes the dot product of v1, v2.

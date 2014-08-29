@@ -29,6 +29,16 @@
         
         <a href="#Matrix"><li><code>Matrix</code></li></a>
         
+        <a href="#Matrix.DenseM"><li><code>Matrix.DenseM</code></li></a>
+        
+        <a href="#Matrix.DiagM"><li><code>Matrix.DiagM</code></li></a>
+        
+        <a href="#Matrix.SparseM"><li><code>Matrix.SparseM</code></li></a>
+        
+        <a href="#Matrix.TabularM"><li><code>Matrix.TabularM</code></li></a>
+        
+        <a href="#Matrix%25fromIndex"><li><code>Matrix#fromIndex</code></li></a>
+        
         <a href="#Matrix%25toIndex"><li><code>Matrix#toIndex</code></li></a>
         
       </ul>
@@ -43,17 +53,72 @@
       
       <div>
         <h4 id="Matrix"><code>Matrix(arr, options)</code></h4>
-        <p>Options may be:</p>
+        <p>The <a href="#Matrix"><code>Matrix</code></a> class is a representation of 2-dimensional algebraic matrices
+with real entries. Their values are internally represented as <a href="#Vector"><code>Vector</code></a>s.
+Matrices contain the following properties:</p>
+<ul>
+<li>A <code>values</code> property, containing a vector representing the values.</li>
+<li><code>nrow</code> and <code>ncol</code> integer properties, representing the number of rows and columns respectively.</li>
+<li>A <code>byRow</code> boolean property, determining if the matrix's values are stored in the vector
+&quot;1 row at a time&quot; or &quot;1 column at a time&quot;. This defaults to false for most matrices, meaning column-wise storage.</li>
+</ul>
+<p>New <a href="#Matrix"><code>Matrix</code></a> objects are created via the <a href="#Matrix"><code>Matrix</code></a> constructor, which accepts a number of options for its first
+argument, <code>arr</code>:</p>
 <ol>
-<li>A number of rows (assumes row-wise)</li>
-<li>An object with possible keys: nrow, ncol, byRow (boolean)</li>
+<li>Called with another <a href="#Matrix"><code>Matrix</code></a>, returns a &quot;copy/clone&quot;.</li>
+<li>Called with a single array of values, constructs a matrix based on these values. The dimensions
+and other properties of this array are determined by the second argument, which is an object <code>options</code>
+containg one or more of the keys <code>nrow</code>, <code>ncol</code>, <code>byRow</code>.</li>
+<li>Called with an array of arrays of values, it constructs a matrix with columns based on arrays.
+The number of arrays (length of <code>arr</code>) becomes <code>ncol</code>. The arrays in <code>arr</code> are expected to have
+the same length, and that becomes <code>nrow</code>. The options object is optional, but may contain a &quot;byRow&quot;
+entry, which if <code>true</code> indicates that the roles of <code>column</code> and <code>row</code> would be interchanged, i.e. the
+arrays in <code>arr</code> would become rows instead of columns.</li>
+<li>Called with a function <code>f(i,j)</code>, it uses that function to determine the <a href="#Matrix"><code>Matrix</code></a>'s values. In that case
+an <code>options</code> second argument specifying <code>nrow</code> and <code>ncol</code> is needed.</li>
 </ol>
       </div>
       
       <div>
+        <h4 id="Matrix.DenseM"><code>Matrix.DenseM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing &quot;dense&quot; matrices.
+Dense matrices are internally stored simply as Javascript Arrays.
+Users should not need to access this directly.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.SparseM"><code>Matrix.SparseM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing &quot;sparse&quot; matrices.
+Sparce matrices are stored as objects, whose keys represent the indices
+that have non-zero values.
+Users should not need to access this directly.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.TabularM"><code>Matrix.TabularM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing matrices whose values are specified via
+a function <code>f(i)</code> of the index.
+The values of the matrix are computed lazily, only when they are accessed.
+Users should not need to access this directly.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.DiagM"><code>Matrix.DiagM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing diagonal matrices.
+Users should not need to access this directly.</p>
+      </div>
+      
+      <div>
         <h4 id="Matrix%25toIndex"><code>Matrix#toIndex(i, j)</code></h4>
-        <p>'this' is set to the matrix
-Returns the vector index that would correspond to the i-th row and j-th column</p>
+        <p>Return the vector index that would correspond to the i-th row and j-th column.
+This is used to access the appropriate location in the vector that represents
+the matrix's values.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25fromIndex"><code>Matrix#fromIndex(n)</code></h4>
+        <p>Return the pair i, j corresponding to the vector index <code>n</code>. This is the inverse
+process to <a href="#Matrix%25toIndex"><code>Matrix.prototype.toIndex</code></a>.</p>
       </div>
       
     </div>
