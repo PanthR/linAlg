@@ -17,7 +17,7 @@ return function(Matrix) {
          if (arr.hasOwnProperty(i) && !isNaN(parseInt(i))) {
             for (j in arr[i]) {
                if (arr[i].hasOwnProperty(j) && !isNaN(parseInt(j))) {
-                  this.values[this.toIndex(parseInt(i), parseInt(j))] = arr[i][j];
+                  values[this.toIndex(parseInt(i), parseInt(j))] = arr[i][j];
                }
             }
          }
