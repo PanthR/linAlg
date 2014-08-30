@@ -17,7 +17,6 @@ return function(Matrix) {
       } else {
          setFromSingleArray(this, arr, options);
       }
-      console.log(this.ncol, this.nrow, this.values);
       if (this.ncol * this.nrow !== this.values.length) {
          throw new Error('Declared matrix dimensions invalid');
       }
