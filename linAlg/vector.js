@@ -187,10 +187,12 @@ define(function(require) {
    Vector.prototype.set = function set(i, vals) {
       function makeChanges(target, vals) {
          if (!target.sameLength(vals)) { throw new Error('Incompatible vector lengths'); }
-         vals.forEach(function(val, i) { target._set(i, val); });
+         new Vector(vals).forEach(function(val, i) { target._set(i, val); });
       }
       if (arguments.length === 1) {
          makeChanges(this, i);  // i is the values
+      } else if (i instanceof Vector) {
+         makeChanges(this.view(i.toArray()), vals);
       } else if (Array.isArray(i)) {
          makeChanges(this.view(i), vals);
       } else {

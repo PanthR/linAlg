@@ -56,9 +56,10 @@ describe('Vectors', function() {
       }).to.throw(Error);
    });
    it('can be set back to being immutable', function() {
+      var value = v1.get(1);
       expect(function() { v1.mutable(false); }).to.not.throw(Error);
       expect(function() { v1.set(1, 233); }).to.throw(Error);
-      expect(v1.get(1)).to.equal(235);
+      expect(v1.get(1)).to.equal(value);
    });
    it('can be filled, if not constant', function() {
       expect(function() { v1.fill(10); }).to.not.throw(Error);
