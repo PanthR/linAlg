@@ -265,6 +265,8 @@ define(function(require) {
     * Fill in the segment of the vector's values from `start` to `end` with `val`.
     * If `start` is an array or vector, use its values as the indices to fill.
     */
+
+   /* eslint-disable complexity */
    Vector.prototype.fill = function fill(val, start, end) {
       var currentMutable, i;
       currentMutable = this.mutable();
@@ -281,6 +283,7 @@ define(function(require) {
       this.mutable(currentMutable);
       return this;
    };
+   /* eslint-enable */
 
    /**
     * Execute the function `f` for each entry of the vector,

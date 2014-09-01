@@ -6,6 +6,7 @@ define(function(require) {
  */
 return function(Matrix) {
 
+   /* eslint-disable complexity */
    // Subclass of `Matrix` representing 'dense' matrices.
    function DenseM(arr, options) {
       if (arr.length === 0) { throw new Error('Cannot create empty matrix yet.'); }
@@ -27,6 +28,7 @@ return function(Matrix) {
       }
       return this;
    }
+   /* eslint-enable */
 
    DenseM.prototype = Object.create(Matrix.prototype);
 
