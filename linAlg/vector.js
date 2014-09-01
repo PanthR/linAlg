@@ -6,6 +6,10 @@
 
 (function(define) {'use strict';
 define(function(require) {
+
+   var op;
+
+   op = require('./utils').op;
    /**
     * `Vector` objects are Javascript representations of real-valued vectors.
     * They are constructed in one of three ways depending on the type of the first parameter `arr`:
@@ -466,12 +470,12 @@ define(function(require) {
 
    /** Pointwise add two vectors. */
    Vector.prototype.pAdd = function pAdd(v) {
-      return this.mapPair(v, add, false);
+      return this.mapPair(v, op.add, false);
    };
 
    /** Pointwise subtract two vectors. */
    Vector.prototype.pSub = function pSub(v) {
-      return this.mapPair(v, sub, false);
+      return this.mapPair(v, op.sub, false);
    };
 
    /** Multiply the vector `v` by the constant `a`. */
@@ -481,12 +485,12 @@ define(function(require) {
 
    /** Pointwise multiply two vectors. */
    Vector.prototype.pMult = function pMult(v) {
-      return this.mapPair(v, mult, true);
+      return this.mapPair(v, op.mult, true);
    };
 
    /** Pointwise divide two vectors. */
    Vector.prototype.pDiv = function pDiv(v) {
-      return this.mapPair(v, divide, false);
+      return this.mapPair(v, op.div, false);
    };
 
    /** Raise each entry in `v` to the `n`-th power. Return the resulting vector. */
@@ -537,7 +541,7 @@ define(function(require) {
     *     v1.cumSum();
     */
    Vector.prototype.cumSum = function cumSum() {
-      return this.cumulative(add, 0);
+      return this.cumulative(op.add, 0);
    };
 
    /**
@@ -546,7 +550,7 @@ define(function(require) {
     *     v1.cumProd(); // Produces [3, 15, 15, 30]
     */
    Vector.prototype.cumProd = function cumProd() {
-      return this.cumulative(mult, 1);
+      return this.cumulative(op.mult, 1);
    };
 
    /**
@@ -585,12 +589,6 @@ define(function(require) {
       return function(b, a, i) { return f(a, b, i); };
    }
 
-   // Arithmetic
-
-   function add(a, b) { return a + b; }
-   function sub(a, b) { return a - b; }
-   function mult(a, b) { return a * b; }
-   function divide(a, b) { return a / b; }
 
    return Vector;
 
