@@ -12,7 +12,7 @@ console.error = function () {//fmt, i, title, msg, stack
       }
       match = stack.match(regexp);
       if (match) {
-         stack = stack.split('\n').slice(3).join('\n') + '\n';
+         stack = stack.split('\n').slice(0, 3).join('\n') + '\n';
       }
       args[ 4 ] = stack;
    }
