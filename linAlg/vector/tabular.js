@@ -34,9 +34,14 @@ return function(Vector) {
       if (!this.cached) {
          for (i = 1; i <= this.length; i += 1) { this._get(i); }
          this.cached = true;
+         this.f = fmoot; // We do not need f any more.
       }
       return this;
    };
+
+   function fmoot() {
+      throw new Error('Should not call the function of a cached tabular object');
+   }
 
    return TabularV;
 };
