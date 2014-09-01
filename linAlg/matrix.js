@@ -106,10 +106,10 @@ define(function(require) {
     */
     Matrix.Vector.prototype.outer = function outer(v2, f) {
        var tabf;
-       f = (op[f] != null) ? op[f] : (f || op.mult);
+       f = op[f] != null ? op[f] : f || op.mult;
        tabf = function(i, j) { return f(this.get(i), v2.get(j), i, j); }.bind(this);
        return new Matrix(tabf, { nrow: this.length, ncol: v2.length });
-    }
+    };
 
    return Matrix;
 });
