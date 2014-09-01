@@ -87,6 +87,15 @@ return function(Vector) {
       return new Vector(newValues, this.length);
    };
 
+   SparseV.prototype.clone = function clone() {
+      var values = {};
+      var oldValues = this._values;
+      Object.keys(oldValues).forEach(function(k) {
+         values[k] = oldValues[k];
+      });
+      return new Vector(values, this.length);
+   };
+
    SparseV.prototype.isSparse = function isSparse() {
       return true;
    };

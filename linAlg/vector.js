@@ -450,6 +450,13 @@ define(function(require) {
       return arr;
    };
 
+   /**
+    * Return a clone of the vector.
+    */
+   Vector.prototype.clone = function clone() {
+      return new Vector(this.toArray());
+   };
+
    // Vector arithmetic operations.
 
    /** Pointwise add two vectors. */
