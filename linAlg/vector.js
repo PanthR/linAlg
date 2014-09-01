@@ -13,6 +13,8 @@ define(function(require) {
     * 2. Based on a key-value object representing the non-zero indices and their values (sparse vectors)
     * 3. Based on a function `f(n)` describing how the i-th index is meant to be computed.
     *
+    * When `arr` is a `Vector`, it is simply returned unchanged.
+    *
     * `Vector` objects are 1-indexed. By default, they are immutable structures, they cannot be edited
     * once created. See `Vector.MutableV` for a description of mutable vectors.
     *
@@ -28,6 +30,7 @@ define(function(require) {
     *     v3.length === 3  // true
     */
    function Vector(arr, len) {
+      if (arr instanceof Vector) { return arr; }
       if (Array.isArray(arr)) {
          return new Vector.DenseV(arr);
       }

@@ -30,3 +30,18 @@ describe('seq', function() {
       expect(Vector.seq().toArray().length).to.equal(0);
    });
 });
+
+describe('Vector being passed a Vector', function() {
+   it('returns the given Vector', function() {
+      var v1 = new Vector([4, 5, 2, 3]);
+      var v2 = new Vector({2:5, 3:2},4); // [0, 5, 2, 0]
+      var v3 = new Vector(function(i) { return i; }, 4);
+      var v4 = v1.view([4, 1, 2]); // [3, 4, 5]
+      expect(new Vector(v1)).to.equal(v1);
+      expect(new Vector(v2)).to.equal(v2);
+      expect(new Vector(v3)).to.equal(v3);
+      expect(new Vector(v4)).to.equal(v4);
+      expect(new Vector(v4)).to.not.equal(v1);
+
+   });
+});
