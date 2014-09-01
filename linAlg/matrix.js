@@ -93,9 +93,9 @@ define(function(require) {
     */
    Matrix.prototype.fromIndex = function fromIndex(n) {
       if (this.byRow) {
-         return { i: Math.floor((n + 1) / this.ncol), j: (n - 1) % this.ncol + 1 };
+         return { i: Math.floor((n - 1) / this.ncol) + 1, j: (n - 1) % this.ncol + 1 };
       }
-      return { i: (n - 1) % this.nrow + 1, j: Math.floor((n + 1) / this.nrow) };
+      return { i: (n - 1) % this.nrow + 1, j: Math.floor((n - 1) / this.nrow) + 1 };
    };
 
    return Matrix;
