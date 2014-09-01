@@ -72,7 +72,11 @@ return function(Vector) {
 
    // A ViewV's mutability is directly tied to its target's mutability.
    ViewV.prototype.mutable = function mutable(newSetting) {
-      return this.target.mutable(newSetting);
+      if (newSetting != null) {
+         this.target.mutable(newSetting);
+         return this;
+      }
+      return this.target.mutable();
    };
 
    ViewV.prototype.each = function each(f) {

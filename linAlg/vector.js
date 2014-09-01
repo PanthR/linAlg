@@ -220,11 +220,15 @@ define(function(require) {
     * Called with no arguments (or with undefined/null argument), return the mutable
     * state of the vector.
     *
-    * Called with a boolean argument `newSetting`, set the mutable state to that.
+    * Called with a boolean argument `newSetting`, set the mutable state to that
+    * and return the vector.
     */
    Vector.prototype.mutable = function mutable(newSetting) {
       if (!this.hasOwnProperty('_mutable')) { this._mutable = false; }
-      if (newSetting != null) { this._mutable = newSetting === true; }
+      if (newSetting != null) {
+         this._mutable = newSetting === true;
+         return this;
+      }
       return this._mutable;
    };
 
