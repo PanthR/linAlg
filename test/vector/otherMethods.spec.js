@@ -24,4 +24,14 @@ describe('Other methods', function() {
       expect(v2.cumMax().toArray()).to.deep.equal([0, 4, 4, 4, 4, 4, 4, 4, 4, 4]);
       expect(v2.cumMin().toArray()).to.deep.equal([0, 0, 0, 0, 0, -2, -2, -2, -2, -2]);
    });
+   it('equals', function() {
+      expect(v1.equals(v1)).to.be.ok;
+      expect(v2.equals(v2)).to.be.ok;
+      expect(v1.equals(v2)).to.not.be.ok;
+      expect(v1.equals(v3)).to.not.be.ok;
+      expect(v3.equals(v2)).to.not.be.ok;
+      var v4 = new Vector([4.0002, -2, 1]);
+      expect(v4.equals(v1)).to.not.be.ok;
+      expect(v4.equals(v1, 1e-3)).to.be.ok;
+   });
 });

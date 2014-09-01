@@ -7,9 +7,10 @@
 (function(define) {'use strict';
 define(function(require) {
 
-   var op;
+   var utils, op;
 
-   op = require('./utils').op;
+   utils = require('./utils');
+   op = utils.op;
    /**
     * `Vector` objects are Javascript representations of real-valued vectors.
     * They are constructed in one of three ways depending on the type of the first parameter `arr`:
@@ -43,6 +44,10 @@ define(function(require) {
       }
       return new Vector.SparseV(arr, len);
    }
+
+   /** The tolerance used in equality tests
+    */
+    Vector.tolerance = 1e-8;
 
    /**
     * Subclass of `Vector` representing "dense" vectors.
@@ -466,6 +471,17 @@ define(function(require) {
       return new Vector(this.toArray());
    };
 
+   /** Test if `this` pointwise equals `v2`, within a given pointwise tolerance. */
+   Vector.prototype.equals = function equals(v2, tolerance) {
+      var i;
+      tolerance = tolerance || Vector.tolerance;
+      if (!this.sameLength(v2)) { return false; }
+      for (i = 1; i <= this.length; i += 1) {
+         if (!utils.veryClose(this.get(i), v2.get(i), tolerance)) { return false; }
+      }
+      return true;
+   };
+
    // Vector arithmetic operations.
 
    /** Pointwise add two vectors. */
@@ -588,7 +604,6 @@ define(function(require) {
    function swap(f) {
       return function(b, a, i) { return f(a, b, i); };
    }
-
 
    return Vector;
 

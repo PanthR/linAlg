@@ -4,6 +4,11 @@ define(function(require) {
    // Arithmetic
    var utils = {};
 
+   // TODO: Is this the best way?
+   utils.veryClose = function veryClose(a, b, tol) {
+      return Math.abs(a - b) < tol;
+   };
+
    utils.op = {};
 
    utils.op.add = function add(a, b) { return a + b; };
