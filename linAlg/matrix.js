@@ -161,6 +161,24 @@ define(function(require) {
       return new Matrix.ViewM(this, rowIndex, colIndex, dims);
     };
 
+    Matrix.prototype.rowView = function rowView(i) {
+       if (i < 1 || i > this.nrow) {
+          throw new Error('Row index out of bounds');
+       }
+       return this.values.view(function(j) {
+          return this.toIndex(i, j);
+       }.bind(this), this.ncol);
+    };
+
+    Matrix.prototype.colView = function colView(j) {
+       if (j < 1 || j > this.ncol) {
+          throw new Error('Column index out of bounds');
+       }
+       return this.values.view(function(i) {
+          return this.toIndex(i, j);
+       }.bind(this), this.nrow);
+    };
+
     // A Matrix's mutability is directly tied to its value Vector's mutability.
     Matrix.prototype.mutable = function mutable(newSetting) {
        if (newSetting != null) {
