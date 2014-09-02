@@ -33,15 +33,16 @@ describe('Vectors', function() {
       expect(v1.set(1, 235).get(1)).to.equal(235);
       expect(v2.set(2, 234).get(2)).to.equal(234);
       expect(v3.set(1, 234).get(1)).to.equal(234);
-      expect(v1.set([1, 2], [23, 23]).get(1)).to.equal(23);
-      expect(v1.set(Vector([1, 2]), [24, 24]).get(1)).to.equal(24);
+      expect(v1.set(23).get(1)).to.equal(23);
+      expect(v1.set(function(i) { return i + 1; }).get(1)).to.equal(2);
    });
    it('set() affects the viewed vector if they are ViewVs', function() {
       expect(v4.set(1, 233).get(1)).to.equal(233);
       expect(v1.get(3)).to.equal(233);
       expect(v4.view([2]).set(1, 20).get(1)).to.equal(20);
-      expect(v1.get(4)).to.equal(20);
-      expect(v4.get(2)).to.equal(20);
+      expect(v4.view([1, 2]).set(new Vector([21, 22])).get(2)).to.equal(22);
+      expect(v1.get(4)).to.equal(22);
+      expect(v4.get(2)).to.equal(22);
    });
    it('cannot set values out of range', function() {
       expect(function() { v1.set(5, 2); }).to.throw(Error);

@@ -179,31 +179,44 @@ define(function(require) {
    /**
     * Set the entries of the vector that are specified by the parameter `i` to the value(s)
     * specified by the parameter `vals`. Can only be used on a vector that is set to
-    * be mutable. The parameters can take various forms:
+    * be mutable. The parameters can take two forms:
     *
     * 1. If `i` is a single numeric index, and `vals` is the value that should be placed
     * at that index.
-    * 2. If `i` is an array of indices, or a vector holding indices, then `vals` needs to be
-    * an array or vector of equal length, with the values to be placed at the corresponding
-    * indices.
-    * 3. If the parameter `i` is omitted, i.e. `vals` is the first argument, then it needs to
-    * be an array or vector of equal length to `this`, and it will be used to set all the
-    * vector's values.
+    * 2. If the parameter `i` is omitted, i.e. `vals` is the first argument, then it needs to
+    * be an array or vector of equal length to `this`, or a single number, or a function `f(i)`,
+    * and it will be used to set all the vector's values.
+    *
+    * In order to set more than one of a vector's values at the same time, create a
+    * `Vector.prototype.view` and use set on that.
     *
     * You may use `Vector.prototype._set` if efficiency is an issue and you are certain that
     * you are in the single-index case.
     */
    Vector.prototype.set = function set(i, vals) {
-      function makeChanges(target, vals) {
-         if (!target.sameLength(vals)) { throw new Error('Incompatible vector lengths'); }
-         new Vector(vals).forEach(function(val, i) { target._set(i, val); });
+      function changeAll(target, vals) {
+         var i;
+         // Ensure vals is a function returning the values
+         function makeLookup(vals) {
+            if (typeof vals === 'function') { return vals; }
+            if (Array.isArray(vals)) {
+               if (!target.sameLength(vals)) {
+                  throw new Error('Incompatible vector lengths');
+               }
+               return function(i) { return vals[i - 1]; };
+            }
+            if (vals instanceof Vector) {
+               return vals.get.bind(vals);
+            }
+            return function(i) { return vals; }; // constant
+         }
+         vals = makeLookup(vals);
+         for (i = 1; i <= target.length; i += 1) {
+            target._set(i, vals(i));
+         }
       }
       if (arguments.length === 1) {
-         makeChanges(this, i);  // i is the values
-      } else if (i instanceof Vector) {
-         makeChanges(this.view(i.toArray()), vals);
-      } else if (Array.isArray(i)) {
-         makeChanges(this.view(i), vals);
+         changeAll(this, i);  // i is the values
       } else {
          this._set(i, vals);
       }
