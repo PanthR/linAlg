@@ -278,9 +278,10 @@ define(function(require) {
     * Return a view vector on the `arr` indices. View vectors reflect the values on their
     * target, but allow one to access those locations via a different indexing.
     * Changing the values of a view vector actually changes the values of their target.
+    * TODO: Fix the comment: First arugment could be a function, in which case second argument needed.
     */
-   Vector.prototype.view = function view(arr) {
-      return new Vector.ViewV(this, arr);
+   Vector.prototype.view = function view(arr, len) {
+      return new Vector.ViewV(this, arr, len);
    };
 
    /**

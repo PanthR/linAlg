@@ -31,5 +31,7 @@ describe('View vectors', function() {
       expect(target).to.respondTo('view');
       var v3 = target.view([1, 4, 4]);
       expect(v3.toArray()).to.deep.equal([5, 2, 2]);
+      var v4 = target.view(function(i) { return i + 1; }, 3);
+      expect(v4.toArray()).to.deep.equal([4, 3, 2]);
    });
 });
