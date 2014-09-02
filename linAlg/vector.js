@@ -193,19 +193,17 @@ define(function(require) {
     * You may use `Vector.prototype._set` if efficiency is an issue and you are certain that
     * you are in the single-index case.
     */
-   Vector.prototype.set = function set(i, vals) {
+   Vector.prototype.set = function set(ind, vals) {
       function changeAll(target, vals) {
          var i;
          // Ensure vals is a function returning the values
          function makeLookup(vals) {
             if (typeof vals === 'function') { return vals; }
-            if (Array.isArray(vals)) {
+            if (Array.isArray(vals)) { vals = new Vector(vals); }
+            if (vals instanceof Vector) {
                if (!target.sameLength(vals)) {
                   throw new Error('Incompatible vector lengths');
                }
-               return function(i) { return vals[i - 1]; };
-            }
-            if (vals instanceof Vector) {
                return vals.get.bind(vals);
             }
             return function(i) { return vals; }; // constant
@@ -216,9 +214,9 @@ define(function(require) {
          }
       }
       if (arguments.length === 1) {
-         changeAll(this, i);  // i is the values
+         changeAll(this, ind);  // ind is the values
       } else {
-         this._set(i, vals);
+         this._set(ind, vals);
       }
       return this;
    };

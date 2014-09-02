@@ -35,6 +35,8 @@ describe('Vectors', function() {
       expect(v3.set(1, 234).get(1)).to.equal(234);
       expect(v1.set(23).get(1)).to.equal(23);
       expect(v1.set(function(i) { return i + 1; }).get(1)).to.equal(2);
+      expect(v1.set([2, 3, 4, 5]).get(3)).to.equal(4);
+      expect(v1.set(new Vector([6, 7, 8, 9])).get(4)).to.equal(9);
    });
    it('set() affects the viewed vector if they are ViewVs', function() {
       expect(v4.set(1, 233).get(1)).to.equal(233);
