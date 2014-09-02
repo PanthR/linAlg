@@ -84,6 +84,50 @@ define(function(require) {
       if ( j < 1 || j > this.ncol) { return 0; }
       return this.values.get(this.toIndex(i, j));
    };
+
+   /**
+    * Set can be called with:
+    * 1. Three parameters: `i`, `j`, `val`. It will set the (i,j) entry to `val`.
+    * 2. With only one parameter. That parameter may be a function `f(i, j)`, a
+    * single value, or a Matrix with the same dimensions, which is then used to set
+    * all the values of the Matrix `this`.
+    */
+   Matrix.prototype.set = function set(i, j, val) {
+      function changeAll(target, vals) {
+         var row, col;
+         function makeLookup(vals) {
+            if (typeof vals === 'function') { return vals; }
+            if (vals instanceof Matrix) {
+               if (!target.sameDims(vals)) {
+                  throw new Error('Incompatible matrix dimensions');
+               }
+               return vals.get.bind(vals);
+            }
+            return function(i, j) { return vals; };
+         }
+         vals = makeLookup(vals);
+         for (col = 1; col <= target.ncol; col += 1) {
+            for (row = 1; row <= target.nrow; row += 1) {
+               target._set(row, col, vals(row, col));
+            }
+         }
+      }
+      if (arguments.length === 1) {
+         changeAll(this, i);
+      } else {
+         this._set(i, j, val);
+      }
+      return this;
+   };
+
+   Matrix.prototype._set = function _set(i, j, val) {
+      if ( i < 1 || i > this.nrow ||
+           j < 1 || j > this.ncol) {
+         throw new Error('Setting out of Matrix bounds');
+      }
+      this.values._set(this.toIndex(i, j), val);
+      return this;
+   };
    /**
     * Return the vector index that would correspond to the i-th row and j-th column.
     * This is used to access the appropriate location in the vector that represents
@@ -115,6 +159,19 @@ define(function(require) {
 
     Matrix.prototype.view = function view(rowIndex, colIndex, dims) {
       return new Matrix.ViewM(this, rowIndex, colIndex, dims);
+    };
+
+    // A Matrix's mutability is directly tied to its value Vector's mutability.
+    Matrix.prototype.mutable = function mutable(newSetting) {
+       if (newSetting != null) {
+          this.values.mutable(newSetting);
+          return this;
+       }
+       return this.values.mutable();
+    };
+
+    Matrix.prototype.sameDims = function sameDims(other) {
+       return this.nrow === other.nrow && this.ncol === other.ncol;
     };
 
    return Matrix;
