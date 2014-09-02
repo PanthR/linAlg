@@ -292,19 +292,16 @@ define(function(require) {
 
    /* eslint-disable complexity */
    Vector.prototype.fill = function fill(val, start, end) {
-      var currentMutable, i;
-      currentMutable = this.mutable();
-      this.mutable(true);
+      var i;
       if (start && start.forEach != null) {
          start.forEach(function(ind) { this._set(ind, val); }.bind(this));
       } else {
          if (end == null || end > this.length) { end = this.length; }
          if (start == null || start < 1) { start = 1; }
          for (i = start; i <= end; i += 1) {
-            this.change(i, val); // No need for the _set checks at this point
+            this._set(i, val); // No need for the _set checks at this point
          }
       }
-      this.mutable(currentMutable);
       return this;
    };
    /* eslint-enable */
