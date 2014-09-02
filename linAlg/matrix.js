@@ -73,6 +73,8 @@ define(function(require) {
     */
    Matrix.DiagM    = require('./matrix/diag')(Matrix);
 
+   Matrix.ViewM    = require('./matrix/view')(Matrix);
+
    Matrix.prototype.get = function get(i, j) {
       return this._get(i, j);
    };
@@ -109,6 +111,10 @@ define(function(require) {
        f = op[f] != null ? op[f] : f || op.mult;
        tabf = function(i, j) { return f(this.get(i), v2.get(j), i, j); }.bind(this);
        return new Matrix(tabf, { nrow: this.length, ncol: v2.length });
+    };
+
+    Matrix.prototype.view = function view(rowIndex, colIndex, dims) {
+      return new Matrix.ViewM(this, rowIndex, colIndex, dims);
     };
 
    return Matrix;
