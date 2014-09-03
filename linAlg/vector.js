@@ -45,7 +45,7 @@ define(function(require) {
       return new Vector.SparseV(arr, len);
    }
 
-   /** The tolerance used in equality tests
+   /** The tolerance used in equality tests. You may set a different value.
     */
     Vector.tolerance = 1e-8;
 
@@ -107,19 +107,19 @@ define(function(require) {
    };
 
    /**
-    * Generate a constant vector of length `len`, with all entries having value `val`.
-    * Constant vectors are immutable.
-    */
-   Vector.const = function constant(val, len) {
-      return new Vector.ConstV(val, len);
-   };
-
-   /**
     * Generate a vector of length `len`, with all entries having value `val`.
     * This vector can become mutable. Use this to set starting values for a vector.
     */
    Vector.fill = function fill(val, len) {
       return new Vector(function() { return val; }, len);
+   };
+
+   /**
+    * Generate a constant vector of length `len`, with all entries having value `val`.
+    * Constant vectors are immutable.
+    */
+   Vector.const = function constant(val, len) {
+      return new Vector.ConstV(val, len);
    };
 
    /**
@@ -144,7 +144,7 @@ define(function(require) {
     * (indexing starts at 1).
     * 3. If called with an array of integers, an array of the correspondigly indexed entries is returned.
     *
-    * Users should always go through this method when accessing
+    * Users should always go through this method, or `Vector.prototype._get`, when accessing
     * values of the vector unless they really know what they're doing.
     * You may use `Vector.prototype._get` for slightly more efficient access, if you will always
     * be accessing values via an integer.
@@ -177,9 +177,21 @@ define(function(require) {
    };
 
    /**
+    * Compute the entry at index `i` of the vector. This method is used internally
+    * by `Vector.prototype.get` and `Vector.prototype._get` to obtain the correct
+    * value in cases where the vector values are stored _lazily_. Users should not
+    * call it directly. Use `Vector.prototype.get` or `Vector.prototype._get` instead.
+    * @private
+    */
+   Vector.prototype.compute = function compute(i) {
+      throw new Error('Subclasses of Vector need to implement compute: ' +
+         this.constructor.name);
+   };
+
+   /**
     * Set the entries of the vector that are specified by the parameter `i` to the value(s)
-    * specified by the parameter `vals`. Can only be used on a vector that is set to
-    * be mutable. The parameters can take two forms:
+    * specified by the parameter `vals`. _Can only be used on a vector that is set to
+    * be mutable_. The parameters can take two forms:
     *
     * 1. If `i` is a single numeric index, and `vals` is the value that should be placed
     * at that index.
@@ -221,8 +233,8 @@ define(function(require) {
       return this;
    };
    /**
-    * Set the entry at index `i` of the vector. Can only be used on a vector that is set to
-    * be mutable.
+    * Set the entry at index `i` of the vector to `val`. Can only be used on a vector
+    * that is set to be mutable.
     */
    Vector.prototype._set = function _set(i, val) {
       if (!this.mutable()) { throw new Error('Trying to set in an immutable vector.'); }
@@ -233,6 +245,12 @@ define(function(require) {
       return this;
    };
 
+   /**
+    * Method meant to be used internally for setting the value at index `i` of the
+    * vector to `val`. Bypasses the checks made by `Vector.prototype._set`, including
+    * whether the vector has been set to be mutable. _Avoid using this method unless
+    * you are really certain of what you are doing!_
+    */
    Vector.prototype.change = function change(i, val) {
       throw new Error('Subclasses of Vector need to implement change: ' +
          this.constructor.name);
@@ -242,7 +260,7 @@ define(function(require) {
     * Called with no arguments (or with undefined/null argument), return the mutable
     * state of the vector.
     *
-    * Called with a boolean argument `newSetting`, set the mutable state to that
+    * Called with a boolean argument `newSetting`, set the mutable state to that value
     * and return the vector.
     */
    Vector.prototype.mutable = function mutable(newSetting) {
@@ -257,39 +275,39 @@ define(function(require) {
    /**
     * Force a vector to be evaluated. This resolves any deferred calculations
     * needed for the computation of the vector's elements.
+    *
+    * Many vector methods, notably `Vector.prototype.map`, delay the required computations
+    * until the point where they need to be computed. `Vector.prototype.force` is one
+    * way to do so.
     */
    Vector.prototype.force = function force() {
       return this;  // stub; overridden in some subclasses
    };
 
    /**
-    * Compute the entry at index `i` of the vector. This method is used internally
-    * by `Vector.prototype.get` and `Vector.prototype._get` to obtain the correct
-    * value in cases where the vector values are stored _lazily_. Users should not
-    * call it directly. Use `Vector.prototype.get` or `Vector.prototype._get` instead.
-    * @private
-    */
-   Vector.prototype.compute = function compute(i) {
-      throw new Error('Subclasses of Vector need to implement compute: ' +
-         this.constructor.name);
-   };
-
-   /**
     * Return a view vector on the `arr` indices. View vectors reflect the values on their
     * target, but allow one to access those locations via a different indexing.
     * Changing the values of a view vector actually changes the values of their target.
-    * TODO: Fix the comment: First arugment could be a function, in which case second argument needed.
+    *
+    * The indices to view may also be specified via af function `f(i)` as the first argument.
+    * In that case, a second argument is needed with the desired length for the resulting vector.
+    *
+    *     var v1 = new Vector([3, 5, 1, 2]);
+    *     var view = v1.view([2, 3]);
+    *     view.get(1) === 5;
+    *     view.get(2) === 1;
+    *     var view2 = v1.view(function(i) { return 5 - i; }, 3); // [2, 1, 5]
     */
    Vector.prototype.view = function view(arr, len) {
       return new Vector.ViewV(this, arr, len);
    };
 
+
+   /* eslint-disable complexity */
    /**
     * Fill in the segment of the vector's values from `start` to `end` with `val`.
     * If `start` is an array or vector, use its values as the indices to fill.
     */
-
-   /* eslint-disable complexity */
    Vector.prototype.fill = function fill(val, start, end) {
       var i;
       if (start && start.forEach != null) {
@@ -298,7 +316,7 @@ define(function(require) {
          if (end == null || end > this.length) { end = this.length; }
          if (start == null || start < 1) { start = 1; }
          for (i = start; i <= end; i += 1) {
-            this._set(i, val); // No need for the _set checks at this point
+            this._set(i, val);
          }
       }
       return this;
@@ -319,6 +337,9 @@ define(function(require) {
          this.constructor.name);
    };
 
+   /**
+    * Alias for `Vector.prototype.each`.
+    */
    Vector.prototype.forEach = function(f, skipZeros) {
       return this.each.apply(this, [].slice.call(arguments));
    };
@@ -410,8 +431,8 @@ define(function(require) {
 
 
    /**
-    * Like `Vector.map`, but the function `f` acts on two vectors, with signature
-    * `f(val1, val2, i)`. If `skipZeros` is `true`, the implementation may
+    * Like `Vector.prototype.map`, but the function `f` acts on two vectors, with
+    * signature `f(val1, val2, i)`. If `skipZeros` is `true`, the implementation may
     * assume that `f` will return 0 as long as one of the values is 0.
     */
    Vector.prototype.mapPair = function mapPair(v2, f, skipZeros) {
@@ -473,9 +494,7 @@ define(function(require) {
       return arr;
    };
 
-   /**
-    * Return a clone of the vector.
-    */
+   /** Return a clone of the vector. */
    Vector.prototype.clone = function clone() {
       return new Vector(this.toArray());
    };
@@ -600,12 +619,14 @@ define(function(require) {
       }, -Infinity);
    };
 
+   /** Return whether the vector is stored as a sparse vector. */
    Vector.prototype.isSparse = function isSparse() {
       return false;
    };
 
-   Vector.prototype.sameLength = function sameLength(b) {
-      return this.length === b.length;
+   /** Return whether the vector has the same length as the vector `other`. */
+   Vector.prototype.sameLength = function sameLength(other) {
+      return this.length === other.length;
    };
 
    // Helper functions

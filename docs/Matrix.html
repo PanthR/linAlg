@@ -19,6 +19,8 @@
         
         <a href="Matrix.html"><li><code>Matrix</code></li></a>
         
+        <a href="utils.html"><li><code>utils</code></li></a>
+        
         <a href="Vector.html"><li><code>Vector</code></li></a>
         
       </ul>
@@ -37,9 +39,31 @@
         
         <a href="#Matrix.TabularM"><li><code>Matrix.TabularM</code></li></a>
         
+        <a href="#Matrix.Vector"><li><code>Matrix.Vector</code></li></a>
+        
+        <a href="#Matrix.ViewM"><li><code>Matrix.ViewM</code></li></a>
+        
+        <a href="#Matrix%25_get"><li><code>Matrix#_get</code></li></a>
+        
+        <a href="#Matrix%25_set"><li><code>Matrix#_set</code></li></a>
+        
+        <a href="#Matrix%25colView"><li><code>Matrix#colView</code></li></a>
+        
         <a href="#Matrix%25fromIndex"><li><code>Matrix#fromIndex</code></li></a>
         
+        <a href="#Matrix%25get"><li><code>Matrix#get</code></li></a>
+        
+        <a href="#Matrix%25mutable"><li><code>Matrix#mutable</code></li></a>
+        
+        <a href="#Matrix%25rowView"><li><code>Matrix#rowView</code></li></a>
+        
+        <a href="#Matrix%25sameDims"><li><code>Matrix#sameDims</code></li></a>
+        
+        <a href="#Matrix%25set"><li><code>Matrix#set</code></li></a>
+        
         <a href="#Matrix%25toIndex"><li><code>Matrix#toIndex</code></li></a>
+        
+        <a href="#Matrix%25view"><li><code>Matrix#view</code></li></a>
         
       </ul>
       </div>
@@ -60,23 +84,32 @@ Matrices contain the following properties:</p>
 <li>A <code>values</code> property, containing a vector representing the values.</li>
 <li><code>nrow</code> and <code>ncol</code> integer properties, representing the number of rows and columns respectively.</li>
 <li>A <code>byRow</code> boolean property, determining if the matrix's values are stored in the vector
-&quot;1 row at a time&quot; or &quot;1 column at a time&quot;. This defaults to false for most matrices, meaning column-wise storage.</li>
+&quot;1 row at a time&quot; or &quot;1 column at a time&quot;. This defaults to false for most matrices, meaning
+column-wise storage.</li>
 </ul>
-<p>New <a href="#Matrix"><code>Matrix</code></a> objects are created via the <a href="#Matrix"><code>Matrix</code></a> constructor, which accepts a number of options for its first
-argument, <code>arr</code>:</p>
+<p>The methods <a href="#Matrix%25fromIndex"><code>Matrix.prototype.fromIndex</code></a> and <a href="#Matrix%25toIndex"><code>Matrix.prototype.toIndex</code></a> may be used to
+relate a pair of indices <code>(i, j)</code> of the matrix to the index location in the <code>this.values</code>
+vector where the related matrix value is stored.</p>
+<p>New <a href="#Matrix"><code>Matrix</code></a> objects are created via the <a href="#Matrix"><code>Matrix</code></a> constructor, which accepts a number of options
+for its first argument, <code>arr</code>:</p>
 <ol>
-<li>Called with another <a href="#Matrix"><code>Matrix</code></a>, returns a &quot;copy/clone&quot;.</li>
+<li>Called with another <a href="#Matrix"><code>Matrix</code></a>, simply returns the matrix itself.</li>
 <li>Called with a single array of values, constructs a matrix based on these values. The dimensions
-and other properties of this array are determined by the second argument, which is an object <code>options</code>
-containg one or more of the keys <code>nrow</code>, <code>ncol</code>, <code>byRow</code>.</li>
+and other properties of this array are determined by the second argument, which is an object
+<code>options</code> containg one or more of the keys <code>nrow</code>, <code>ncol</code>, <code>byRow</code>.</li>
 <li>Called with an array of arrays of values, it constructs a matrix with columns based on arrays.
 The number of arrays (length of <code>arr</code>) becomes <code>ncol</code>. The arrays in <code>arr</code> are expected to have
 the same length, and that becomes <code>nrow</code>. The options object is optional, but may contain a &quot;byRow&quot;
-entry, which if <code>true</code> indicates that the roles of <code>column</code> and <code>row</code> would be interchanged, i.e. the
-arrays in <code>arr</code> would become rows instead of columns.</li>
-<li>Called with a function <code>f(i,j)</code>, it uses that function to determine the <a href="#Matrix"><code>Matrix</code></a>'s values. In that case
-an <code>options</code> second argument specifying <code>nrow</code> and <code>ncol</code> is needed.</li>
+entry, which if <code>true</code> indicates that the roles of <code>column</code> and <code>row</code> would be interchanged, i.e.
+the arrays in <code>arr</code> would become rows instead of columns.</li>
+<li>Called with a function <code>f(i,j)</code>, it uses that function to determine the <a href="#Matrix"><code>Matrix</code></a>'s values. In
+that case an <code>options</code> second argument specifying <code>nrow</code> and <code>ncol</code> is needed.</li>
 </ol>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.Vector"><code>Matrix.Vector</code></h4>
+        <p>This is the class <a href="#Vector"><code>Vector</code></a> as it is accessed from <a href="#Matrix"><code>Matrix</code></a>.</p>
       </div>
       
       <div>
@@ -109,6 +142,41 @@ Users should not need to access this directly.</p>
       </div>
       
       <div>
+        <h4 id="Matrix.ViewM"><code>Matrix.ViewM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing Submatrix views into another Matrix. Changes
+to the view are reflected on the original matrix and vice-versa. Use
+<a href="#Matrix%25view"><code>Matrix.prototype.view</code></a> to create these. If you want to create vector views into
+a row or column of a matrix, use <a href="#Matrix%25rowView"><code>Matrix.prototype.rowView</code></a> or
+<a href="#Matrix%25colView"><code>Matrix.prototype.colView</code></a> instead.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25get"><code>Matrix#get(i, j)</code></h4>
+        <p>Return the value at the <code>(i, j)</code> entry of the matrix. When called with no
+arguments, it returns an array of arrays of all the matrix's values.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25_get"><code>Matrix#_get(i, j)</code></h4>
+        <p>Internally used by <a href="#Matrix%25get"><code>Matrix.prototype.get</code></a>. There should be no need for users
+to call this method.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25set"><code>Matrix#set(i, j, val)</code></h4>
+        <p>Set the value of the matrix at the <code>(i, j)</code> entry to <code>val</code>. </p>
+<p>If instead there is only one argument, then it may be a function <code>f(i, j)</code>, or
+a single value, or a <a href="#Matrix"><code>Matrix</code></a> with the same dimensions, it will be used to set
+all the values of the Matrix <code>this</code>.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25_set"><code>Matrix#_set(i, j, val)</code></h4>
+        <p>Internally used by <a href="#Matrix%25set"><code>Matrix.prototype.set</code></a>. Users should not have need for
+this method.</p>
+      </div>
+      
+      <div>
         <h4 id="Matrix%25toIndex"><code>Matrix#toIndex(i, j)</code></h4>
         <p>Return the vector index that would correspond to the i-th row and j-th column.
 This is used to access the appropriate location in the vector that represents
@@ -119,6 +187,42 @@ the matrix's values.</p>
         <h4 id="Matrix%25fromIndex"><code>Matrix#fromIndex(n)</code></h4>
         <p>Return the pair i, j corresponding to the vector index <code>n</code>. This is the inverse
 process to <a href="#Matrix%25toIndex"><code>Matrix.prototype.toIndex</code></a>.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25view"><code>Matrix#view(rowIndex, colIndex, dims)</code></h4>
+        <p>Return a view into a submatrix of <code>this</code>. The parameters <code>rowIndex</code>, <code>colIndex</code>
+maybe be either arrays or functions <code>f(i)</code> used to obtain the indices.
+In the latter case, a third argument <code>dims</code> is needed. It is an object with
+properties <code>nrow</code> or <code>ncol</code> as needed, specifying the dimensions of the resulting
+matrix.</p>
+<pre class="prettyprint source"><code>var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 }); // 2x3 matrix
+// Returns 2nd & 3rd column
+var A2 = A1.view([1, 2], function(j) { return 1 + j; }, { ncol: 2})</code></pre>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25rowView"><code>Matrix#rowView(i)</code></h4>
+        <p>Return a <a href="#Vector"><code>Vector</code></a> view of the <code>i</code>-th row of the matrix.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25colView"><code>Matrix#colView(j)</code></h4>
+        <p>Return a <a href="#Vector"><code>Vector</code></a> view of the <code>j</code>-th column of the matrix.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25mutable"><code>Matrix#mutable(newSetting)</code></h4>
+        <p>With no arguments, returns the mutable state of the matrix.</p>
+<p>With a boolean argument, sets the mutable state of the matrix and returns
+the matrix.</p>
+<p>A matrix's mutable state is simply a reflection of the mutable state of
+its <code>values</code> vector.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25sameDims"><code>Matrix#sameDims(other)</code></h4>
+        <p>Return whether the matrix has the same dimensions as the matrix <code>other</code></p>
       </div>
       
     </div>

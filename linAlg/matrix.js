@@ -20,10 +20,14 @@ define(function(require) {
     * "1 row at a time" or "1 column at a time". This defaults to false for most matrices, meaning
     * column-wise storage.
     *
+    * The methods `Matrix.prototype.fromIndex` and `Matrix.prototype.toIndex` may be used to
+    * relate a pair of indices `(i, j)` of the matrix to the index location in the `this.values`
+    * vector where the related matrix value is stored.
+    *
     * New `Matrix` objects are created via the `Matrix` constructor, which accepts a number of options
     * for its first argument, `arr`:
     *
-    * 1. Called with another `Matrix`, returns a "copy/clone".
+    * 1. Called with another `Matrix`, simply returns the matrix itself.
     * 2. Called with a single array of values, constructs a matrix based on these values. The dimensions
     * and other properties of this array are determined by the second argument, which is an object
     * `options` containg one or more of the keys `nrow`, `ncol`, `byRow`.
@@ -46,6 +50,9 @@ define(function(require) {
       return new Matrix.SparseM(arr, options);
    }
 
+   /**
+    * This is the class `Vector` as it is accessed from `Matrix`.
+    */
    Matrix.Vector   = require('./vector');
    /**
     * Subclass of `Matrix` representing "dense" matrices.
@@ -72,12 +79,27 @@ define(function(require) {
     * Users should not need to access this directly.
     */
    Matrix.DiagM    = require('./matrix/diag')(Matrix);
-
+   /**
+    * Subclass of `Matrix` representing Submatrix views into another Matrix. Changes
+    * to the view are reflected on the original matrix and vice-versa. Use
+    * `Matrix.prototype.view` to create these. If you want to create vector views into
+    * a row or column of a matrix, use `Matrix.prototype.rowView` or
+    * `Matrix.prototype.colView` instead.
+    */
    Matrix.ViewM    = require('./matrix/view')(Matrix);
 
+   /**
+    * Return the value at the `(i, j)` entry of the matrix. When called with no
+    * arguments, it returns an array of arrays of all the matrix's values.
+    */
    Matrix.prototype.get = function get(i, j) {
       return this._get(i, j);
    };
+
+   /**
+    * Internally used by `Matrix.prototype.get`. There should be no need for users
+    * to call this method.
+    */
    Matrix.prototype._get = function _get(i, j) {
       var n;
       if ( i < 1 || i > this.nrow) { return 0; }
@@ -86,10 +108,10 @@ define(function(require) {
    };
 
    /**
-    * Set can be called with:
-    * 1. Three parameters: `i`, `j`, `val`. It will set the (i,j) entry to `val`.
-    * 2. With only one parameter. That parameter may be a function `f(i, j)`, a
-    * single value, or a Matrix with the same dimensions, which is then used to set
+    * Set the value of the matrix at the `(i, j)` entry to `val`. 
+    *
+    * If instead there is only one argument, then it may be a function `f(i, j)`, or
+    * a single value, or a `Matrix` with the same dimensions, it will be used to set
     * all the values of the Matrix `this`.
     */
    Matrix.prototype.set = function set(i, j, val) {
@@ -120,6 +142,10 @@ define(function(require) {
       return this;
    };
 
+   /**
+    * Internally used by `Matrix.prototype.set`. Users should not have need for
+    * this method.
+    */
    Matrix.prototype._set = function _set(i, j, val) {
       if ( i < 1 || i > this.nrow ||
            j < 1 || j > this.ncol) {
@@ -128,6 +154,7 @@ define(function(require) {
       this.values._set(this.toIndex(i, j), val);
       return this;
    };
+
    /**
     * Return the vector index that would correspond to the i-th row and j-th column.
     * This is used to access the appropriate location in the vector that represents
@@ -136,6 +163,7 @@ define(function(require) {
    Matrix.prototype.toIndex = function toIndex(i, j) {
       return this.byRow ? (i - 1) * this.ncol + j : (j - 1) * this.nrow + i;
    };
+
    /**
     * Return the pair i, j corresponding to the vector index `n`. This is the inverse
     * process to `Matrix.prototype.toIndex`.
@@ -148,7 +176,12 @@ define(function(require) {
    };
 
    /**
+    * Return the outer product matrix of two vectors. If a function `f(i, j)` is
+    * provided as the second argument, it will be used. Otherwise, normal number
+    * multiplication is used resulting in the standard outer product.
+    *
     * TODO: Find a way to add this the Vector docs
+    * @memberof Vector
     */
     Matrix.Vector.prototype.outer = function outer(v2, f) {
        var tabf;
@@ -157,10 +190,22 @@ define(function(require) {
        return new Matrix(tabf, { nrow: this.length, ncol: v2.length });
     };
 
+    /**
+     * Return a view into a submatrix of `this`. The parameters `rowIndex`, `colIndex`
+     * maybe be either arrays or functions `f(i)` used to obtain the indices.
+     * In the latter case, a third argument `dims` is needed. It is an object with
+     * properties `nrow` or `ncol` as needed, specifying the dimensions of the resulting
+     * matrix.
+     *
+     *     var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 }); // 2x3 matrix
+     *     // Returns 2nd & 3rd column
+     *     var A2 = A1.view([1, 2], function(j) { return 1 + j; }, { ncol: 2})
+     */
     Matrix.prototype.view = function view(rowIndex, colIndex, dims) {
       return new Matrix.ViewM(this, rowIndex, colIndex, dims);
     };
 
+    /** Return a `Vector` view of the `i`-th row of the matrix. */
     Matrix.prototype.rowView = function rowView(i) {
        if (i < 1 || i > this.nrow) {
           throw new Error('Row index out of bounds');
@@ -170,6 +215,7 @@ define(function(require) {
        }.bind(this), this.ncol);
     };
 
+    /** Return a `Vector` view of the `j`-th column of the matrix. */
     Matrix.prototype.colView = function colView(j) {
        if (j < 1 || j > this.ncol) {
           throw new Error('Column index out of bounds');
@@ -179,7 +225,15 @@ define(function(require) {
        }.bind(this), this.nrow);
     };
 
-    // A Matrix's mutability is directly tied to its value Vector's mutability.
+    /**
+     * With no arguments, returns the mutable state of the matrix.
+     *
+     * With a boolean argument, sets the mutable state of the matrix and returns
+     * the matrix.
+     *
+     * A matrix's mutable state is simply a reflection of the mutable state of
+     * its `values` vector.
+     */
     Matrix.prototype.mutable = function mutable(newSetting) {
        if (newSetting != null) {
           this.values.mutable(newSetting);
@@ -188,6 +242,7 @@ define(function(require) {
        return this.values.mutable();
     };
 
+    /** Return whether the matrix has the same dimensions as the matrix `other` */
     Matrix.prototype.sameDims = function sameDims(other) {
        return this.nrow === other.nrow && this.ncol === other.ncol;
     };

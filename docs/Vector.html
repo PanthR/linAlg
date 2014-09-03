@@ -19,6 +19,8 @@
         
         <a href="Matrix.html"><li><code>Matrix</code></li></a>
         
+        <a href="utils.html"><li><code>utils</code></li></a>
+        
         <a href="Vector.html"><li><code>Vector</code></li></a>
         
       </ul>
@@ -47,9 +49,15 @@
         
         <a href="#Vector.seq"><li><code>Vector.seq</code></li></a>
         
+        <a href="#Vector.tolerance"><li><code>Vector.tolerance</code></li></a>
+        
         <a href="#Vector%25_get"><li><code>Vector#_get</code></li></a>
         
         <a href="#Vector%25_set"><li><code>Vector#_set</code></li></a>
+        
+        <a href="#Vector%25change"><li><code>Vector#change</code></li></a>
+        
+        <a href="#Vector%25clone"><li><code>Vector#clone</code></li></a>
         
         <a href="#Vector%25compute"><li><code>Vector#compute</code></li></a>
         
@@ -71,13 +79,19 @@
         
         <a href="#Vector%25eachPair"><li><code>Vector#eachPair</code></li></a>
         
+        <a href="#Vector%25equals"><li><code>Vector#equals</code></li></a>
+        
         <a href="#Vector%25fill"><li><code>Vector#fill</code></li></a>
         
         <a href="#Vector%25foldl"><li><code>Vector#foldl</code></li></a>
         
+        <a href="#Vector%25forEach"><li><code>Vector#forEach</code></li></a>
+        
         <a href="#Vector%25force"><li><code>Vector#force</code></li></a>
         
         <a href="#Vector%25get"><li><code>Vector#get</code></li></a>
+        
+        <a href="#Vector%25isSparse"><li><code>Vector#isSparse</code></li></a>
         
         <a href="#Vector%25map"><li><code>Vector#map</code></li></a>
         
@@ -102,6 +116,8 @@
         <a href="#Vector%25reducePair"><li><code>Vector#reducePair</code></li></a>
         
         <a href="#Vector%25sMult"><li><code>Vector#sMult</code></li></a>
+        
+        <a href="#Vector%25sameLength"><li><code>Vector#sameLength</code></li></a>
         
         <a href="#Vector%25set"><li><code>Vector#set</code></li></a>
         
@@ -128,6 +144,7 @@ They are constructed in one of three ways depending on the type of the first par
 <li>Based on a key-value object representing the non-zero indices and their values (sparse vectors)</li>
 <li>Based on a function <code>f(n)</code> describing how the i-th index is meant to be computed.</li>
 </ol>
+<p>When <code>arr</code> is a <a href="#Vector"><code>Vector</code></a>, it is simply returned unchanged.</p>
 <p><a href="#Vector"><code>Vector</code></a> objects are 1-indexed. By default, they are immutable structures, they cannot be edited
 once created. See <code>Vector.MutableV</code> for a description of mutable vectors.</p>
 <p>Every vector has a fixed <code>length</code>, accessed as a property.
@@ -139,6 +156,11 @@ var v2 = new Vector({ 4: 10, 2: 12 }, 10);
 // A length-3 vector with values exp(1), exp(2), exp(3)
 var v3 = new Vector(Math.exp, 3);
 v3.length === 3  // true</code></pre>
+      </div>
+      
+      <div>
+        <h4 id="Vector.tolerance"><code>Vector.tolerance</code></h4>
+        <p>The tolerance used in equality tests. You may set a different value.</p>
       </div>
       
       <div>
@@ -191,15 +213,15 @@ Vector.seq(3)        // Produces [1, 2, 3]</code></pre>
       </div>
       
       <div>
-        <h4 id="Vector.const"><code>Vector.const(val, len)</code></h4>
-        <p>Generate a constant vector of length <code>len</code>, with all entries having value <code>val</code>.
-Constant vectors are immutable.</p>
-      </div>
-      
-      <div>
         <h4 id="Vector.fill"><code>Vector.fill(val, len)</code></h4>
         <p>Generate a vector of length <code>len</code>, with all entries having value <code>val</code>.
 This vector can become mutable. Use this to set starting values for a vector.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector.const"><code>Vector.const(val, len)</code></h4>
+        <p>Generate a constant vector of length <code>len</code>, with all entries having value <code>val</code>.
+Constant vectors are immutable.</p>
       </div>
       
       <div>
@@ -216,13 +238,14 @@ Vector.ones(v1.length).dot(v1)</code></pre>
 number of different forms:</p>
 <ol>
 <li>With no argument present, an array of all vector values is returned.</li>
-<li>If called with an integer <code>i</code>, the <code>i</code>-th entry from the vector is returned (indexing starts at 1).</li>
+<li>If called with an integer <code>i</code>, the <code>i</code>-th entry from the vector is returned
+(indexing starts at 1).</li>
 <li>If called with an array of integers, an array of the correspondigly indexed entries is returned.</li>
 </ol>
-<p>Users should always go through this method when accessing
+<p>Users should always go through this method, or <a href="#Vector%25_get"><code>Vector.prototype._get</code></a>, when accessing
 values of the vector unless they really know what they're doing.
-You may use <a href="#Vector%25_get"><code>Vector.prototype._get</code></a> for slightly more efficient access, if you will always be accessing
-values via an integer.</p>
+You may use <a href="#Vector%25_get"><code>Vector.prototype._get</code></a> for slightly more efficient access, if you will always
+be accessing values via an integer.</p>
 <pre class="prettyprint source"><code>v1.get() === [3, 5, 1, 2];
 v1.get([2, 3]) === [5, 1];
 v1.get(1) === 3;
@@ -238,44 +261,6 @@ v1.get(5) === 0;</code></pre>
       </div>
       
       <div>
-        <h4 id="Vector%25set"><code>Vector#set(i, vals)</code></h4>
-        <p>Set the entries of the vector that are specified by the parameter <code>i</code> to the value(s)
-specified by the parameter <code>vals</code>. Can only be used on a vector that is set to
-be mutable. The parameters can take various forms:</p>
-<ol>
-<li>If <code>i</code> is a single numeric index, and <code>vals</code> is the value that should be placed
-at that index.</li>
-<li>If <code>i</code> is an array of indices, or a vector holding indices, then <code>vals</code> needs to be
-an array or vector of equal length, with the values to be placed at the corresponding
-indices.</li>
-<li>If the parameter <code>i</code> is omitted, i.e. <code>vals</code> is the first argument, then it needs to
-be an array or vector of equal length to <code>this</code>, and it will be used to set all the
-vector's values.</li>
-</ol>
-<p>You may use <a href="#Vector%25_set"><code>Vector.prototype._set</code></a> if efficiency is an issue and you are certain that
-you are in the single-index case.</p>
-      </div>
-      
-      <div>
-        <h4 id="Vector%25_set"><code>Vector#_set(i, val)</code></h4>
-        <p>Set the entry at index <code>i</code> of the vector. Can only be used on a vector that is set to
-be mutable.</p>
-      </div>
-      
-      <div>
-        <h4 id="Vector%25mutable"><code>Vector#mutable(newSetting)</code></h4>
-        <p>Called with no arguments (or with undefined/null argument), return the mutable
-state of the vector.</p>
-<p>Called with a boolean argument <code>newSetting</code>, set the mutable state to that.</p>
-      </div>
-      
-      <div>
-        <h4 id="Vector%25force"><code>Vector#force()</code></h4>
-        <p>Force a vector to be evaluated. This resolves any deferred calculations
-needed for the computation of the vector's elements.</p>
-      </div>
-      
-      <div>
         <h4 id="Vector%25compute"><code>Vector#compute(i)</code></h4>
         <p>Compute the entry at index <code>i</code> of the vector. This method is used internally
 by <a href="#Vector%25get"><code>Vector.prototype.get</code></a> and <a href="#Vector%25_get"><code>Vector.prototype._get</code></a> to obtain the correct
@@ -284,10 +269,66 @@ call it directly. Use <a href="#Vector%25get"><code>Vector.prototype.get</code><
       </div>
       
       <div>
-        <h4 id="Vector%25view"><code>Vector#view(arr)</code></h4>
+        <h4 id="Vector%25set"><code>Vector#set(ind, vals)</code></h4>
+        <p>Set the entries of the vector that are specified by the parameter <code>i</code> to the value(s)
+specified by the parameter <code>vals</code>. <em>Can only be used on a vector that is set to
+be mutable</em>. The parameters can take two forms:</p>
+<ol>
+<li>If <code>i</code> is a single numeric index, and <code>vals</code> is the value that should be placed
+at that index.</li>
+<li>If the parameter <code>i</code> is omitted, i.e. <code>vals</code> is the first argument, then it needs to
+be an array or vector of equal length to <code>this</code>, or a single number, or a function <code>f(i)</code>,
+and it will be used to set all the vector's values.</li>
+</ol>
+<p>In order to set more than one of a vector's values at the same time, create a
+<a href="#Vector%25view"><code>Vector.prototype.view</code></a> and use set on that.</p>
+<p>You may use <a href="#Vector%25_set"><code>Vector.prototype._set</code></a> if efficiency is an issue and you are certain that
+you are in the single-index case.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25_set"><code>Vector#_set(i, val)</code></h4>
+        <p>Set the entry at index <code>i</code> of the vector to <code>val</code>. Can only be used on a vector
+that is set to be mutable.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25change"><code>Vector#change(i, val)</code></h4>
+        <p>Method meant to be used internally for setting the value at index <code>i</code> of the
+vector to <code>val</code>. Bypasses the checks made by <a href="#Vector%25_set"><code>Vector.prototype._set</code></a>, including
+whether the vector has been set to be mutable. <em>Avoid using this method unless
+you are really certain of what you are doing!</em></p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25mutable"><code>Vector#mutable(newSetting)</code></h4>
+        <p>Called with no arguments (or with undefined/null argument), return the mutable
+state of the vector.</p>
+<p>Called with a boolean argument <code>newSetting</code>, set the mutable state to that value
+and return the vector.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25force"><code>Vector#force()</code></h4>
+        <p>Force a vector to be evaluated. This resolves any deferred calculations
+needed for the computation of the vector's elements.</p>
+<p>Many vector methods, notably <a href="#Vector%25map"><code>Vector.prototype.map</code></a>, delay the required computations
+until the point where they need to be computed. <a href="#Vector%25force"><code>Vector.prototype.force</code></a> is one
+way to do so.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25view"><code>Vector#view(arr, len)</code></h4>
         <p>Return a view vector on the <code>arr</code> indices. View vectors reflect the values on their
 target, but allow one to access those locations via a different indexing.
 Changing the values of a view vector actually changes the values of their target.</p>
+<p>The indices to view may also be specified via af function <code>f(i)</code> as the first argument.
+In that case, a second argument is needed with the desired length for the resulting vector.</p>
+<pre class="prettyprint source"><code>var v1 = new Vector([3, 5, 1, 2]);
+var view = v1.view([2, 3]);
+view.get(1) === 5;
+view.get(2) === 1;
+var view2 = v1.view(function(i) { return 5 - i; }, 3); // [2, 1, 5]</code></pre>
       </div>
       
       <div>
@@ -304,6 +345,11 @@ If <code>skipZeros</code> is <code>true</code>, then the system <em>may</em> ski
 of <code>f</code> for zero entries.</p>
 <pre class="prettyprint source"><code>// Prints: 3 1, 5 2, 1 3, 2 4
 v.each(console.log);</code></pre>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25forEach"><code>Vector#forEach(f, skipZeros)</code></h4>
+        <p>Alias for <a href="#Vector%25each"><code>Vector.prototype.each</code></a>.</p>
       </div>
       
       <div>
@@ -364,8 +410,8 @@ v1.map(function(val, i) { return val + i; });</code></pre>
       
       <div>
         <h4 id="Vector%25mapPair"><code>Vector#mapPair(v2, f, skipZeros)</code></h4>
-        <p>Like <code>Vector.map</code>, but the function <code>f</code> acts on two vectors, with signature
-<code>f(val1, val2, i)</code>. If <code>skipZeros</code> is <code>true</code>, the implementation may
+        <p>Like <a href="#Vector%25map"><code>Vector.prototype.map</code></a>, but the function <code>f</code> acts on two vectors, with
+signature <code>f(val1, val2, i)</code>. If <code>skipZeros</code> is <code>true</code>, the implementation may
 assume that <code>f</code> will return 0 as long as one of the values is 0.</p>
       </div>
       
@@ -389,6 +435,16 @@ v1.dot(v1);</code></pre>
         <h4 id="Vector%25toArray"><code>Vector#toArray()</code></h4>
         <p>Return a Javascript array of the vector's values. Returns a new
 Array object every time.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25clone"><code>Vector#clone()</code></h4>
+        <p>Return a clone of the vector.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25equals"><code>Vector#equals(v2, tolerance)</code></h4>
+        <p>Test if <code>this</code> pointwise equals <code>v2</code>, within a given pointwise tolerance.</p>
       </div>
       
       <div>
@@ -464,6 +520,16 @@ v1.cumSum();</code></pre>
         <h4 id="Vector%25cumMax"><code>Vector#cumMax()</code></h4>
         <p>Create a new vector from the partial maximums in the vector.</p>
 <pre class="prettyprint source"><code>v1.cumMax(); // Produces [3, 5, 5, 5]</code></pre>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25isSparse"><code>Vector#isSparse()</code></h4>
+        <p>Return whether the vector is stored as a sparse vector.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25sameLength"><code>Vector#sameLength(other)</code></h4>
+        <p>Return whether the vector has the same length as the vector <code>other</code>.</p>
       </div>
       
       <div>
