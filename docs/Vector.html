@@ -148,7 +148,7 @@ They are constructed in one of three ways depending on the type of the first par
 <p><a href="#Vector"><code>Vector</code></a> objects are 1-indexed. By default, they are immutable structures, they cannot be edited
 once created. See <code>Vector.MutableV</code> for a description of mutable vectors.</p>
 <p>Every vector has a fixed <code>length</code>, accessed as a property.
-Vectors of length 0 are allowed, though there is not much one can do with them.</p>
+Vectors of length <code>0</code> are allowed, though there is not much one can do with them.</p>
 <pre class="prettyprint source"><code>// A length-4 vector
 var v1 = new Vector([3, 5, 1, 2]);
 // A length-10 sparse vector
@@ -160,22 +160,22 @@ v3.length === 3  // true</code></pre>
       
       <div>
         <h4 id="Vector.tolerance"><code>Vector.tolerance</code></h4>
-        <p>The tolerance used in equality tests. You may set a different value.</p>
+        <p>The tolerance used in equality tests. You may set a different value. Defaults to <code>1e-8</code>.</p>
       </div>
       
       <div>
         <h4 id="Vector.DenseV"><code>Vector.DenseV</code></h4>
         <p>Subclass of <a href="#Vector"><code>Vector</code></a> representing &quot;dense&quot; vectors.
 Dense vectors are internally stored simply as Javascript Arrays.
-Users should not need to access this directly.</p>
+Users should not need to access this subclass directly.</p>
       </div>
       
       <div>
         <h4 id="Vector.SparseV"><code>Vector.SparseV</code></h4>
         <p>Subclass of <a href="#Vector"><code>Vector</code></a> representing &quot;sparse&quot; vectors.
-Sparce vectors are stored as objects, whose keys represent the indices
+Sparse vectors are stored as objects, whose keys represent the indices
 that have non-zero values.
-Users should not need to access this directly.</p>
+Users should not need to access this subclass directly.</p>
       </div>
       
       <div>
@@ -183,22 +183,24 @@ Users should not need to access this directly.</p>
         <p>Subclass of <a href="#Vector"><code>Vector</code></a> representing vectors whose values are specified via
 a function <code>f(i)</code> of the index.
 The values of the vector are computed lazily, only when they are accessed.
-Users should not need to access this directly.</p>
+Users should not need to access this subclass directly.</p>
       </div>
       
       <div>
         <h4 id="Vector.ConstV"><code>Vector.ConstV</code></h4>
-        <p>Subclass of <a href="#Vector"><code>Vector</code></a> representing efficiently vectors all of whose
+        <p>Subclass of <a href="#Vector"><code>Vector</code></a> efficiently representing vectors all of whose
 values are meant to be the same number.
-Users should not need to access this directly.
+Users should not need to access this subclass directly.
 Use <a href="#Vector.const"><code>Vector.const</code></a> or <a href="#Vector.ones"><code>Vector.ones</code></a> instead.</p>
       </div>
       
       <div>
         <h4 id="Vector.ViewV"><code>Vector.ViewV</code></h4>
         <p>Subclass of <a href="#Vector"><code>Vector</code></a> representing vectors that provide a &quot;view&quot; into
-another object, e.g. the row or column of a <a href="#Matrix"><code>Matrix</code></a>. Changes to a view
-vector cause changes to the corresponding &quot;viewed&quot; object and vice versa.</p>
+another object, e.g. a row or column of a <a href="#Matrix"><code>Matrix</code></a>. Changes to a view
+vector cause changes to the corresponding &quot;viewed&quot; object and vice versa.
+Users should not need to access this subclass directly. 
+Use <a href="#Vector%25view"><code>Vector.prototype.view</code></a> instead.</p>
       </div>
       
       <div>
@@ -221,13 +223,14 @@ This vector can become mutable. Use this to set starting values for a vector.</p
       <div>
         <h4 id="Vector.const"><code>Vector.const(val, len)</code></h4>
         <p>Generate a constant vector of length <code>len</code>, with all entries having value <code>val</code>.
-Constant vectors are immutable.</p>
+<em>Constant vectors are immutable</em>. Use <a href="#Vector.fill"><code>Vector.fill</code></a> if you want to initialize a
+vector with some value(s).</p>
       </div>
       
       <div>
         <h4 id="Vector.ones"><code>Vector.ones(len)</code></h4>
         <p>Generate a constant vector of length <code>len</code>, with all entries having value 1.
-Constant vectors are immutable.</p>
+<em>Constant vectors are immutable</em>.</p>
 <pre class="prettyprint source"><code>// Sums all elements of v1
 Vector.ones(v1.length).dot(v1)</code></pre>
       </div>
@@ -240,11 +243,11 @@ number of different forms:</p>
 <li>With no argument present, an array of all vector values is returned.</li>
 <li>If called with an integer <code>i</code>, the <code>i</code>-th entry from the vector is returned
 (indexing starts at 1).</li>
-<li>If called with an array of integers, an array of the correspondigly indexed entries is returned.</li>
+<li>If called with an array of integers, an array of the correspondingly indexed entries is returned.</li>
 </ol>
 <p>Users should always go through this method, or <a href="#Vector%25_get"><code>Vector.prototype._get</code></a>, when accessing
 values of the vector unless they really know what they're doing.
-You may use <a href="#Vector%25_get"><code>Vector.prototype._get</code></a> for slightly more efficient access, if you will always
+You may use <a href="#Vector%25_get"><code>Vector.prototype._get</code></a> for slightly more efficient access if you will always
 be accessing values via an integer.</p>
 <pre class="prettyprint source"><code>v1.get() === [3, 5, 1, 2];
 v1.get([2, 3]) === [5, 1];
@@ -269,19 +272,19 @@ call it directly. Use <a href="#Vector%25get"><code>Vector.prototype.get</code><
       </div>
       
       <div>
-        <h4 id="Vector%25set"><code>Vector#set(ind, vals)</code></h4>
+        <h4 id="Vector%25set"><code>Vector#set(i, vals)</code></h4>
         <p>Set the entries of the vector that are specified by the parameter <code>i</code> to the value(s)
 specified by the parameter <code>vals</code>. <em>Can only be used on a vector that is set to
 be mutable</em>. The parameters can take two forms:</p>
 <ol>
-<li>If <code>i</code> is a single numeric index, and <code>vals</code> is the value that should be placed
+<li>If <code>i</code> is a single numeric index, then <code>vals</code> is the value that should be placed
 at that index.</li>
 <li>If the parameter <code>i</code> is omitted, i.e. <code>vals</code> is the first argument, then it needs to
 be an array or vector of equal length to <code>this</code>, or a single number, or a function <code>f(i)</code>,
 and it will be used to set all the vector's values.</li>
 </ol>
 <p>In order to set more than one of a vector's values at the same time, create a
-<a href="#Vector%25view"><code>Vector.prototype.view</code></a> and use set on that.</p>
+<a href="#Vector.ViewV"><code>Vector.ViewV</code></a> and use <a href="#Vector%25set"><code>Vector.prototype.set</code></a> on that.</p>
 <p>You may use <a href="#Vector%25_set"><code>Vector.prototype._set</code></a> if efficiency is an issue and you are certain that
 you are in the single-index case.</p>
       </div>
@@ -289,7 +292,7 @@ you are in the single-index case.</p>
       <div>
         <h4 id="Vector%25_set"><code>Vector#_set(i, val)</code></h4>
         <p>Set the entry at index <code>i</code> of the vector to <code>val</code>. Can only be used on a vector
-that is set to be mutable.</p>
+that is currently mutable.</p>
       </div>
       
       <div>
@@ -301,10 +304,10 @@ you are really certain of what you are doing!</em></p>
       </div>
       
       <div>
-        <h4 id="Vector%25mutable"><code>Vector#mutable(newSetting)</code></h4>
+        <h4 id="Vector%25mutable"><code>Vector#mutable(isMutable)</code></h4>
         <p>Called with no arguments (or with undefined/null argument), return the mutable
 state of the vector.</p>
-<p>Called with a boolean argument <code>newSetting</code>, set the mutable state to that value
+<p>Called with a boolean argument <code>isMutable</code>, set the mutable state to that value
 and return the vector.</p>
       </div>
       
@@ -314,7 +317,7 @@ and return the vector.</p>
 needed for the computation of the vector's elements.</p>
 <p>Many vector methods, notably <a href="#Vector%25map"><code>Vector.prototype.map</code></a>, delay the required computations
 until the point where they need to be computed. <a href="#Vector%25force"><code>Vector.prototype.force</code></a> is one
-way to do so.</p>
+way to force that computation.</p>
       </div>
       
       <div>
@@ -322,7 +325,7 @@ way to do so.</p>
         <p>Return a view vector on the <code>arr</code> indices. View vectors reflect the values on their
 target, but allow one to access those locations via a different indexing.
 Changing the values of a view vector actually changes the values of their target.</p>
-<p>The indices to view may also be specified via af function <code>f(i)</code> as the first argument.
+<p>The indices to view may also be specified via a function <code>f(i)</code> as the first argument.
 In that case, a second argument is needed with the desired length for the resulting vector.</p>
 <pre class="prettyprint source"><code>var v1 = new Vector([3, 5, 1, 2]);
 var view = v1.view([2, 3]);
@@ -334,7 +337,8 @@ var view2 = v1.view(function(i) { return 5 - i; }, 3); // [2, 1, 5]</code></pre>
       <div>
         <h4 id="Vector%25fill"><code>Vector#fill(val, start, end)</code></h4>
         <p>Fill in the segment of the vector's values from <code>start</code> to <code>end</code> with <code>val</code>.
-If <code>start</code> is an array or vector, use its values as the indices to fill.</p>
+If <code>start</code> is an array or vector, use its values as the indices to fill. Only usable
+on vectors that are currently mutable.</p>
       </div>
       
       <div>
@@ -343,8 +347,9 @@ If <code>start</code> is an array or vector, use its values as the indices to fi
 starting with the entry with index 1. <code>f</code> will be called as <code>f(value, index)</code>.
 If <code>skipZeros</code> is <code>true</code>, then the system <em>may</em> skip the execution
 of <code>f</code> for zero entries.</p>
-<pre class="prettyprint source"><code>// Prints: 3 1, 5 2, 1 3, 2 4
-v.each(console.log);</code></pre>
+<pre class="prettyprint source"><code>var v1 = new Vector([3, 5, 1, 2]);
+// Prints: 3 1, 5 2, 1 3, 2 4
+v1.each(console.log);</code></pre>
       </div>
       
       <div>
@@ -356,10 +361,10 @@ v.each(console.log);</code></pre>
         <h4 id="Vector%25eachPair"><code>Vector#eachPair(v2, f, skipZeros)</code></h4>
         <p>Execute the function <code>f</code> for each pair of corresponding entries from the
 vector and <code>v2</code>, starting with the entries with index 1.
-<code>f</code> will be called as <code>f(value1, value2, index)</code>, where <code>value1</code>, <code>value2</code>
+<code>f</code> will be called as <code>f(val1, val2, index)</code>, where <code>val1</code>, <code>val2</code>
 are the entries of the vectors <code>this</code>, <code>v2</code> at index <code>i</code>.
 If <code>skipZeros</code> is <code>true</code>, then the system <em>may</em> skip the execution of <code>f</code> when
-one of the values is 0.</p>
+one of the values is <code>0</code>.</p>
 <pre class="prettyprint source"><code>// Prints 3 3 1, 5 5 2, 1 1 3, 2 2 4
 v1.eachPair(v1, console.log);</code></pre>
       </div>
@@ -383,7 +388,7 @@ v1.reduce(add, 4);</code></pre>
 The signature of the function <code>f</code> would be <code>f(acc, val1, val2, i)</code> where <code>acc</code>
 is the accumulated value, <code>i</code> is the index, and <code>val1</code>, <code>val2</code> are the <code>i</code>-indexed
 values from <code>this</code>, <code>v2</code>. If <code>skipZeros</code> is <code>true</code>, the implementation <em>may</em> avoid
-calling <code>f</code> for an index <code>i</code> if one of the values there is 0.</p>
+calling <code>f</code> for an index <code>i</code> if one of the values is <code>0</code>.</p>
 <p>The vectors <code>this</code>, <code>v2</code> need to have the same length.</p>
 <pre class="prettyprint source"><code>function f(acc, val1, val2) = { return acc + val1 * val2; };
 // Computes the dot product of v1, v2.
@@ -402,9 +407,9 @@ The function <code>f</code> has the signature <code>f(val, i)</code>.
 If <code>skipZeros</code> is <code>true</code>, the operation may assume that <code>f(0, i)=0</code> and
 may choose to skip those computations.</p>
 <p><a href="#Vector%25map"><code>Vector#map</code></a> only returns a &quot;promise&quot; to compute the resulting vector.
-The implementation may choose to not actually compute values <code>f</code> until
-they are actually needed. Users should not rely on side-effects of <code>f</code>.</p>
-<pre class="prettyprint source"><code>// Results in [4, 7, 4, 6];
+The implementation may choose to not call <code>f</code> until its values
+are actually needed. Users should not rely on side-effects of <code>f</code>.</p>
+<pre class="prettyprint source"><code>// Results in [3 + 1, 5 + 2, 1 + 3, 2 + 4];
 v1.map(function(val, i) { return val + i; });</code></pre>
       </div>
       
@@ -412,15 +417,15 @@ v1.map(function(val, i) { return val + i; });</code></pre>
         <h4 id="Vector%25mapPair"><code>Vector#mapPair(v2, f, skipZeros)</code></h4>
         <p>Like <a href="#Vector%25map"><code>Vector.prototype.map</code></a>, but the function <code>f</code> acts on two vectors, with
 signature <code>f(val1, val2, i)</code>. If <code>skipZeros</code> is <code>true</code>, the implementation may
-assume that <code>f</code> will return 0 as long as one of the values is 0.</p>
+assume that <code>f</code> will return <code>0</code> as long as one of the values is <code>0</code>.</p>
       </div>
       
       <div>
         <h4 id="Vector%25norm"><code>Vector#norm(p)</code></h4>
-        <p>Compute the p-norm of the vector. <code>p</code> should be a positive
+        <p>Compute the p-norm of the vector. <code>p</code> should be a positive real
 number or <code>Infinity</code>. Defaults to the 2-norm.</p>
 <pre class="prettyprint source"><code>v.norm(1)        // 1-norm (sum of absolute values)
-v.norm()           // 2 norm (usual formula)
+v.norm()         // 2-norm (Euclidean formula)
 v.norm(Infinity) // Infinity (max) norm</code></pre>
       </div>
       
@@ -444,45 +449,45 @@ Array object every time.</p>
       
       <div>
         <h4 id="Vector%25equals"><code>Vector#equals(v2, tolerance)</code></h4>
-        <p>Test if <code>this</code> pointwise equals <code>v2</code>, within a given pointwise tolerance.</p>
+        <p>Test if <code>this</code> pointwise equals <code>v2</code>, within a given pointwise <code>tolerance</code> (defaults to <a href="#Vector.tolerance"><code>Vector.tolerance</code></a>).</p>
       </div>
       
       <div>
         <h4 id="Vector%25pAdd"><code>Vector#pAdd(v)</code></h4>
-        <p>Pointwise add two vectors.</p>
+        <p>Pointwise add two vectors. Returns a new vector.</p>
+<pre class="prettyprint source"><code>// Returns: [3 + 1, 5 + 1, 1 + 1, 2 + 1]
+v1.pAdd(Vector.ones(4));</code></pre>
       </div>
       
       <div>
         <h4 id="Vector%25pSub"><code>Vector#pSub(v)</code></h4>
-        <p>Pointwise subtract two vectors.</p>
+        <p>Pointwise subtract two vectors. Returns a new vector.</p>
       </div>
       
       <div>
         <h4 id="Vector%25sMult"><code>Vector#sMult(a)</code></h4>
-        <p>Multiply the vector <code>v</code> by the constant <code>a</code>.</p>
+        <p>Multiply the vector <code>v</code> by the constant <code>a</code>. Returns a new vector.</p>
       </div>
       
       <div>
         <h4 id="Vector%25pMult"><code>Vector#pMult(v)</code></h4>
-        <p>Pointwise multiply two vectors.</p>
+        <p>Pointwise multiply two vectors. Returns a new vector.</p>
       </div>
       
       <div>
         <h4 id="Vector%25pDiv"><code>Vector#pDiv(v)</code></h4>
-        <p>Pointwise divide two vectors.</p>
+        <p>Pointwise divide two vectors. Returns a new vector.</p>
       </div>
       
       <div>
         <h4 id="Vector%25pPow"><code>Vector#pPow(n)</code></h4>
-        <p>Raise each entry in <code>v</code> to the <code>n</code>-th power. Return the resulting vector.</p>
+        <p>Raise each entry in <code>this</code> to the <code>n</code>-th power. Returns a new vector.</p>
       </div>
       
       <div>
         <h4 id="Vector%25diff"><code>Vector#diff()</code></h4>
-        <p>Compute consecutive differences of the values in the vector.</p>
-<pre class="prettyprint source"><code>// Both produce: [2, -4, 1]
-Vector.diff(v1);
-v1.diff();
+        <p>Compute the successive differences of the values in the vector, &quot;<code>this[i+1] - this[i]</code>.&quot;</p>
+<pre class="prettyprint source"><code>v1.diff(); // Produces: [5 - 3, 1 - 5, 2 - 1]
 v1.diff().length === v1.length - 1 // true</code></pre>
       </div>
       
@@ -490,35 +495,34 @@ v1.diff().length === v1.length - 1 // true</code></pre>
         <h4 id="Vector%25cumulative"><code>Vector#cumulative(f, initial)</code></h4>
         <p>Create a new vector by accumulating one by one the results
 <code>f(acc, val, i)</code> as <code>val</code> ranges over the values of the vector,
-starting with the value <code>initial</code>. This is effectively a version of
-<code>Vector.reduce</code> where each intermediate step is stored.</p>
-<pre class="prettyprint source"><code>function f(acc, val) { return acc + val * val; }
-v1.cumulative(f, 2);  // Produces [11, 36, 37, 41]</code></pre>
+starting with the value <code>initial</code> (defaults to <code>0</code>). This is effectively a version of
+<a href="#Vector%25reduce"><code>Vector.prototype.reduce</code></a> where each intermediate step is stored.</p>
+<pre class="prettyprint source"><code>var v1 = new Vector([3, 5, 1, 2]);
+function f(acc, val) { return acc + val * val; }
+v1.cumulative(f, 2);  // [11, 36, 37, 41]</code></pre>
       </div>
       
       <div>
         <h4 id="Vector%25cumSum"><code>Vector#cumSum()</code></h4>
         <p>Create a new vector from the partial sums in the vector.</p>
-<pre class="prettyprint source"><code>// Both produce [3, 8, 9, 11]
-Vector.prototype.cumSum(v1);
-v1.cumSum();</code></pre>
+<pre class="prettyprint source"><code>v1.cumSum();  // [3, 8, 9, 11]</code></pre>
       </div>
       
       <div>
         <h4 id="Vector%25cumProd"><code>Vector#cumProd()</code></h4>
         <p>Create a new vector from the partial products in the vector.</p>
-<pre class="prettyprint source"><code>v1.cumProd(); // Produces [3, 15, 15, 30]</code></pre>
+<pre class="prettyprint source"><code>v1.cumProd(); // [3, 15, 15, 30]</code></pre>
       </div>
       
       <div>
         <h4 id="Vector%25cumMin"><code>Vector#cumMin()</code></h4>
-        <p>Create a new vector from the partial minimums in the vector.</p>
-<pre class="prettyprint source"><code>v1.cumMin(); // Produces [3, 5, 1, 1]</code></pre>
+        <p>Create a new vector from the partial minima in the vector.</p>
+<pre class="prettyprint source"><code>v1.cumMin(); // Produces [3, 3, 1, 1]</code></pre>
       </div>
       
       <div>
         <h4 id="Vector%25cumMax"><code>Vector#cumMax()</code></h4>
-        <p>Create a new vector from the partial maximums in the vector.</p>
+        <p>Create a new vector from the partial maxima in the vector.</p>
 <pre class="prettyprint source"><code>v1.cumMax(); // Produces [3, 5, 5, 5]</code></pre>
       </div>
       

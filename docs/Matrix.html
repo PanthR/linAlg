@@ -49,11 +49,13 @@
         
         <a href="#Matrix%25colView"><li><code>Matrix#colView</code></li></a>
         
-        <a href="#Matrix%25fromIndex"><li><code>Matrix#fromIndex</code></li></a>
+        <a href="#Matrix%25each"><li><code>Matrix#each</code></li></a>
         
         <a href="#Matrix%25get"><li><code>Matrix#get</code></li></a>
         
         <a href="#Matrix%25mutable"><li><code>Matrix#mutable</code></li></a>
+        
+        <a href="#Matrix%25rowFromIndex"><li><code>Matrix#rowFromIndex</code></li></a>
         
         <a href="#Matrix%25rowView"><li><code>Matrix#rowView</code></li></a>
         
@@ -87,7 +89,7 @@ Matrices contain the following properties:</p>
 &quot;1 row at a time&quot; or &quot;1 column at a time&quot;. This defaults to false for most matrices, meaning
 column-wise storage.</li>
 </ul>
-<p>The methods <a href="#Matrix%25fromIndex"><code>Matrix.prototype.fromIndex</code></a> and <a href="#Matrix%25toIndex"><code>Matrix.prototype.toIndex</code></a> may be used to
+<p>The methods <code>Matrix.prototype.fromIndex</code> and <a href="#Matrix%25toIndex"><code>Matrix.prototype.toIndex</code></a> may be used to
 relate a pair of indices <code>(i, j)</code> of the matrix to the index location in the <code>this.values</code>
 vector where the related matrix value is stored.</p>
 <p>New <a href="#Matrix"><code>Matrix</code></a> objects are created via the <a href="#Matrix"><code>Matrix</code></a> constructor, which accepts a number of options
@@ -153,7 +155,7 @@ a row or column of a matrix, use <a href="#Matrix%25rowView"><code>Matrix.protot
       <div>
         <h4 id="Matrix%25get"><code>Matrix#get(i, j)</code></h4>
         <p>Return the value at the <code>(i, j)</code> entry of the matrix. When called with no
-arguments, it returns an array of arrays of all the matrix's values.</p>
+arguments, TODO Fix this comment!</p>
       </div>
       
       <div>
@@ -164,7 +166,7 @@ to call this method.</p>
       
       <div>
         <h4 id="Matrix%25set"><code>Matrix#set(i, j, val)</code></h4>
-        <p>Set the value of the matrix at the <code>(i, j)</code> entry to <code>val</code>. </p>
+        <p>Set the value of the matrix at the <code>(i, j)</code> entry to <code>val</code>.</p>
 <p>If instead there is only one argument, then it may be a function <code>f(i, j)</code>, or
 a single value, or a <a href="#Matrix"><code>Matrix</code></a> with the same dimensions, it will be used to set
 all the values of the Matrix <code>this</code>.</p>
@@ -184,7 +186,7 @@ the matrix's values.</p>
       </div>
       
       <div>
-        <h4 id="Matrix%25fromIndex"><code>Matrix#fromIndex(n)</code></h4>
+        <h4 id="Matrix%25rowFromIndex"><code>Matrix#rowFromIndex(n)</code></h4>
         <p>Return the pair i, j corresponding to the vector index <code>n</code>. This is the inverse
 process to <a href="#Matrix%25toIndex"><code>Matrix.prototype.toIndex</code></a>.</p>
       </div>
@@ -218,6 +220,11 @@ var A2 = A1.view([1, 2], function(j) { return 1 + j; }, { ncol: 2})</code></pre>
 the matrix.</p>
 <p>A matrix's mutable state is simply a reflection of the mutable state of
 its <code>values</code> vector.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25each"><code>Matrix#each(f, skipZeros)</code></h4>
+        <p>TODO make comment</p>
       </div>
       
       <div>

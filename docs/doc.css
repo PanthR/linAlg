@@ -15,6 +15,14 @@ a {
    
 }
 
+em {
+   font-style: italic;
+}
+
+strong {
+   font-weight: bold;
+}
+
 /* Layout */
 #main {
    margin-left: 25%;

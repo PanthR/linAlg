@@ -24,7 +24,7 @@ define(function(require) {
     * once created. See `Vector.MutableV` for a description of mutable vectors.
     *
     * Every vector has a fixed `length`, accessed as a property.
-    * Vectors of length 0 are allowed, though there is not much one can do with them.
+    * Vectors of length `0` are allowed, though there is not much one can do with them.
     *
     *     // A length-4 vector
     *     var v1 = new Vector([3, 5, 1, 2]);
@@ -45,22 +45,22 @@ define(function(require) {
       return new Vector.SparseV(arr, len);
    }
 
-   /** The tolerance used in equality tests. You may set a different value.
+   /** The tolerance used in equality tests. You may set a different value. Defaults to `1e-8`.
     */
     Vector.tolerance = 1e-8;
 
    /**
     * Subclass of `Vector` representing "dense" vectors.
     * Dense vectors are internally stored simply as Javascript Arrays.
-    * Users should not need to access this directly.
+    * Users should not need to access this subclass directly.
     */
    Vector.DenseV = require('./vector/dense')(Vector);
 
    /**
     * Subclass of `Vector` representing "sparse" vectors.
-    * Sparce vectors are stored as objects, whose keys represent the indices
+    * Sparse vectors are stored as objects, whose keys represent the indices
     * that have non-zero values.
-    * Users should not need to access this directly.
+    * Users should not need to access this subclass directly.
     */
    Vector.SparseV = require('./vector/sparse')(Vector);
 
@@ -68,20 +68,22 @@ define(function(require) {
     * Subclass of `Vector` representing vectors whose values are specified via
     * a function `f(i)` of the index.
     * The values of the vector are computed lazily, only when they are accessed.
-    * Users should not need to access this directly.
+    * Users should not need to access this subclass directly.
     */
    Vector.TabularV = require('./vector/tabular')(Vector);
     /**
-     * Subclass of `Vector` representing efficiently vectors all of whose
+     * Subclass of `Vector` efficiently representing vectors all of whose
      * values are meant to be the same number.
-     * Users should not need to access this directly.
+     * Users should not need to access this subclass directly.
      * Use `Vector.const` or `Vector.ones` instead.
      */
    Vector.ConstV = require('./vector/const')(Vector);
    /**
     * Subclass of `Vector` representing vectors that provide a "view" into
-    * another object, e.g. the row or column of a `Matrix`. Changes to a view
+    * another object, e.g. a row or column of a `Matrix`. Changes to a view
     * vector cause changes to the corresponding "viewed" object and vice versa.
+    * Users should not need to access this subclass directly. 
+    * Use `Vector.prototype.view` instead.
     */
    Vector.ViewV = require('./vector/view')(Vector);
 
@@ -116,7 +118,8 @@ define(function(require) {
 
    /**
     * Generate a constant vector of length `len`, with all entries having value `val`.
-    * Constant vectors are immutable.
+    * _Constant vectors are immutable_. Use `Vector.fill` if you want to initialize a
+    * vector with some value(s).
     */
    Vector.const = function constant(val, len) {
       return new Vector.ConstV(val, len);
@@ -124,7 +127,7 @@ define(function(require) {
 
    /**
     * Generate a constant vector of length `len`, with all entries having value 1.
-    * Constant vectors are immutable.
+    * _Constant vectors are immutable_.
     *
     *     // Sums all elements of v1
     *     Vector.ones(v1.length).dot(v1)
@@ -142,11 +145,11 @@ define(function(require) {
     * 1. With no argument present, an array of all vector values is returned.
     * 2. If called with an integer `i`, the `i`-th entry from the vector is returned
     * (indexing starts at 1).
-    * 3. If called with an array of integers, an array of the correspondigly indexed entries is returned.
+    * 3. If called with an array of integers, an array of the correspondingly indexed entries is returned.
     *
     * Users should always go through this method, or `Vector.prototype._get`, when accessing
     * values of the vector unless they really know what they're doing.
-    * You may use `Vector.prototype._get` for slightly more efficient access, if you will always
+    * You may use `Vector.prototype._get` for slightly more efficient access if you will always
     * be accessing values via an integer.
     *
     *     v1.get() === [3, 5, 1, 2];
@@ -193,21 +196,21 @@ define(function(require) {
     * specified by the parameter `vals`. _Can only be used on a vector that is set to
     * be mutable_. The parameters can take two forms:
     *
-    * 1. If `i` is a single numeric index, and `vals` is the value that should be placed
+    * 1. If `i` is a single numeric index, then `vals` is the value that should be placed
     * at that index.
     * 2. If the parameter `i` is omitted, i.e. `vals` is the first argument, then it needs to
     * be an array or vector of equal length to `this`, or a single number, or a function `f(i)`,
     * and it will be used to set all the vector's values.
     *
     * In order to set more than one of a vector's values at the same time, create a
-    * `Vector.prototype.view` and use set on that.
+    * `Vector.ViewV` and use `Vector.prototype.set` on that.
     *
     * You may use `Vector.prototype._set` if efficiency is an issue and you are certain that
     * you are in the single-index case.
     */
-   Vector.prototype.set = function set(ind, vals) {
+   Vector.prototype.set = function set(i, vals) {
       function changeAll(target, vals) {
-         var i;
+         var ind;
          // Ensure vals is a function returning the values
          function makeLookup(vals) {
             if (typeof vals === 'function') { return vals; }
@@ -218,23 +221,23 @@ define(function(require) {
                }
                return vals.get.bind(vals);
             }
-            return function(i) { return vals; }; // constant
+            return function(ind) { return vals; }; // constant
          }
          vals = makeLookup(vals);
-         for (i = 1; i <= target.length; i += 1) {
-            target._set(i, vals(i));
+         for (ind = 1; ind <= target.length; ind += 1) {
+            target._set(ind, vals(ind));
          }
       }
       if (arguments.length === 1) {
-         changeAll(this, ind);  // ind is the values
+         changeAll(this, i);  // ind is the values
       } else {
-         this._set(ind, vals);
+         this._set(i, vals);
       }
       return this;
    };
    /**
     * Set the entry at index `i` of the vector to `val`. Can only be used on a vector
-    * that is set to be mutable.
+    * that is currently mutable.
     */
    Vector.prototype._set = function _set(i, val) {
       if (!this.mutable()) { throw new Error('Trying to set in an immutable vector.'); }
@@ -260,13 +263,13 @@ define(function(require) {
     * Called with no arguments (or with undefined/null argument), return the mutable
     * state of the vector.
     *
-    * Called with a boolean argument `newSetting`, set the mutable state to that value
+    * Called with a boolean argument `isMutable`, set the mutable state to that value
     * and return the vector.
     */
-   Vector.prototype.mutable = function mutable(newSetting) {
+   Vector.prototype.mutable = function mutable(isMutable) {
       if (!this.hasOwnProperty('_mutable')) { this._mutable = false; }
-      if (newSetting != null) {
-         this._mutable = newSetting === true;
+      if (isMutable != null) {
+         this._mutable = isMutable === true;
          return this;
       }
       return this._mutable;
@@ -278,7 +281,7 @@ define(function(require) {
     *
     * Many vector methods, notably `Vector.prototype.map`, delay the required computations
     * until the point where they need to be computed. `Vector.prototype.force` is one
-    * way to do so.
+    * way to force that computation.
     */
    Vector.prototype.force = function force() {
       return this;  // stub; overridden in some subclasses
@@ -289,7 +292,7 @@ define(function(require) {
     * target, but allow one to access those locations via a different indexing.
     * Changing the values of a view vector actually changes the values of their target.
     *
-    * The indices to view may also be specified via af function `f(i)` as the first argument.
+    * The indices to view may also be specified via a function `f(i)` as the first argument.
     * In that case, a second argument is needed with the desired length for the resulting vector.
     *
     *     var v1 = new Vector([3, 5, 1, 2]);
@@ -306,7 +309,8 @@ define(function(require) {
    /* eslint-disable complexity */
    /**
     * Fill in the segment of the vector's values from `start` to `end` with `val`.
-    * If `start` is an array or vector, use its values as the indices to fill.
+    * If `start` is an array or vector, use its values as the indices to fill. Only usable
+    * on vectors that are currently mutable.
     */
    Vector.prototype.fill = function fill(val, start, end) {
       var i;
@@ -329,8 +333,9 @@ define(function(require) {
     * If `skipZeros` is `true`, then the system _may_ skip the execution
     * of `f` for zero entries.
     *
+    *     var v1 = new Vector([3, 5, 1, 2]);
     *     // Prints: 3 1, 5 2, 1 3, 2 4
-    *     v.each(console.log);
+    *     v1.each(console.log);
     */
    Vector.prototype.each = function each(f, skipZeros) {
       throw new Error('Subclasses of Vector need to implement each: ' +
@@ -346,10 +351,10 @@ define(function(require) {
    /**
     * Execute the function `f` for each pair of corresponding entries from the
     * vector and `v2`, starting with the entries with index 1.
-    * `f` will be called as `f(value1, value2, index)`, where `value1`, `value2`
+    * `f` will be called as `f(val1, val2, index)`, where `val1`, `val2`
     * are the entries of the vectors `this`, `v2` at index `i`.
     * If `skipZeros` is `true`, then the system _may_ skip the execution of `f` when
-    * one of the values is 0.
+    * one of the values is `0`.
     *
     *     // Prints 3 3 1, 5 5 2, 1 1 3, 2 2 4
     *     v1.eachPair(v1, console.log);
@@ -392,7 +397,7 @@ define(function(require) {
     * The signature of the function `f` would be `f(acc, val1, val2, i)` where `acc`
     * is the accumulated value, `i` is the index, and `val1`, `val2` are the `i`-indexed
     * values from `this`, `v2`. If `skipZeros` is `true`, the implementation _may_ avoid
-    * calling `f` for an index `i` if one of the values there is 0.
+    * calling `f` for an index `i` if one of the values is `0`.
     *
     * The vectors `this`, `v2` need to have the same length.
     *
@@ -418,10 +423,10 @@ define(function(require) {
     * may choose to skip those computations.
     *
     * `Vector#map` only returns a "promise" to compute the resulting vector.
-    * The implementation may choose to not actually compute values `f` until
-    * they are actually needed. Users should not rely on side-effects of `f`.
+    * The implementation may choose to not call `f` until its values
+    * are actually needed. Users should not rely on side-effects of `f`.
     *
-    *     // Results in [4, 7, 4, 6];
+    *     // Results in [3 + 1, 5 + 2, 1 + 3, 2 + 4];
     *     v1.map(function(val, i) { return val + i; });
     */
    Vector.prototype.map = function map(f, skipZeros) {
@@ -433,7 +438,7 @@ define(function(require) {
    /**
     * Like `Vector.prototype.map`, but the function `f` acts on two vectors, with
     * signature `f(val1, val2, i)`. If `skipZeros` is `true`, the implementation may
-    * assume that `f` will return 0 as long as one of the values is 0.
+    * assume that `f` will return `0` as long as one of the values is `0`.
     */
    Vector.prototype.mapPair = function mapPair(v2, f, skipZeros) {
       if (!this.sameLength(v2)) {
@@ -450,11 +455,11 @@ define(function(require) {
    // Vector operations
 
    /**
-    * Compute the p-norm of the vector. `p` should be a positive
+    * Compute the p-norm of the vector. `p` should be a positive real
     * number or `Infinity`. Defaults to the 2-norm.
     *
     *     v.norm(1)        // 1-norm (sum of absolute values)
-    *     v.norm()           // 2 norm (usual formula)
+    *     v.norm()         // 2-norm (Euclidean formula)
     *     v.norm(Infinity) // Infinity (max) norm
     */
    Vector.prototype.norm = function norm(p) {
@@ -499,7 +504,7 @@ define(function(require) {
       return new Vector(this.toArray());
    };
 
-   /** Test if `this` pointwise equals `v2`, within a given pointwise tolerance. */
+   /** Test if `this` pointwise equals `v2`, within a given pointwise `tolerance` (defaults to `Vector.tolerance`). */
    Vector.prototype.equals = function equals(v2, tolerance) {
       var i;
       tolerance = tolerance || Vector.tolerance;
@@ -512,32 +517,37 @@ define(function(require) {
 
    // Vector arithmetic operations.
 
-   /** Pointwise add two vectors. */
+   /**
+    * Pointwise add two vectors. Returns a new vector.
+    *
+    *     // Returns: [3 + 1, 5 + 1, 1 + 1, 2 + 1]
+    *     v1.pAdd(Vector.ones(4));
+    */
    Vector.prototype.pAdd = function pAdd(v) {
       return this.mapPair(v, op.add, false);
    };
 
-   /** Pointwise subtract two vectors. */
+   /** Pointwise subtract two vectors. Returns a new vector. */
    Vector.prototype.pSub = function pSub(v) {
       return this.mapPair(v, op.sub, false);
    };
 
-   /** Multiply the vector `v` by the constant `a`. */
+   /** Multiply the vector `v` by the constant `a`. Returns a new vector. */
    Vector.prototype.sMult = function sMult(a) {
       return this.map(function(val) { return a * val; }, true);
    };
 
-   /** Pointwise multiply two vectors. */
+   /** Pointwise multiply two vectors. Returns a new vector. */
    Vector.prototype.pMult = function pMult(v) {
       return this.mapPair(v, op.mult, true);
    };
 
-   /** Pointwise divide two vectors. */
+   /** Pointwise divide two vectors. Returns a new vector. */
    Vector.prototype.pDiv = function pDiv(v) {
       return this.mapPair(v, op.div, false);
    };
 
-   /** Raise each entry in `v` to the `n`-th power. Return the resulting vector. */
+   /** Raise each entry in `this` to the `n`-th power. Returns a new vector. */
    Vector.prototype.pPow = function pPow(n) {
       return this.map(function(val) { return Math.pow(val, n); }, n > 0);
    };
@@ -545,11 +555,9 @@ define(function(require) {
    // Other Vector prototype methods
 
    /**
-    * Compute consecutive differences of the values in the vector.
+    * Compute the successive differences of the values in the vector, "`this[i+1] - this[i]`."
     *
-    *     // Both produce: [2, -4, 1]
-    *     Vector.diff(v1);
-    *     v1.diff();
+    *     v1.diff(); // Produces: [5 - 3, 1 - 5, 2 - 1]
     *     v1.diff().length === v1.length - 1 // true
     */
    Vector.prototype.diff = function diff() {
@@ -561,11 +569,12 @@ define(function(require) {
    /**
     * Create a new vector by accumulating one by one the results
     * `f(acc, val, i)` as `val` ranges over the values of the vector,
-    * starting with the value `initial`. This is effectively a version of
-    * `Vector.reduce` where each intermediate step is stored.
+    * starting with the value `initial` (defaults to `0`). This is effectively a version of
+    * `Vector.prototype.reduce` where each intermediate step is stored.
     *
+    *     var v1 = new Vector([3, 5, 1, 2]);
     *     function f(acc, val) { return acc + val * val; }
-    *     v1.cumulative(f, 2);  // Produces [11, 36, 37, 41]
+    *     v1.cumulative(f, 2);  // [11, 36, 37, 41]
     */
    Vector.prototype.cumulative = function cumulative(f, initial) {
       var arr = [];
@@ -580,9 +589,7 @@ define(function(require) {
    /**
     * Create a new vector from the partial sums in the vector.
     *
-    *     // Both produce [3, 8, 9, 11]
-    *     Vector.prototype.cumSum(v1);
-    *     v1.cumSum();
+    *     v1.cumSum();  // [3, 8, 9, 11]
     */
    Vector.prototype.cumSum = function cumSum() {
       return this.cumulative(op.add, 0);
@@ -591,16 +598,16 @@ define(function(require) {
    /**
     * Create a new vector from the partial products in the vector.
     *
-    *     v1.cumProd(); // Produces [3, 15, 15, 30]
+    *     v1.cumProd(); // [3, 15, 15, 30]
     */
    Vector.prototype.cumProd = function cumProd() {
       return this.cumulative(op.mult, 1);
    };
 
    /**
-    * Create a new vector from the partial minimums in the vector.
+    * Create a new vector from the partial minima in the vector.
     *
-    *     v1.cumMin(); // Produces [3, 5, 1, 1]
+    *     v1.cumMin(); // Produces [3, 3, 1, 1]
     */
    Vector.prototype.cumMin = function cumMin() {
       return this.cumulative(function(a, b) {
@@ -609,7 +616,7 @@ define(function(require) {
    };
 
    /**
-    * Create a new vector from the partial maximums in the vector.
+    * Create a new vector from the partial maxima in the vector.
     *
     *     v1.cumMax(); // Produces [3, 5, 5, 5]
     */
