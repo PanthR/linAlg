@@ -23,7 +23,7 @@ return function(Matrix) {
       this.values = this.target.values.view(function fetch(n) {
          var viewInd = this.fromIndex(n); // index object
          return this.target.toIndex(this.i(viewInd.i), this.j(viewInd.j));
-      }.bind(this));
+      }.bind(this), this.nrow * this.ncol);
       return this;
    }
 
