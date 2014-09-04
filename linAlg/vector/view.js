@@ -29,6 +29,9 @@ return function(Vector) {
       this.target = target;
       if (typeof indices === 'function') {
          this.i = indices;
+         if (len == null) {
+            throw new Error('ViewV with function requires length arg');
+         }
          this.length = len;
       } else {
          this.i = function(i) { return indices[i - 1]; };

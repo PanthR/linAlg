@@ -18,6 +18,11 @@ describe('View vectors', function() {
       expect(v2).to.be.instanceof(ViewV);
       expect(v2).to.be.instanceof(Vector);
    });
+   it('from functions require length arg', function() {
+      expect(function() {
+         new ViewV(target, function(i) { return 6-i; });
+      }).to.throw(Error);
+   });
    it('have the correct values', function() {
       expect(v1.toArray()).to.deep.equal([5, 2, 2]);
       expect(v2.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
