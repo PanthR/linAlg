@@ -156,6 +156,20 @@ define(function(require) {
       return this;
    };
 
+   Matrix.prototype.toArray = function toArray(byRow) {
+      var arr = [];
+      if (byRow) {
+         this.eachRow(function(row) {
+            arr.push(row.toArray());
+         });
+      } else {
+         this.eachCol(function(col) {
+            arr.push(col.toArray());
+         });
+      }
+      return arr;
+   };
+
    /**
     * Return the vector index that would correspond to the i-th row and j-th column.
     * This is used to access the appropriate location in the vector that represents
