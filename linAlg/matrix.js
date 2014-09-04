@@ -41,6 +41,7 @@ define(function(require) {
     *
     */
    function Matrix(arr, options) {
+      if (arr instanceof Matrix) { return arr; }
       if (Array.isArray(arr)) {
          return new Matrix.DenseM(arr, options);
       }
