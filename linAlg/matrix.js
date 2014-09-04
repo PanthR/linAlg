@@ -108,7 +108,7 @@ define(function(require) {
    };
 
    /**
-    * Set the value of the matrix at the `(i, j)` entry to `val`. 
+    * Set the value of the matrix at the `(i, j)` entry to `val`.
     *
     * If instead there is only one argument, then it may be a function `f(i, j)`, or
     * a single value, or a `Matrix` with the same dimensions, it will be used to set
@@ -237,6 +237,17 @@ define(function(require) {
       }
       return this.values.mutable();
    };
+
+   /** TODO make comment */
+   Matrix.prototype.forEach = function forEach(f, skipZeros) {
+      var f2 = function f2(val, n) {
+         var coord = this.fromIndex(n);
+         return f(val, coord.i, coord.j);
+      }.bind(this);
+      this.values.each(f2, skipZeros || false);
+      return this;
+   };
+
    /** Return whether the matrix has the same dimensions as the matrix `other` */
    Matrix.prototype.sameDims = function sameDims(other) {
       return this.nrow === other.nrow && this.ncol === other.ncol;
