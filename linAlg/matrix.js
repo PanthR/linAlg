@@ -183,69 +183,64 @@ define(function(require) {
     * TODO: Find a way to add this the Vector docs
     * @memberof Vector
     */
-    Matrix.Vector.prototype.outer = function outer(v2, f) {
-       var tabf;
-       f = op[f] != null ? op[f] : f || op.mult;
-       tabf = function(i, j) { return f(this.get(i), v2.get(j), i, j); }.bind(this);
-       return new Matrix(tabf, { nrow: this.length, ncol: v2.length });
-    };
-
-    /**
-     * Return a view into a submatrix of `this`. The parameters `rowIndex`, `colIndex`
-     * maybe be either arrays or functions `f(i)` used to obtain the indices.
-     * In the latter case, a third argument `dims` is needed. It is an object with
-     * properties `nrow` or `ncol` as needed, specifying the dimensions of the resulting
-     * matrix.
-     *
-     *     var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 }); // 2x3 matrix
-     *     // Returns 2nd & 3rd column
-     *     var A2 = A1.view([1, 2], function(j) { return 1 + j; }, { ncol: 2})
-     */
-    Matrix.prototype.view = function view(rowIndex, colIndex, dims) {
+   Matrix.Vector.prototype.outer = function outer(v2, f) {
+      var tabf;
+      f = op[f] != null ? op[f] : f || op.mult;
+      tabf = function(i, j) { return f(this.get(i), v2.get(j), i, j); }.bind(this);
+      return new Matrix(tabf, { nrow: this.length, ncol: v2.length });
+   };
+   /**
+    * Return a view into a submatrix of `this`. The parameters `rowIndex`, `colIndex`
+    * maybe be either arrays or functions `f(i)` used to obtain the indices.
+    * In the latter case, a third argument `dims` is needed. It is an object with
+    * properties `nrow` or `ncol` as needed, specifying the dimensions of the resulting
+    * matrix.
+    *
+    *     var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 }); // 2x3 matrix
+    *     // Returns 2nd & 3rd column
+    *     var A2 = A1.view([1, 2], function(j) { return 1 + j; }, { ncol: 2})
+    */
+   Matrix.prototype.view = function view(rowIndex, colIndex, dims) {
       return new Matrix.ViewM(this, rowIndex, colIndex, dims);
-    };
-
-    /** Return a `Vector` view of the `i`-th row of the matrix. */
-    Matrix.prototype.rowView = function rowView(i) {
-       if (i < 1 || i > this.nrow) {
-          throw new Error('Row index out of bounds');
-       }
-       return this.values.view(function(j) {
-          return this.toIndex(i, j);
-       }.bind(this), this.ncol);
-    };
-
-    /** Return a `Vector` view of the `j`-th column of the matrix. */
-    Matrix.prototype.colView = function colView(j) {
-       if (j < 1 || j > this.ncol) {
-          throw new Error('Column index out of bounds');
-       }
-       return this.values.view(function(i) {
-          return this.toIndex(i, j);
-       }.bind(this), this.nrow);
-    };
-
-    /**
-     * With no arguments, returns the mutable state of the matrix.
-     *
-     * With a boolean argument, sets the mutable state of the matrix and returns
-     * the matrix.
-     *
-     * A matrix's mutable state is simply a reflection of the mutable state of
-     * its `values` vector.
-     */
-    Matrix.prototype.mutable = function mutable(newSetting) {
-       if (newSetting != null) {
-          this.values.mutable(newSetting);
-          return this;
-       }
-       return this.values.mutable();
-    };
-
-    /** Return whether the matrix has the same dimensions as the matrix `other` */
-    Matrix.prototype.sameDims = function sameDims(other) {
-       return this.nrow === other.nrow && this.ncol === other.ncol;
-    };
+   };
+   /** Return a `Vector` view of the `i`-th row of the matrix. */
+   Matrix.prototype.rowView = function rowView(i) {
+      if (i < 1 || i > this.nrow) {
+         throw new Error('Row index out of bounds');
+      }
+      return this.values.view(function(j) {
+         return this.toIndex(i, j);
+      }.bind(this), this.ncol);
+   };
+   /** Return a `Vector` view of the `j`-th column of the matrix. */
+   Matrix.prototype.colView = function colView(j) {
+      if (j < 1 || j > this.ncol) {
+         throw new Error('Column index out of bounds');
+      }
+      return this.values.view(function(i) {
+         return this.toIndex(i, j);
+      }.bind(this), this.nrow);
+   };
+   /**
+    * With no arguments, returns the mutable state of the matrix.
+    *
+    * With a boolean argument, sets the mutable state of the matrix and returns
+    * the matrix.
+    *
+    * A matrix's mutable state is simply a reflection of the mutable state of
+    * its `values` vector.
+    */
+   Matrix.prototype.mutable = function mutable(newSetting) {
+      if (newSetting != null) {
+         this.values.mutable(newSetting);
+         return this;
+      }
+      return this.values.mutable();
+   };
+   /** Return whether the matrix has the same dimensions as the matrix `other` */
+   Matrix.prototype.sameDims = function sameDims(other) {
+      return this.nrow === other.nrow && this.ncol === other.ncol;
+   };
 
    return Matrix;
 });
