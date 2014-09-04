@@ -7,6 +7,36 @@ describe('Matrix iterators', function() {
    var A2 = new Matrix({ 2: { 3: 8, 4: 2}, 4: { 1: 5 }}, { nrow : 4, ncol: 6 });
    var A3 = new Matrix(function(i, j) { return i * j; }, { nrow: 4, ncol: 6 });
    var A4 = A3.view([3, 4], [1, 3]);
+   describe('eachRow', function() {
+      it('passes the correct arguments to f', function() {
+         var f = function(val, i) { a.push([val, i]); };
+         var a; // accumulator
+         function testMatrix(m) {
+            a = [];
+            m.eachRow(f);
+            for(var i = 1; i <= m.nrow; i += 1) {
+               expect(a[i - 1][1]).to.equal(i);
+               expect(a[i - 1][0].toArray()).to.deep.equal(m.rowView(i).toArray());
+            }
+         }
+         [A1, A2, A3, A4].forEach(testMatrix);
+      });
+   });
+   describe('eachCol', function() {
+      it('passes the correct arguments to f', function() {
+         var f = function(val, i) { a.push([val, i]); };
+         var a; // accumulator
+         function testMatrix(m) {
+            a = [];
+            m.eachCol(f);
+            for(var i = 1; i <= m.ncol; i += 1) {
+               expect(a[i - 1][1]).to.equal(i);
+               expect(a[i - 1][0].toArray()).to.deep.equal(m.colView(i).toArray());
+            }
+         }
+         [A1, A2, A3, A4].forEach(testMatrix);
+      });
+   });
    describe('forEach', function() {
       var sorter = function(a, b) { 
          if (a[1] < b[1]) return -1;

@@ -243,11 +243,28 @@ define(function(require) {
    };
 
    /** TODO make comment */
-   Matrix.prototype.forEach = function forEach(f, skipZeros) {
+   Matrix.prototype.each = function each(f, skipZeros) {
       var f2 = function f2(val, n) {
          return f(val, this.rowFromIndex(n), this.colFromIndex(n));
       }.bind(this);
       this.values.each(f2, skipZeros || false);
+      return this;
+   };
+   Matrix.prototype.forEach = Matrix.prototype.each;
+
+   Matrix.prototype.eachRow = function eachRow(f) {
+      var i;
+      for (i = 1; i <= this.nrow; i += 1) {
+         f(this.rowView(i), i);
+      }
+      return this;
+   };
+
+   Matrix.prototype.eachCol = function eachCol(f) {
+      var j;
+      for (j = 1; j <= this.ncol; j += 1) {
+         f(this.colView(j), j);
+      }
       return this;
    };
 
