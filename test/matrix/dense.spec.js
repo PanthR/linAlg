@@ -53,25 +53,25 @@ describe('Dense matrices', function() {
 describe('index conversion methods', function() {
    var A1 = new Matrix([4, 6, 7, 2, 1, 3, 1, 1, 1, 1, 1, 1], { nrow : 3 }); // byRow: False
    var A2 = new Matrix([4, 6, 7, 2, 1, 3, 1, 1, 1, 1, 1, 1], { nrow : 3, byRow: true });
-   it('fromIndex', function() {
-      expect(A1.fromIndex(1).i).to.equal(1);
-      expect(A1.fromIndex(1).j).to.equal(1);
-      expect(A1.fromIndex(2).i).to.equal(2);
-      expect(A1.fromIndex(2).j).to.equal(1);
-      expect(A1.fromIndex(3).i).to.equal(3);
-      expect(A1.fromIndex(3).j).to.equal(1);
-      expect(A1.fromIndex(4).i).to.equal(1);
-      expect(A1.fromIndex(4).j).to.equal(2);
-      expect(A2.fromIndex(1).i).to.equal(1);
-      expect(A2.fromIndex(1).j).to.equal(1);
-      expect(A2.fromIndex(2).i).to.equal(1);
-      expect(A2.fromIndex(2).j).to.equal(2);
-      expect(A2.fromIndex(3).i).to.equal(1);
-      expect(A2.fromIndex(3).j).to.equal(3);
-      expect(A2.fromIndex(4).i).to.equal(1);
-      expect(A2.fromIndex(4).j).to.equal(4);
-      expect(A2.fromIndex(5).i).to.equal(2);
-      expect(A2.fromIndex(5).j).to.equal(1);
+   it('FromIndex', function() {
+      expect(A1.rowFromIndex(1)).to.equal(1);
+      expect(A1.colFromIndex(1)).to.equal(1);
+      expect(A1.rowFromIndex(2)).to.equal(2);
+      expect(A1.colFromIndex(2)).to.equal(1);
+      expect(A1.rowFromIndex(3)).to.equal(3);
+      expect(A1.colFromIndex(3)).to.equal(1);
+      expect(A1.rowFromIndex(4)).to.equal(1);
+      expect(A1.colFromIndex(4)).to.equal(2);
+      expect(A2.rowFromIndex(1)).to.equal(1);
+      expect(A2.colFromIndex(1)).to.equal(1);
+      expect(A2.rowFromIndex(2)).to.equal(1);
+      expect(A2.colFromIndex(2)).to.equal(2);
+      expect(A2.rowFromIndex(3)).to.equal(1);
+      expect(A2.colFromIndex(3)).to.equal(3);
+      expect(A2.rowFromIndex(4)).to.equal(1);
+      expect(A2.colFromIndex(4)).to.equal(4);
+      expect(A2.rowFromIndex(5)).to.equal(2);
+      expect(A2.colFromIndex(5)).to.equal(1);
    });
    it('toIndex', function() {
       expect(A1.toIndex(1, 1)).to.equal(1);

@@ -21,8 +21,8 @@ return function(Matrix) {
       this.byRow = this.target.byRow;
       // need a ViewV into the target's values
       this.values = this.target.values.view(function fetch(n) {
-         var viewInd = this.fromIndex(n); // index object
-         return this.target.toIndex(this.i(viewInd.i), this.j(viewInd.j));
+         return this.target.toIndex(this.i(this.rowFromIndex(n)),
+                                    this.j(this.colFromIndex(n)));
       }.bind(this), this.nrow * this.ncol);
       return this;
    }

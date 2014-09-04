@@ -12,8 +12,7 @@ return function(Matrix) {
       this.nrow = options && options.nrow;
       this.ncol = options && options.ncol;
       function f2(n) {
-         var indices = this.fromIndex(n);
-         return f(indices.i, indices.j);
+         return f(this.rowFromIndex(n), this.colFromIndex(n));
       }
       this.values = new Matrix.Vector(f2.bind(this), this.nrow * this.ncol);
    }

@@ -163,18 +163,22 @@ define(function(require) {
    Matrix.prototype.toIndex = function toIndex(i, j) {
       return this.byRow ? (i - 1) * this.ncol + j : (j - 1) * this.nrow + i;
    };
-
    /**
     * Return the pair i, j corresponding to the vector index `n`. This is the inverse
     * process to `Matrix.prototype.toIndex`.
     */
-   Matrix.prototype.fromIndex = function fromIndex(n) {
+   Matrix.prototype.rowFromIndex = function rowFromIndex(n) {
       if (this.byRow) {
-         return { i: Math.floor((n - 1) / this.ncol) + 1, j: (n - 1) % this.ncol + 1 };
+         return Math.floor((n - 1) / this.ncol) + 1;
       }
-      return { i: (n - 1) % this.nrow + 1, j: Math.floor((n - 1) / this.nrow) + 1 };
+      return (n - 1) % this.nrow + 1;
    };
-
+      Matrix.prototype.colFromIndex = function colFromIndex(n) {
+      if (this.byRow) {
+         return (n - 1) % this.ncol + 1;
+      }
+      return Math.floor((n - 1) / this.nrow) + 1;
+   };
    /**
     * Return the outer product matrix of two vectors. If a function `f(i, j)` is
     * provided as the second argument, it will be used. Otherwise, normal number
@@ -241,8 +245,7 @@ define(function(require) {
    /** TODO make comment */
    Matrix.prototype.forEach = function forEach(f, skipZeros) {
       var f2 = function f2(val, n) {
-         var coord = this.fromIndex(n);
-         return f(val, coord.i, coord.j);
+         return f(val, this.rowFromIndex(n), this.colFromIndex(n));
       }.bind(this);
       this.values.each(f2, skipZeros || false);
       return this;
