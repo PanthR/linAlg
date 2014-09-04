@@ -18,6 +18,12 @@ describe('Matrix#toArray', function() {
    var A2 = new Matrix({ 2: { 3: 8, 4: 2}, 4: { 1: 5 }}, { nrow : 4, ncol: 6 });
    var A3 = new Matrix(function(i, j) { return i * j; }, { nrow: 4, ncol: 6 });
    var A4 = A3.view([3, 4], [1, 3]);
+   it('is aliased by Matrix#get (with 0 or 1 args)', function() {
+      expect(A1.get()).to.be.instanceof(Array);
+      expect(A1.get().length).to.equal(A1.ncol);
+      expect(A2.get(true)).to.be.instanceof(Array);
+      expect(A2.get(true).length).to.equal(A2.nrow);
+   })
    it('works when byRow is true', function() {
       expect(A1).to.respondTo('toArray');
       function testArray(m) {

@@ -91,9 +91,12 @@ define(function(require) {
 
    /**
     * Return the value at the `(i, j)` entry of the matrix. When called with no
-    * arguments, it returns an array of arrays of all the matrix's values.
+    * arguments, TODO Fix this comment!
     */
    Matrix.prototype.get = function get(i, j) {
+      if (arguments.length <= 1) {
+         return this.toArray(i || false);
+      }
       return this._get(i, j);
    };
 
