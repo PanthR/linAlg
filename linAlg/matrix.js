@@ -286,6 +286,13 @@ define(function(require) {
       return this;
    };
 
+   Matrix.prototype.reduce = function reduce(f, initial, skipZeros) {
+      var f2 = function f2(acc, val, n) {
+         return f(acc, val, this.rowFromIndex(n), this.colFromIndex(n));
+      }.bind(this);
+      return this.values.reduce(f2, initial, skipZeros || false);
+   };
+
    /** Return whether the matrix has the same dimensions as the matrix `other` */
    Matrix.prototype.sameDims = function sameDims(other) {
       return this.nrow === other.nrow && this.ncol === other.ncol;
