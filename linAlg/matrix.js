@@ -293,6 +293,22 @@ define(function(require) {
       return this.values.reduce(f2, initial, skipZeros || false);
    };
 
+   Matrix.prototype.reduceRow = function reduceRow(f, initial) {
+      var i;
+      for (i = 1; i <= this.nrow; i += 1) {
+         initial = f(initial, this.rowView(i), i);
+      }
+      return initial;
+   };
+
+   Matrix.prototype.reduceCol = function reduceCol(f, initial) {
+      var j;
+      for (j = 1; j <= this.ncol; j += 1) {
+         initial = f(initial, this.colView(j), j);
+      }
+      return initial;
+   };
+
    /** Return whether the matrix has the same dimensions as the matrix `other` */
    Matrix.prototype.sameDims = function sameDims(other) {
       return this.nrow === other.nrow && this.ncol === other.ncol;
