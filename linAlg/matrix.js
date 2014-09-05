@@ -326,6 +326,36 @@ define(function(require) {
       }.bind(this), { nrow: this.nrow, ncol: this.ncol });
    };
 
+   Matrix.prototype.mapRow = function mapRow(f) {
+      var newRows = [];
+      this.eachRow(function(row, i) { newRows.push(f(row, i)); });
+      if (newRows[0] instanceof Matrix.Vector) {
+         return new Matrix(newRows.map(function(row) {
+            return row.toArray();
+         }), true);
+      }
+      if (Array.isArray(newRows[0])) {
+         return new Matrix(newRows, true);
+      }
+      // values of f are numbers
+      return new Matrix.Vector(newRows);
+   };
+
+   Matrix.prototype.mapCol = function mapCol(f) {
+      var newCols = [];
+      this.eachCol(function(col, j) { newCols.push(f(col, j)); });
+      if (newCols[0] instanceof Matrix.Vector) {
+         return new Matrix(newCols.map(function(col) {
+            return col.toArray();
+         }));
+      }
+      if (Array.isArray(newCols[0])) {
+         return new Matrix(newCols);
+      }
+      // values of f are numbers
+      return new Matrix.Vector(newCols);
+   };
+
    /** Return whether the matrix has the same dimensions as the matrix `other` */
    Matrix.prototype.sameDims = function sameDims(other) {
       return this.nrow === other.nrow && this.ncol === other.ncol;
