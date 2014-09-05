@@ -173,6 +173,17 @@ define(function(require) {
       return arr;
    };
 
+   Matrix.prototype.toVector = function toVector(byRow) {
+      var obj;
+      byRow = byRow || false;
+      if (this.byRow === byRow) { return this.values; }
+      obj = { nrow: this.nrow, ncol: this.ncol, byRow: byRow };
+      return new Matrix.Vector(function(n) {
+         return this.get(this.rowFromIndex.call(obj, n),
+                         this.colFromIndex.call(obj, n));
+      }.bind(this), this.values.length);
+   };
+
    /**
     * Return the vector index that would correspond to the i-th row and j-th column.
     * This is used to access the appropriate location in the vector that represents
