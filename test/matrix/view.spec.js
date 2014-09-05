@@ -35,10 +35,20 @@ describe('View matrices', function() {
       expect(A6.get(3, 6)).to.equal(99);
    });
    it('respects the mutable setting of the target', function() {
-      console.log("TODO");
+      A4.mutable(true); A1.mutable(false);
+      expect(A4.mutable()).to.be.false;
+      expect(function() { A4.set(1, 1, 2); }).to.throw(Error);
+      A1.mutable(true);
+      expect(A4.mutable()).to.be.true;
+      expect(function() { A4.set(1, 1, 2); }).to.not.throw(Error);
    });
    it('when set, affect the target values', function() {
-      console.log("TODO");
+      A4.mutable(true).set(2, 1, 100);
+      expect(A1.get(3, 4)).to.equal(100);
+      A5.mutable(true).set(2, 1, 100);
+      expect(A2.get(2, 3)).to.equal(100);
+      A6.mutable(true).set(3, 6, 100);
+      expect(A3.get(2, 1)).to.equal(100);
    });
 });
 describe('Matrix to Vector:', function() {
