@@ -320,6 +320,12 @@ define(function(require) {
       return initial;
    };
 
+   Matrix.prototype.map = function map(f, skipZeros) {
+      return new Matrix(function(i, j) {
+         return f(this.get(i, j), i, j);
+      }.bind(this), { nrow: this.nrow, ncol: this.ncol });
+   };
+
    /** Return whether the matrix has the same dimensions as the matrix `other` */
    Matrix.prototype.sameDims = function sameDims(other) {
       return this.nrow === other.nrow && this.ncol === other.ncol;

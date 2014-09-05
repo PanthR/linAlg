@@ -210,4 +210,53 @@ describe('Matrix iterators', function() {
          expect(A4.reduceCol(f, 0)).to.equal(3 + 4 + 9 + 12);
       });
    });
+   describe('Matrix#map', function() {
+      it('calls function with the correct args', function() {
+         var f = function(val, i, j) { a.push([val, i, j]); };
+         var a; // accumulator
+         function testArray(m) {
+            a = [];
+            m.map(f).toArray();
+            expect(a.length).to.equal(m.nrow * m.ncol); // if not skipZeros
+            a.sort(sorter);
+            var c = 0;
+            for(var i = 1; i <= m.nrow; i += 1) {
+               for(var j = 1; j <= m.ncol; j += 1) {
+                  expect(a[c]).to.deep.equal([m.get(i,j), i, j]);
+                  c += 1;
+               }
+            }
+         }
+         [A1, A2, A3, A4].forEach(testArray);
+      });
+      it('returns a matrix with the correct entries', function() {
+         var f = function(v) { return v + 2; };
+         function test(m) {
+            var m2 = m.map(f); // result
+            expect(m2.nrow).to.equal(m.nrow);
+            expect(m2.ncol).to.equal(m.ncol);
+            for(var i = 1; i <= m.nrow; i += 1) {
+               for(var j = 1; j <= m.ncol; j += 1) {
+                  expect(m2.get(i, j)).to.equal(f(m.get(i, j)));
+               }
+            }
+         }
+         [A1, A2, A3, A4].forEach(test);
+      });
+      it('preserves sparseness if skipZeros is true', function() {
+         var f = function(val, i, j) { a.push([val, i, j]); };
+         var a; // accumulator
+         a = [];
+         var m = A2.map(f, true);
+         m.toArray();
+         expect(a.length).to.equal(3);
+         a.sort(sorter);
+         expect(m).to.be.instanceof(Matrix.SparseM);
+         expect(m.nrow).to.equal(A2.nrow);
+         expect(m.ncol).to.equal(A2.ncol);
+         expect(a[0]).to.deep.equal([8, 2, 3]);
+         expect(a[1]).to.deep.equal([2, 2, 4]);
+         expect(a[2]).to.deep.equal([5, 4, 1]);
+      });
+   });
 });
