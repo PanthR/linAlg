@@ -82,7 +82,7 @@ define(function(require) {
     * Subclass of `Vector` representing vectors that provide a "view" into
     * another object, e.g. a row or column of a `Matrix`. Changes to a view
     * vector cause changes to the corresponding "viewed" object and vice versa.
-    * Users should not need to access this subclass directly. 
+    * Users should not need to access this subclass directly.
     * Use `Vector.prototype.view` instead.
     */
    Vector.ViewV = require('./vector/view')(Vector);
@@ -145,7 +145,8 @@ define(function(require) {
     * 1. With no argument present, an array of all vector values is returned.
     * 2. If called with an integer `i`, the `i`-th entry from the vector is returned
     * (indexing starts at 1).
-    * 3. If called with an array of integers, an array of the correspondingly indexed entries is returned.
+    * 3. If called with an array of integers, an array of the correspondingly indexed entries
+    * is returned.
     *
     * Users should always go through this method, or `Vector.prototype._get`, when accessing
     * values of the vector unless they really know what they're doing.
@@ -504,7 +505,8 @@ define(function(require) {
       return new Vector(this.toArray());
    };
 
-   /** Test if `this` pointwise equals `v2`, within a given pointwise `tolerance` (defaults to `Vector.tolerance`). */
+   /** Test if `this` pointwise equals `v2`, within a given pointwise `tolerance`
+    * (defaults to `Vector.tolerance`). */
    Vector.prototype.equals = function equals(v2, tolerance) {
       var i;
       tolerance = tolerance || Vector.tolerance;
