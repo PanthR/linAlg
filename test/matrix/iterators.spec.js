@@ -67,13 +67,13 @@ describe('forEach', function() {
             }
          }
       }
-      [A1, A2, A3, A4].forEach(testArray);
+      [A1, A3, A4].forEach(testArray);
    });
    it('can be called with skipZeros set to true', function() {
       var f = function(val, i, j) { a.push([val, i, j]); };
       var a; // accumulator
       a = [];
-      A2.forEach(f, true);
+      A2.forEach(f);
       expect(a.length).to.equal(3);
       a.sort(sorter);
       expect(a[0]).to.deep.equal([8, 2, 3]);
@@ -98,7 +98,7 @@ describe('reduce', function() {
             }
          }
       }
-      [A1, A2, A3, A4].forEach(testArray);
+      [A1, A3, A4].forEach(testArray);
    });
    it('passes the correct acc value on every call', function() {
       var makef = function(c) {
@@ -119,7 +119,7 @@ describe('reduce', function() {
       var f = function(acc, val, i, j) { a.push([val, i, j]); };
       var a; // accumulator
       a = [];
-      A2.reduce(f, 0, true);
+      A2.reduce(f, 0);
       expect(a.length).to.equal(3);
       a.sort(sorter);
       expect(a[0]).to.deep.equal([8, 2, 3]);

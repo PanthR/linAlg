@@ -94,6 +94,11 @@ define(function(require) {
     */
    Matrix.ViewM    = require('./matrix/view')(Matrix);
 
+   /**
+    * Subclass of Vector that is used internally by `Matrix` for representing the rows/columns
+    * as vectors.
+    */
+   Matrix.ViewMV    = require('./matrix/viewmv')(Matrix);
    // Static methods
 
    /**
@@ -126,9 +131,16 @@ define(function(require) {
     * to call this method.
     */
    Matrix.prototype._get = function _get(i, j) {
-      var n;
       if ( i < 1 || i > this.nrow) { return 0; }
       if ( j < 1 || j > this.ncol) { return 0; }
+      return this.compute(i, j);
+   };
+
+   /**
+    * Computes the value that is meant to be at the i, j entry. Subclasses would
+    * probably want to override this.
+    */
+   Matrix.prototype.compute = function compute(i, j) {
       return this.values.get(this.toIndex(i, j));
    };
 
@@ -153,11 +165,7 @@ define(function(require) {
             return function(i, j) { return vals; };
          }
          vals = makeLookup(vals);
-         for (col = 1; col <= target.ncol; col += 1) {
-            for (row = 1; row <= target.nrow; row += 1) {
-               target._set(row, col, vals(row, col));
-            }
-         }
+         target.each(function(val, i, j) { target._set(i, j, vals(i, j)); });
       }
       if (arguments.length === 1) {
          changeAll(this, i);
@@ -176,6 +184,10 @@ define(function(require) {
            j < 1 || j > this.ncol) {
          throw new Error('Setting out of Matrix bounds');
       }
+      return this.change(i, j, val);
+   };
+
+   Matrix.prototype.change = function change(i, j, val) {
       this.values._set(this.toIndex(i, j), val);
       return this;
    };
@@ -197,12 +209,11 @@ define(function(require) {
    Matrix.prototype.toVector = function toVector(byRow) {
       var obj;
       byRow = byRow || false;
-      if (this.byRow === byRow) { return this.values; }
       obj = { nrow: this.nrow, ncol: this.ncol, byRow: byRow };
       return new Matrix.Vector(function(n) {
          return this.get(this.rowFromIndex.call(obj, n),
                          this.colFromIndex.call(obj, n));
-      }.bind(this), this.values.length);
+      }.bind(this), this.nrow * this.ncol);
    };
 
    /**
@@ -262,18 +273,14 @@ define(function(require) {
       if (i < 1 || i > this.nrow) {
          throw new Error('Row index out of bounds');
       }
-      return this.values.view(function(j) {
-         return this.toIndex(i, j);
-      }.bind(this), this.ncol);
+      return new Matrix.ViewMV(this, i, 'row');
    };
    /** Return a `Vector` view of the `j`-th column of the matrix. */
    Matrix.prototype.colView = function colView(j) {
       if (j < 1 || j > this.ncol) {
          throw new Error('Column index out of bounds');
       }
-      return this.values.view(function(i) {
-         return this.toIndex(i, j);
-      }.bind(this), this.nrow);
+      return new Matrix.ViewMV(this, j, 'column');
    };
    /**
     * With no arguments, returns the mutable state of the matrix.
@@ -292,12 +299,18 @@ define(function(require) {
       return this.values.mutable();
    };
 
-   /** TODO make comment */
-   Matrix.prototype.each = function each(f, skipZeros) {
+   /**
+    * `Each` automatically respects the "structure" of the matrix. For instance
+    * on a Sparse matrix, it will only be called on the non-zero entries, on a
+    * DiagM matrix it will only be called on the diagonal entries and so on.
+    * TODO: Add a way for someone to "densify" a matrix so that each acts on all.
+    * A ViewM on the full dimensions might be able to act that way.
+    */
+   Matrix.prototype.each = function each(f) {
       var f2 = function f2(val, n) {
          return f(val, this.rowFromIndex(n), this.colFromIndex(n));
       }.bind(this);
-      this.values.each(f2, skipZeros || false);
+      this.values.each(f2, true);
       return this;
    };
    Matrix.prototype.forEach = function(f) { return this.each(f); };
@@ -318,11 +331,11 @@ define(function(require) {
       return this;
    };
 
-   Matrix.prototype.reduce = function reduce(f, initial, skipZeros) {
-      var f2 = function f2(acc, val, n) {
-         return f(acc, val, this.rowFromIndex(n), this.colFromIndex(n));
-      }.bind(this);
-      return this.values.reduce(f2, initial, skipZeros || false);
+   Matrix.prototype.reduce = function reduce(f, initial) {
+      this.each(function(val, i, j) {
+         initial = f(initial, val, i, j);
+      });
+      return initial;
    };
 
    Matrix.prototype.reduceRow = function reduceRow(f, initial) {
@@ -341,7 +354,8 @@ define(function(require) {
       return initial;
    };
 
-   Matrix.prototype.map = function map(f, skipZeros) {
+   // TODO: Need to respect the structure??
+   Matrix.prototype.map = function map(f) {
       return new Matrix(function(i, j) {
          return f(this.get(i, j), i, j);
       }.bind(this), { nrow: this.nrow, ncol: this.ncol });
