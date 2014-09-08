@@ -300,7 +300,7 @@ define(function(require) {
       this.values.each(f2, skipZeros || false);
       return this;
    };
-   Matrix.prototype.forEach = Matrix.prototype.each;
+   Matrix.prototype.forEach = function(f) { return this.each(f); };
 
    Matrix.prototype.eachRow = function eachRow(f) {
       var i;
