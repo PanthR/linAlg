@@ -79,6 +79,11 @@ define(function(require) {
     * Subclass of `Matrix` representing diagonal matrices.
     * Users should not need to access this directly.
     */
+   Matrix.StructuredM = require('./matrix/structured')(Matrix);
+   /**
+    * Subclass of `Matrix` representing diagonal matrices.
+    * Users should not need to access this directly.
+    */
    Matrix.DiagM    = require('./matrix/diag')(Matrix);
    /**
     * Subclass of `Matrix` representing Submatrix views into another Matrix. Changes
@@ -88,6 +93,22 @@ define(function(require) {
     * `Matrix.prototype.colView` instead.
     */
    Matrix.ViewM    = require('./matrix/view')(Matrix);
+
+   // Static methods
+
+   /**
+    * Return a diagonal matrix with values `diagonal`. `diagonal` may be an array, a
+    * vector, or a function `f(i)`. In the latter case, a second argument `len` is
+    * required to provide the length of the resulting diagonal.
+    *
+    * To obtain the diagonal of a matrix, see `Matrix.prototype.diag`.
+    */
+   Matrix.diag = function diag(diagonal, len) {
+      if (!(diagonal instanceof Matrix.Vector)) {
+         diagonal = new Matrix.Vector(diagonal, len);
+      }
+      return new Matrix.DiagM(diagonal);
+   };
 
    /**
     * Return the value at the `(i, j)` entry of the matrix. When called with no
