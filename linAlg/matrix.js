@@ -267,18 +267,20 @@ define(function(require) {
    };
    /** Return a `Vector` view of the `i`-th row of the matrix. */
    Matrix.prototype.rowView = function rowView(i) {
-      if (i < 1 || i > this.nrow) {
-         throw new Error('Row index out of bounds');
-      }
       return new Matrix.ViewMV(this, i, 'row');
    };
    /** Return a `Vector` view of the `j`-th column of the matrix. */
    Matrix.prototype.colView = function colView(j) {
-      if (j < 1 || j > this.ncol) {
-         throw new Error('Column index out of bounds');
-      }
-      return new Matrix.ViewMV(this, j, 'column');
+      return new Matrix.ViewMV(this, j, 'col');
    };
+   /**
+    * `offset` is relative to main diagonal being 0.
+    */
+   Matrix.prototype.diagView = function diagView(offset) {
+      return new Matrix.ViewMV(this, offset || 0, 'diag');
+   };
+
+
    /**
     * With no arguments, returns the mutable state of the matrix.
     *

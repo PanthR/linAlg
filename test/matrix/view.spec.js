@@ -1,5 +1,6 @@
 var Matrix = require('../../linAlg/matrix');
-var expect = require('chai').expect;
+var chai = require('chai');
+var expect = chai.expect;
 
 describe('View matrices', function() {
    var A1 = new Matrix([4, 6, 7, 2, 1, 3, 8, 9, 12, 5, 33, 25], { nrow : 3 });
@@ -93,45 +94,121 @@ describe('Matrix to Vector:', function() {
          expect(v2.get(3)).to.equal(25);
       });
    });
-   describe('colView', function() {
-      var A1 = new Matrix([4, 6, 7, 2, 1, 3, 8, 9, 12, 5, 33, 25], { nrow : 3 });
-      var A2 = new Matrix({ 2: { 3: 8, 4: 2}, 4: { 1: 5 }}, { nrow : 4, ncol: 6 });
-      var f  = function(i, j) { return i - j; }
-      var A3 = new Matrix(f, { nrow : 4, ncol: 6 });
-      var A4 = A1.view([1, 3],[4, 2]);
-      var v1 = A1.colView(2);
-      var v2 = A2.colView(4);
-      var v3 = A3.colView(3);
-      var v4 = A4.colView(2);
-      it('returns a vector', function() {
-         expect(A1).to.respondTo('colView');
-         expect(v1).to.be.instanceof(Matrix.Vector);
-         expect(v1.length).to.equal(A1.nrow);
-         expect(v4.length).to.equal(A4.nrow);
+});
+describe('colView', function() {
+   var A1 = new Matrix([4, 6, 7, 2, 1, 3, 8, 9, 12, 5, 33, 25], { nrow : 3 });
+   var A2 = new Matrix({ 2: { 3: 8, 4: 2}, 4: { 1: 5 }}, { nrow : 4, ncol: 6 });
+   var f  = function(i, j) { return i - j; }
+   var A3 = new Matrix(f, { nrow : 4, ncol: 6 });
+   var A4 = A1.view([1, 3],[4, 2]);
+   var v1 = A1.colView(2);
+   var v2 = A2.colView(4);
+   var v3 = A3.colView(3);
+   var v4 = A4.colView(2);
+   it('returns a vector', function() {
+      expect(A1).to.respondTo('colView');
+      expect(v1).to.be.instanceof(Matrix.Vector);
+      expect(v1.length).to.equal(A1.nrow);
+      expect(v4.length).to.equal(A4.nrow);
+   });
+   it('should error if out of bounds', function() {
+      expect(function() { A1.colView(0); }).to.throw(Error);
+      expect(function() { A1.colView(A1.ncol + 1); }).to.throw(Error);
+   });
+   it('with values from the correct column', function() {
+      expect(v1.toArray()).to.deep.equal([2, 1, 3]);
+      expect(v2.toArray()).to.deep.equal([0, 2, 0, 0]);
+      expect(v3.toArray()).to.deep.equal([-2, -1, 0, 1]);
+      expect(v4.toArray()).to.deep.equal([A1.get(1, 2), A1.get(3, 2)]);
+   });
+   it('setting values in Vector changes values in Matrix', function() {
+      v1.mutable(true).set(3, 23);
+      expect(A1.get(3, 2)).to.equal(23);
+      v4.set(2, 24);
+      expect(A4.get(2, 2)).to.equal(24);
+      expect(A1.get(3, 2)).to.equal(24);
+   });
+   it('setting values in Matrix changes values in Vector', function() {
+      A2.mutable(true).set(3, 4, 25);
+      expect(v2.get(3)).to.equal(25);
+      expect(v2.get(2)).to.equal(2);
+      A2.set(3, 3, 26);
+      expect(v2.get(3)).to.equal(25);
+   });
+});
+describe('diagView', function() {
+   var A1 = new Matrix([4, 6, 7, 2, 1, 3, 8, 9, 12, 5, 33, 25], { nrow : 3 });
+   var f  = function(i, j) { return i - j; }
+   var A2 = new Matrix(f, { nrow : 6, ncol: 4 });
+   var indexArray = [
+         [A1,],[A1, 0], [A1, 1], [A1, 2], [A1, 3], [A1, 4],
+         [A1, -1], [A1, -2], [A1, -3], [A1, -4],
+         [A2,],[A2, 0], [A2, 1], [A2, 2], [A2, 3], [A2, 4],
+         [A2, -1], [A2, -2], [A2, -3], [A2, -4]];
+   it('returns a vector, or errors if out of bounds', function() {
+      expect(A1).to.respondTo('diagView');
+      indexArray.forEach(function(pair) {
+         var A = pair[0];
+         var ind = pair[1];
+         var v;
+         function f() { v = A.diagView(ind); }
+         if (ind >= A.ncol || -ind >= A.nrow) {
+            expect(f).to.throw(Error);
+         } else {
+            expect(f).to.not.throw(Error);
+            expect(v).to.be.instanceof(Matrix.Vector);
+         }
       });
-      it('should error if out of bounds', function() {
-         expect(function() { A1.colView(0); }).to.throw(Error);
-         expect(function() { A1.colView(A1.ncol + 1); }).to.throw(Error);
+   });
+   it('with values from the correct diagonal', function() {
+      indexArray.forEach(function(pair) {
+         var A = pair[0];
+         var ind = pair[1] || 0;
+         if (ind >= A.ncol || -ind >= A.nrow) {
+            // nothing
+         } else {
+            var v = A.diagView(ind);
+            var reachedEnd = false;
+            A._get = function(i, j) {
+               expect(j - i).to.equal(ind);
+               expect(i >= 1 && i <= A.nrow).to.be.okay;
+               expect(j).to.be.within(1, A.ncol);
+               if (j === A.ncol || i === A.nrow) { reachedEnd = true; }
+               return Math.min(i, j); // should be vector_i
+            };
+            for (var i = 1; i <= v.length; i += 1) {
+               expect(v.get(i)).to.equal(i);
+            }
+            expect(reachedEnd).to.be.true;
+         }
       });
-      it('with values from the correct column', function() {
-         expect(v1.toArray()).to.deep.equal([2, 1, 3]);
-         expect(v2.toArray()).to.deep.equal([0, 2, 0, 0]);
-         expect(v3.toArray()).to.deep.equal([-2, -1, 0, 1]);
-         expect(v4.toArray()).to.deep.equal([A1.get(1, 2), A1.get(3, 2)]);
-      });
-      it('setting values in Vector changes values in Matrix', function() {
-         v1.mutable(true).set(3, 23);
-         expect(A1.get(3, 2)).to.equal(23);
-         v4.set(2, 24);
-         expect(A4.get(2, 2)).to.equal(24);
-         expect(A1.get(3, 2)).to.equal(24);
-      });
-      it('setting values in Matrix changes values in Vector', function() {
-         A2.mutable(true).set(3, 4, 25);
-         expect(v2.get(3)).to.equal(25);
-         expect(v2.get(2)).to.equal(2);
-         A2.set(3, 3, 26);
-         expect(v2.get(3)).to.equal(25);
+   });
+   it('setting values in Vector changes values in Matrix', function() {
+      indexArray.forEach(function(pair) {
+         var A = pair[0];
+         var ind = pair[1] || 0;
+         if (ind >= A.ncol || -ind >= A.nrow) {
+            // nothing
+         } else {
+            var v = A.diagView(ind);
+            expect(v.mutable()).to.be.false;
+            expect(function() { v.set(1, 55)}).to.throw(Error);
+            expect(function() { v.mutable(true); }).to.not.throw(Error);
+            expect(A.mutable()).to.be.true;
+            var reachedEnd = false;
+            A._set = function(i, j, val) {
+               expect(j - i).to.equal(ind);
+               expect(i >= 1 && i <= A.nrow).to.be.okay;
+               expect(j).to.be.within(1, A.ncol);
+               if (j === A.ncol || i === A.nrow) { reachedEnd = true; }
+               expect(val).to.equal(Math.min(i, j));
+            };
+            for (var i = 1; i <= v.length; i += 1) {
+               v.set(i, i);
+            }
+            expect(reachedEnd).to.be.true;
+            v.mutable(false);
+         }
       });
    });
 });
