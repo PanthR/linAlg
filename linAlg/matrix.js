@@ -12,33 +12,40 @@ define(function(require) {
    /**
     * The `Matrix` class is a representation of 2-dimensional algebraic matrices
     * with real entries. Their values are internally represented as `Vector`s.
-    * Matrices contain the following properties:
+    * One can access the matrix dimensions via the properties `nrow` and `ncol`.
     *
-    * - A `values` property, containing a vector representing the values.
-    * - `nrow` and `ncol` integer properties, representing the number of rows and columns respectively.
-    * - A `byRow` boolean property, determining if the matrix's values are stored in the vector
-    * "1 row at a time" or "1 column at a time". This defaults to false for most matrices, meaning
-    * column-wise storage.
-    *
-    * The methods `Matrix.prototype.fromIndex` and `Matrix.prototype.toIndex` may be used to
-    * relate a pair of indices `(i, j)` of the matrix to the index location in the `this.values`
-    * vector where the related matrix value is stored.
-    *
-    * New `Matrix` objects are created via the `Matrix` constructor, which accepts a number of options
-    * for its first argument, `arr`:
+    * New `Matrix` objects are created via the `Matrix` constructor, which accepts
+    * a number of options for its first argument, `arr`:
     *
     * 1. Called with another `Matrix`, simply returns the matrix itself.
-    * 2. Called with a single array of values, constructs a matrix based on these values. The dimensions
-    * and other properties of this array are determined by the second argument, which is an object
-    * `options` containg one or more of the keys `nrow`, `ncol`, `byRow`.
-    * 3. Called with an array of arrays of values, it constructs a matrix with columns based on arrays.
-    * The number of arrays (length of `arr`) becomes `ncol`. The arrays in `arr` are expected to have
-    * the same length, and that becomes `nrow`. The options object is optional, but may contain a "byRow"
-    * entry, which if `true` indicates that the roles of `column` and `row` would be interchanged, i.e.
+    * 2. Called with a single array of values, constructs a matrix based on these values.
+    * The dimensions and other properties of this array are determined by the second
+    * argument, which is an object `options` containg one or more of the keys
+    * `nrow`, `ncol`, `byRow`.
+    * 3. Called with an array of arrays of values, it constructs a matrix with columns
+    * based on those arrays. The number of arrays (length of `arr`) becomes `ncol`. The
+    * arrays in `arr` are expected to have the same length, and that becomes `nrow`.
+    * The options object is optional, but may contain a "byRow" entry, which if `true`
+    * indicates that the roles of `column` and `row` would be interchanged, i.e.
     * the arrays in `arr` would become rows instead of columns.
-    * 4. Called with a function `f(i,j)`, it uses that function to determine the `Matrix`'s values. In
-    * that case an `options` second argument specifying `nrow` and `ncol` is needed.
+    * 4. Called with a function `f(i,j)`, it uses that function to determine the `Matrix`'s
+    * values. In that case an `options` second argument specifying `nrow` and `ncol` is needed.
     *
+    * Examples:
+    *
+    *     // All these create:
+    *     //        0 1 1
+    *     //        2 0 1
+    *     //
+    *     new Matrix([0, 2, 1, 0, 1, 1], { nrow : 2 }); // by column default
+    *     new Matrix([0, 1, 1, 2, 0, 1], { nrow : 2, byRow: true });
+    *     new Matrix([[0, 1, 1], [2, 0, 1]], { byRow : true });
+    *     new Matrix([[0, 2], [1, 0], [1, 1]]);
+    *     // Sparse matrix:
+    *     new Matrix({ 1: { 2: 1, 3: 1}, 2: { 1: 2, 3: 1 }}, { nrow : 2, ncol: 3 });
+    *     
+    *     // The following produces in rows: [[1, 2, 3], [2, 4, 6]]
+    *     new Matrix(function(i, j) { return i * j; }, { nrow: 2, ncol: 3 });
     */
    function Matrix(arr, options) {
       if (arr instanceof Matrix) { return arr; }
@@ -51,70 +58,75 @@ define(function(require) {
       return new Matrix.SparseM(arr, options);
    }
 
-   /**
-    * This is the class `Vector` as it is accessed from `Matrix`.
-    */
+   /* The class `Vector` as it is accessed from `Matrix`. */
    Matrix.Vector   = require('./vector');
    /**
     * Subclass of `Matrix` representing "dense" matrices.
     * Dense matrices are internally stored simply as Javascript Arrays.
-    * Users should not need to access this directly.
+    * Users should not need to access this subclass directly.
     */
    Matrix.DenseM   = require('./matrix/dense')(Matrix);
    /**
     * Subclass of `Matrix` representing "sparse" matrices.
-    * Sparce matrices are stored as objects, whose keys represent the indices
+    * Sparse matrices are stored as objects, whose keys represent the indices
     * that have non-zero values.
-    * Users should not need to access this directly.
+    * Users should not need to access this subclass directly.
     */
    Matrix.SparseM  = require('./matrix/sparse')(Matrix);
    /**
     * Subclass of `Matrix` representing matrices whose values are specified via
     * a function `f(i)` of the index.
     * The values of the matrix are computed lazily, only when they are accessed.
-    * Users should not need to access this directly.
+    * Users should not need to access this subclass directly.
     */
    Matrix.TabularM = require('./matrix/tabular')(Matrix);
    /**
-    * Subclass of `Matrix` representing diagonal matrices.
-    * Users should not need to access this directly.
+    * Subclass of `Matrix` acting as a superclass for classes of matrices
+    * with extra structure. Users should not need to access this subclass
+    * directly.
     */
    Matrix.StructuredM = require('./matrix/structured')(Matrix);
    /**
     * Subclass of `Matrix` representing diagonal matrices.
-    * Users should not need to access this directly.
+    * Users should not need to access this subclass directly.
     */
    Matrix.DiagM    = require('./matrix/diag')(Matrix);
    /**
-    * Subclass of `Matrix` representing Submatrix views into another Matrix. Changes
+    * Subclass of `Matrix` representing submatrix views into another matrix. Changes
     * to the view are reflected on the original matrix and vice-versa. Use
-    * `Matrix.prototype.view` to create these. If you want to create vector views into
-    * a row or column of a matrix, use `Matrix.prototype.rowView` or
-    * `Matrix.prototype.colView` instead.
+    * `Matrix.prototype.view` to create these.
+    *
+    * See also: `Matrix.prototype.rowView`, `Matrix.prototype.colView`,
+    * `Matrix.prototype.diagView`.
     */
    Matrix.ViewM    = require('./matrix/view')(Matrix);
 
    /**
-    * Subclass of Vector that is used internally by `Matrix` for representing the rows/columns
-    * as vectors.
+    * Subclass of Vector that is used internally by `Matrix` for representing
+    * the rows/columns/diagonals of a matrix as vectors.
+    *
+    * For creating these, see: `Matrix.prototype.rowView`, `Matrix.prototype.colView`,
+    * `Matrix.prototype.diagView`.
     */
    Matrix.ViewMV    = require('./matrix/viewmv')(Matrix);
    // Static methods
 
    /**
-    * Return a diagonal matrix with values `diagonal`. `diagonal` may be an array, a
-    * vector, or a function `f(i)`. In the latter case, a second argument `len` is
-    * required to provide the length of the resulting diagonal.
+    * Return a square diagonal matrix with values given by `diagonal`. The argument
+    * `diagonal` may be an array, a `Vector`, or a function `f(i)`. In the latter case,
+    * a second argument `len` is required to provide the length of the resulting diagonal.
     *
-    * To obtain the diagonal of a matrix, see `Matrix.prototype.diag`.
+    * To obtain a diagonal of an arbitrary matrix, see `Matrix.prototype.diagView`.
     */
    Matrix.diag = function diag(diagonal, len) {
       return new Matrix.DiagM(diagonal, len);
    };
 
    /**
-    * Return the value at the `(i, j)` entry of the matrix. When called with no
-    * arguments, TODO Fix this comment!
+    * Return the value at location `(i, j)`. Returns `0` if accessing a location out
+    * of bounds.
+    *
+    * Called with 0 or 1 arguments, it is an alias for `Matrix.prototype.toArray`.
     */
    Matrix.prototype.get = function get(i, j) {
       if (arguments.length <= 1) {
@@ -124,8 +136,8 @@ define(function(require) {
    };
 
    /**
-    * Internally used by `Matrix.prototype.get`. There should be no need for users
-    * to call this method.
+    * Internally used by `Matrix.prototype.get`. May be used in place of
+    * `Matrix.prototype.get` if both arguments are always present.
     */
    Matrix.prototype._get = function _get(i, j) {
       if ( i < 1 || i > this.nrow) { return 0; }
@@ -134,19 +146,34 @@ define(function(require) {
    };
 
    /**
-    * Computes the value that is meant to be at the i, j entry. Subclasses would
-    * probably want to override this.
+    * Computes the value at the (i, j) location. _Internal method_. Use `Matrix.prototype.get`
+    * instead.
     */
    Matrix.prototype.compute = function compute(i, j) {
       return this.values.get(this.toIndex(i, j));
    };
 
    /**
-    * Set the value of the matrix at the `(i, j)` entry to `val`.
+    * Set the value of the matrix at the `(i, j)` location to `val`. Requires that
+    * the matrix be set to be mutable.
     *
-    * If instead there is only one argument, then it may be a function `f(i, j)`, or
-    * a single value, or a `Matrix` with the same dimensions, it will be used to set
-    * all the values of the Matrix `this`.
+    * If called with only one argument, then that argument may be a function `f(i, j)`, or
+    * a single value, or a `Matrix` with the same dimensions. That argument will then be used
+    * to set all the values of the Matrix.
+    *
+    *     var A1 = new Matrix([1, 2, 3, 4, 5, 6], { nrow: 2, byRow: true });
+    *     A1.set(1, 1, 42);    // Throws an exception
+    *     A1.mutable(true);    // Set matrix to mutable
+    *     A1.set(2, 2, 42);    // Changes 5 to 42
+    *     A1.set(Math.random); // Fills A1 with random values
+    *     A1.set(5);           // Sets all entries to 5
+    *     var A2 = new Matrix([1, 2, 3, 4, 5, 6], { nrow: 2, byRow: true });
+    *     A1.set(A2);          // Sets all values of A1 based on those from A2
+    *     A1.set(1, 1, 42);    // Only changes A1, not A2
+    *
+    * Trying to set at an out-of-bounds location results in an exception. If the matrix is
+    * "structured", trying to set at a location outside the structure (e.g. an off-diagonal
+    * entry of a diagonal matrix) also results in an exception.
     */
    Matrix.prototype.set = function set(i, j, val) {
       function changeAll(target, vals) {
@@ -173,8 +200,8 @@ define(function(require) {
    };
 
    /**
-    * Internally used by `Matrix.prototype.set`. Users should not have need for
-    * this method.
+    * Internally used by `Matrix.prototype.set`. _Internal method_. May be used
+    * instead of `Matrix.prototype._set` if all three arguments are always present.
     */
    Matrix.prototype._set = function _set(i, j, val) {
       if ( i < 1 || i > this.nrow ||
@@ -184,11 +211,24 @@ define(function(require) {
       return this.change(i, j, val);
    };
 
+   /**
+    * Internal method used by `Matrix.prototype._set` to change the value of the
+    * matrix at a particular location. _Internal method_. This method bypasses
+    * various checks and should only be used with extreme care.
+    */
    Matrix.prototype.change = function change(i, j, val) {
       this.values._set(this.toIndex(i, j), val);
       return this;
    };
 
+   /**
+    * Return an array of arrays representing the matrix. This representation is
+    * as an array of columns (or an array of rows if `byRow` is `true`).
+    *
+    *     var A = new Matrix([1, 2, 3, 4, 5, 6], { byRow: true, nrow: 3 });
+    *     A.toArray(true);  // [[1, 2], [3, 4], [5, 6]]
+    *     A.toArray(false); // [[1, 3, 5], [2, 4, 6]]
+    */
    Matrix.prototype.toArray = function toArray(byRow) {
       var arr = [];
       if (byRow) {
@@ -203,6 +243,11 @@ define(function(require) {
       return arr;
    };
 
+   /**
+    * Return a flat vector of the matrix values by concatenating its
+    * columns (or its rows if `byRow` is true). This is not a view into
+    * the matrix, and cannot be used to change the matrix values.
+    */
    Matrix.prototype.toVector = function toVector(byRow) {
       var obj;
       byRow = byRow || false;
@@ -213,17 +258,17 @@ define(function(require) {
       }.bind(this), this.nrow * this.ncol);
    };
 
-   /**
+   /*
     * Return the vector index that would correspond to the i-th row and j-th column.
     * This is used to access the appropriate location in the vector that represents
-    * the matrix's values.
+    * the matrix's values. _This is an internal method_.
     */
    Matrix.prototype.toIndex = function toIndex(i, j) {
       return this.byRow ? (i - 1) * this.ncol + j : (j - 1) * this.nrow + i;
    };
-   /**
-    * Return the pair i, j corresponding to the vector index `n`. This is the inverse
-    * process to `Matrix.prototype.toIndex`.
+   /*
+    * Return the row corresponding to the vector index `n`. This is a partial
+    * inverse to `Matrix.prototype.toIndex`. _This is an internal method_.
     */
    Matrix.prototype.rowFromIndex = function rowFromIndex(n) {
       if (this.byRow) {
@@ -231,7 +276,11 @@ define(function(require) {
       }
       return (n - 1) % this.nrow + 1;
    };
-      Matrix.prototype.colFromIndex = function colFromIndex(n) {
+   /*
+    * Return the column corresponding to the vector index `n`. This is a partial
+    * inverse to `Matrix.prototype.toIndex`. _This is an internal method_.
+    */
+   Matrix.prototype.colFromIndex = function colFromIndex(n) {
       if (this.byRow) {
          return (n - 1) % this.ncol + 1;
       }
@@ -312,8 +361,13 @@ define(function(require) {
       this.values.each(f2, true);
       return this;
    };
+   /** Alias for `Matrix.prototype.each` */
    Matrix.prototype.forEach = function(f) { return this.each(f); };
 
+   /**
+    * Apply the function `f` to each row in the matrix. The signature of `f` is
+    * `f(row, i)` where `row` is a `Vector` object representing the `i`-th row.
+    */
    Matrix.prototype.eachRow = function eachRow(f) {
       var i;
       for (i = 1; i <= this.nrow; i += 1) {
@@ -322,6 +376,10 @@ define(function(require) {
       return this;
    };
 
+   /**
+    * Apply the function `f` to each column in the matrix. The signature of `f` is
+    * `f(col, j)` where `col` is a `Vector` object representing the `j`-th col.
+    */
    Matrix.prototype.eachCol = function eachCol(f) {
       var j;
       for (j = 1; j <= this.ncol; j += 1) {
@@ -330,6 +388,9 @@ define(function(require) {
       return this;
    };
 
+   /**
+    * TODO
+    */
    Matrix.prototype.reduce = function reduce(f, initial) {
       this.each(function(val, i, j) {
          initial = f(initial, val, i, j);
@@ -337,6 +398,9 @@ define(function(require) {
       return initial;
    };
 
+   /**
+    * TODO
+    */
    Matrix.prototype.reduceRow = function reduceRow(f, initial) {
       var i;
       for (i = 1; i <= this.nrow; i += 1) {
@@ -345,6 +409,9 @@ define(function(require) {
       return initial;
    };
 
+   /**
+    * TODO
+    */
    Matrix.prototype.reduceCol = function reduceCol(f, initial) {
       var j;
       for (j = 1; j <= this.ncol; j += 1) {
@@ -360,6 +427,9 @@ define(function(require) {
       }.bind(this), { nrow: this.nrow, ncol: this.ncol });
    };
 
+   /**
+    * TODO
+    */
    Matrix.prototype.mapRow = function mapRow(f) {
       var newRows = [];
       this.eachRow(function(row, i) { newRows.push(f(row, i)); });
@@ -375,6 +445,9 @@ define(function(require) {
       return new Matrix.Vector(newRows);
    };
 
+   /**
+    * TODO
+    */
    Matrix.prototype.mapCol = function mapCol(f) {
       var newCols = [];
       this.eachCol(function(col, j) { newCols.push(f(col, j)); });

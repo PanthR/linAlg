@@ -7,7 +7,7 @@ define(function(require) {
 return function(Vector) {
 
    // Subclass of `Vector` representing "sparse" vectors.
-   // Sparce vectors are stored as objects, whose keys represent the indices
+   // Sparse vectors are stored as objects, whose keys represent the indices
    // that have non-zero values.
    // Users should not need to access this directly.
    function SparseV(arr, len) {

@@ -199,7 +199,7 @@ Use <a href="#Vector.const"><code>Vector.const</code></a> or <a href="#Vector.on
         <p>Subclass of <a href="#Vector"><code>Vector</code></a> representing vectors that provide a &quot;view&quot; into
 another object, e.g. a row or column of a <a href="#Matrix"><code>Matrix</code></a>. Changes to a view
 vector cause changes to the corresponding &quot;viewed&quot; object and vice versa.
-Users should not need to access this subclass directly. 
+Users should not need to access this subclass directly.
 Use <a href="#Vector%25view"><code>Vector.prototype.view</code></a> instead.</p>
       </div>
       
@@ -243,7 +243,8 @@ number of different forms:</p>
 <li>With no argument present, an array of all vector values is returned.</li>
 <li>If called with an integer <code>i</code>, the <code>i</code>-th entry from the vector is returned
 (indexing starts at 1).</li>
-<li>If called with an array of integers, an array of the correspondingly indexed entries is returned.</li>
+<li>If called with an array of integers, an array of the correspondingly indexed entries
+is returned.</li>
 </ol>
 <p>Users should always go through this method, or <a href="#Vector%25_get"><code>Vector.prototype._get</code></a>, when accessing
 values of the vector unless they really know what they're doing.
@@ -449,7 +450,8 @@ Array object every time.</p>
       
       <div>
         <h4 id="Vector%25equals"><code>Vector#equals(v2, tolerance)</code></h4>
-        <p>Test if <code>this</code> pointwise equals <code>v2</code>, within a given pointwise <code>tolerance</code> (defaults to <a href="#Vector.tolerance"><code>Vector.tolerance</code></a>).</p>
+        <p>Test if <code>this</code> pointwise equals <code>v2</code>, within a given pointwise <code>tolerance</code>
+(defaults to <a href="#Vector.tolerance"><code>Vector.tolerance</code></a>).</p>
       </div>
       
       <div>

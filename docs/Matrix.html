@@ -37,25 +37,49 @@
         
         <a href="#Matrix.SparseM"><li><code>Matrix.SparseM</code></li></a>
         
+        <a href="#Matrix.StructuredM"><li><code>Matrix.StructuredM</code></li></a>
+        
         <a href="#Matrix.TabularM"><li><code>Matrix.TabularM</code></li></a>
         
-        <a href="#Matrix.Vector"><li><code>Matrix.Vector</code></li></a>
-        
         <a href="#Matrix.ViewM"><li><code>Matrix.ViewM</code></li></a>
+        
+        <a href="#Matrix.ViewMV"><li><code>Matrix.ViewMV</code></li></a>
+        
+        <a href="#Matrix.diag"><li><code>Matrix.diag</code></li></a>
         
         <a href="#Matrix%25_get"><li><code>Matrix#_get</code></li></a>
         
         <a href="#Matrix%25_set"><li><code>Matrix#_set</code></li></a>
         
+        <a href="#Matrix%25change"><li><code>Matrix#change</code></li></a>
+        
         <a href="#Matrix%25colView"><li><code>Matrix#colView</code></li></a>
+        
+        <a href="#Matrix%25compute"><li><code>Matrix#compute</code></li></a>
+        
+        <a href="#Matrix%25diagView"><li><code>Matrix#diagView</code></li></a>
         
         <a href="#Matrix%25each"><li><code>Matrix#each</code></li></a>
         
+        <a href="#Matrix%25eachCol"><li><code>Matrix#eachCol</code></li></a>
+        
+        <a href="#Matrix%25eachRow"><li><code>Matrix#eachRow</code></li></a>
+        
+        <a href="#Matrix%25forEach"><li><code>Matrix#forEach</code></li></a>
+        
         <a href="#Matrix%25get"><li><code>Matrix#get</code></li></a>
+        
+        <a href="#Matrix%25mapCol"><li><code>Matrix#mapCol</code></li></a>
+        
+        <a href="#Matrix%25mapRow"><li><code>Matrix#mapRow</code></li></a>
         
         <a href="#Matrix%25mutable"><li><code>Matrix#mutable</code></li></a>
         
-        <a href="#Matrix%25rowFromIndex"><li><code>Matrix#rowFromIndex</code></li></a>
+        <a href="#Matrix%25reduce"><li><code>Matrix#reduce</code></li></a>
+        
+        <a href="#Matrix%25reduceCol"><li><code>Matrix#reduceCol</code></li></a>
+        
+        <a href="#Matrix%25reduceRow"><li><code>Matrix#reduceRow</code></li></a>
         
         <a href="#Matrix%25rowView"><li><code>Matrix#rowView</code></li></a>
         
@@ -63,7 +87,9 @@
         
         <a href="#Matrix%25set"><li><code>Matrix#set</code></li></a>
         
-        <a href="#Matrix%25toIndex"><li><code>Matrix#toIndex</code></li></a>
+        <a href="#Matrix%25toArray"><li><code>Matrix#toArray</code></li></a>
+        
+        <a href="#Matrix%25toVector"><li><code>Matrix#toVector</code></li></a>
         
         <a href="#Matrix%25view"><li><code>Matrix#view</code></li></a>
         
@@ -81,52 +107,53 @@
         <h4 id="Matrix"><code>Matrix(arr, options)</code></h4>
         <p>The <a href="#Matrix"><code>Matrix</code></a> class is a representation of 2-dimensional algebraic matrices
 with real entries. Their values are internally represented as <a href="#Vector"><code>Vector</code></a>s.
-Matrices contain the following properties:</p>
-<ul>
-<li>A <code>values</code> property, containing a vector representing the values.</li>
-<li><code>nrow</code> and <code>ncol</code> integer properties, representing the number of rows and columns respectively.</li>
-<li>A <code>byRow</code> boolean property, determining if the matrix's values are stored in the vector
-&quot;1 row at a time&quot; or &quot;1 column at a time&quot;. This defaults to false for most matrices, meaning
-column-wise storage.</li>
-</ul>
-<p>The methods <code>Matrix.prototype.fromIndex</code> and <a href="#Matrix%25toIndex"><code>Matrix.prototype.toIndex</code></a> may be used to
-relate a pair of indices <code>(i, j)</code> of the matrix to the index location in the <code>this.values</code>
-vector where the related matrix value is stored.</p>
-<p>New <a href="#Matrix"><code>Matrix</code></a> objects are created via the <a href="#Matrix"><code>Matrix</code></a> constructor, which accepts a number of options
-for its first argument, <code>arr</code>:</p>
+One can access the matrix dimensions via the properties <code>nrow</code> and <code>ncol</code>.</p>
+<p>New <a href="#Matrix"><code>Matrix</code></a> objects are created via the <a href="#Matrix"><code>Matrix</code></a> constructor, which accepts
+a number of options for its first argument, <code>arr</code>:</p>
 <ol>
 <li>Called with another <a href="#Matrix"><code>Matrix</code></a>, simply returns the matrix itself.</li>
-<li>Called with a single array of values, constructs a matrix based on these values. The dimensions
-and other properties of this array are determined by the second argument, which is an object
-<code>options</code> containg one or more of the keys <code>nrow</code>, <code>ncol</code>, <code>byRow</code>.</li>
-<li>Called with an array of arrays of values, it constructs a matrix with columns based on arrays.
-The number of arrays (length of <code>arr</code>) becomes <code>ncol</code>. The arrays in <code>arr</code> are expected to have
-the same length, and that becomes <code>nrow</code>. The options object is optional, but may contain a &quot;byRow&quot;
-entry, which if <code>true</code> indicates that the roles of <code>column</code> and <code>row</code> would be interchanged, i.e.
+<li>Called with a single array of values, constructs a matrix based on these values.
+The dimensions and other properties of this array are determined by the second
+argument, which is an object <code>options</code> containg one or more of the keys
+<code>nrow</code>, <code>ncol</code>, <code>byRow</code>.</li>
+<li>Called with an array of arrays of values, it constructs a matrix with columns
+based on those arrays. The number of arrays (length of <code>arr</code>) becomes <code>ncol</code>. The
+arrays in <code>arr</code> are expected to have the same length, and that becomes <code>nrow</code>.
+The options object is optional, but may contain a &quot;byRow&quot; entry, which if <code>true</code>
+indicates that the roles of <code>column</code> and <code>row</code> would be interchanged, i.e.
 the arrays in <code>arr</code> would become rows instead of columns.</li>
-<li>Called with a function <code>f(i,j)</code>, it uses that function to determine the <a href="#Matrix"><code>Matrix</code></a>'s values. In
-that case an <code>options</code> second argument specifying <code>nrow</code> and <code>ncol</code> is needed.</li>
+<li>Called with a function <code>f(i,j)</code>, it uses that function to determine the <a href="#Matrix"><code>Matrix</code></a>'s
+values. In that case an <code>options</code> second argument specifying <code>nrow</code> and <code>ncol</code> is needed.</li>
 </ol>
-      </div>
-      
-      <div>
-        <h4 id="Matrix.Vector"><code>Matrix.Vector</code></h4>
-        <p>This is the class <a href="#Vector"><code>Vector</code></a> as it is accessed from <a href="#Matrix"><code>Matrix</code></a>.</p>
+<p>Examples:</p>
+<pre class="prettyprint source"><code>// All these create:
+//        0 1 1
+//        2 0 1
+//
+new Matrix([0, 2, 1, 0, 1, 1], { nrow : 2 }); // by column default
+new Matrix([0, 1, 1, 2, 0, 1], { nrow : 2, byRow: true });
+new Matrix([[0, 1, 1], [2, 0, 1]], { byRow : true });
+new Matrix([[0, 2], [1, 0], [1, 1]]);
+// Sparse matrix:
+new Matrix({ 1: { 2: 1, 3: 1}, 2: { 1: 2, 3: 1 }}, { nrow : 2, ncol: 3 });
+
+// The following produces in rows: [[1, 2, 3], [2, 4, 6]]
+new Matrix(function(i, j) { return i * j; }, { nrow: 2, ncol: 3 });</code></pre>
       </div>
       
       <div>
         <h4 id="Matrix.DenseM"><code>Matrix.DenseM</code></h4>
         <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing &quot;dense&quot; matrices.
 Dense matrices are internally stored simply as Javascript Arrays.
-Users should not need to access this directly.</p>
+Users should not need to access this subclass directly.</p>
       </div>
       
       <div>
         <h4 id="Matrix.SparseM"><code>Matrix.SparseM</code></h4>
         <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing &quot;sparse&quot; matrices.
-Sparce matrices are stored as objects, whose keys represent the indices
+Sparse matrices are stored as objects, whose keys represent the indices
 that have non-zero values.
-Users should not need to access this directly.</p>
+Users should not need to access this subclass directly.</p>
       </div>
       
       <div>
@@ -134,61 +161,113 @@ Users should not need to access this directly.</p>
         <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing matrices whose values are specified via
 a function <code>f(i)</code> of the index.
 The values of the matrix are computed lazily, only when they are accessed.
-Users should not need to access this directly.</p>
+Users should not need to access this subclass directly.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.StructuredM"><code>Matrix.StructuredM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> acting as a superclass for classes of matrices
+with extra structure. Users should not need to access this subclass
+directly.</p>
       </div>
       
       <div>
         <h4 id="Matrix.DiagM"><code>Matrix.DiagM</code></h4>
         <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing diagonal matrices.
-Users should not need to access this directly.</p>
+Users should not need to access this subclass directly.</p>
       </div>
       
       <div>
         <h4 id="Matrix.ViewM"><code>Matrix.ViewM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing Submatrix views into another Matrix. Changes
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing submatrix views into another matrix. Changes
 to the view are reflected on the original matrix and vice-versa. Use
-<a href="#Matrix%25view"><code>Matrix.prototype.view</code></a> to create these. If you want to create vector views into
-a row or column of a matrix, use <a href="#Matrix%25rowView"><code>Matrix.prototype.rowView</code></a> or
-<a href="#Matrix%25colView"><code>Matrix.prototype.colView</code></a> instead.</p>
+<a href="#Matrix%25view"><code>Matrix.prototype.view</code></a> to create these.</p>
+<p>See also: <a href="#Matrix%25rowView"><code>Matrix.prototype.rowView</code></a>, <a href="#Matrix%25colView"><code>Matrix.prototype.colView</code></a>,
+<a href="#Matrix%25diagView"><code>Matrix.prototype.diagView</code></a>.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.ViewMV"><code>Matrix.ViewMV</code></h4>
+        <p>Subclass of Vector that is used internally by <a href="#Matrix"><code>Matrix</code></a> for representing
+the rows/columns/diagonals of a matrix as vectors.</p>
+<p>For creating these, see: <a href="#Matrix%25rowView"><code>Matrix.prototype.rowView</code></a>, <a href="#Matrix%25colView"><code>Matrix.prototype.colView</code></a>,
+<a href="#Matrix%25diagView"><code>Matrix.prototype.diagView</code></a>.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.diag"><code>Matrix.diag(diagonal, len)</code></h4>
+        <p>Return a square diagonal matrix with values given by <code>diagonal</code>. The argument
+<code>diagonal</code> may be an array, a <a href="#Vector"><code>Vector</code></a>, or a function <code>f(i)</code>. In the latter case,
+a second argument <code>len</code> is required to provide the length of the resulting diagonal.</p>
+<p>To obtain a diagonal of an arbitrary matrix, see <a href="#Matrix%25diagView"><code>Matrix.prototype.diagView</code></a>.</p>
       </div>
       
       <div>
         <h4 id="Matrix%25get"><code>Matrix#get(i, j)</code></h4>
-        <p>Return the value at the <code>(i, j)</code> entry of the matrix. When called with no
-arguments, TODO Fix this comment!</p>
+        <p>Return the value at location <code>(i, j)</code>. Returns <code>0</code> if accessing a location out
+of bounds.</p>
+<p>Called with 0 or 1 arguments, it is an alias for <a href="#Matrix%25toArray"><code>Matrix.prototype.toArray</code></a>.</p>
       </div>
       
       <div>
         <h4 id="Matrix%25_get"><code>Matrix#_get(i, j)</code></h4>
-        <p>Internally used by <a href="#Matrix%25get"><code>Matrix.prototype.get</code></a>. There should be no need for users
-to call this method.</p>
+        <p>Internally used by <a href="#Matrix%25get"><code>Matrix.prototype.get</code></a>. May be used in place of
+<a href="#Matrix%25get"><code>Matrix.prototype.get</code></a> if both arguments are always present.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25compute"><code>Matrix#compute(i, j)</code></h4>
+        <p>Computes the value at the (i, j) location. <em>Internal method</em>. Use <a href="#Matrix%25get"><code>Matrix.prototype.get</code></a>
+instead.</p>
       </div>
       
       <div>
         <h4 id="Matrix%25set"><code>Matrix#set(i, j, val)</code></h4>
-        <p>Set the value of the matrix at the <code>(i, j)</code> entry to <code>val</code>.</p>
-<p>If instead there is only one argument, then it may be a function <code>f(i, j)</code>, or
-a single value, or a <a href="#Matrix"><code>Matrix</code></a> with the same dimensions, it will be used to set
-all the values of the Matrix <code>this</code>.</p>
+        <p>Set the value of the matrix at the <code>(i, j)</code> location to <code>val</code>. Requires that
+the matrix be set to be mutable.</p>
+<p>If called with only one argument, then that argument may be a function <code>f(i, j)</code>, or
+a single value, or a <a href="#Matrix"><code>Matrix</code></a> with the same dimensions. That argument will then be used
+to set all the values of the Matrix.</p>
+<pre class="prettyprint source"><code>var A1 = new Matrix([1, 2, 3, 4, 5, 6], { nrow: 2, byRow: true });
+A1.set(1, 1, 42);    // Throws an exception
+A1.mutable(true);    // Set matrix to mutable
+A1.set(2, 2, 42);    // Changes 5 to 42
+A1.set(Math.random); // Fills A1 with random values
+A1.set(5);           // Sets all entries to 5
+var A2 = new Matrix([1, 2, 3, 4, 5, 6], { nrow: 2, byRow: true });
+A1.set(A2);          // Sets all values of A1 based on those from A2
+A1.set(1, 1, 42);    // Only changes A1, not A2</code></pre><p>Trying to set at an out-of-bounds location results in an exception. If the matrix is
+&quot;structured&quot;, trying to set at a location outside the structure (e.g. an off-diagonal
+entry of a diagonal matrix) also results in an exception.</p>
       </div>
       
       <div>
         <h4 id="Matrix%25_set"><code>Matrix#_set(i, j, val)</code></h4>
-        <p>Internally used by <a href="#Matrix%25set"><code>Matrix.prototype.set</code></a>. Users should not have need for
-this method.</p>
+        <p>Internally used by <a href="#Matrix%25set"><code>Matrix.prototype.set</code></a>. <em>Internal method</em>. May be used
+instead of <a href="#Matrix%25_set"><code>Matrix.prototype._set</code></a> if all three arguments are always present.</p>
       </div>
       
       <div>
-        <h4 id="Matrix%25toIndex"><code>Matrix#toIndex(i, j)</code></h4>
-        <p>Return the vector index that would correspond to the i-th row and j-th column.
-This is used to access the appropriate location in the vector that represents
-the matrix's values.</p>
+        <h4 id="Matrix%25change"><code>Matrix#change(i, j, val)</code></h4>
+        <p>Internal method used by <a href="#Matrix%25_set"><code>Matrix.prototype._set</code></a> to change the value of the
+matrix at a particular location. <em>Internal method</em>. This method bypasses
+various checks and should only be used with extreme care.</p>
       </div>
       
       <div>
-        <h4 id="Matrix%25rowFromIndex"><code>Matrix#rowFromIndex(n)</code></h4>
-        <p>Return the pair i, j corresponding to the vector index <code>n</code>. This is the inverse
-process to <a href="#Matrix%25toIndex"><code>Matrix.prototype.toIndex</code></a>.</p>
+        <h4 id="Matrix%25toArray"><code>Matrix#toArray(byRow)</code></h4>
+        <p>Return an array of arrays representing the matrix. This representation is
+as an array of columns (or an array of rows if <code>byRow</code> is <code>true</code>).</p>
+<pre class="prettyprint source"><code>var A = new Matrix([1, 2, 3, 4, 5, 6], { byRow: true, nrow: 3 });
+A.toArray(true);  // [[1, 2], [3, 4], [5, 6]]
+A.toArray(false); // [[1, 3, 5], [2, 4, 6]]</code></pre>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25toVector"><code>Matrix#toVector(byRow)</code></h4>
+        <p>Return a flat vector of the matrix values by concatenating its
+columns (or its rows if <code>byRow</code> is true). This is not a view into
+the matrix, and cannot be used to change the matrix values.</p>
       </div>
       
       <div>
@@ -214,6 +293,11 @@ var A2 = A1.view([1, 2], function(j) { return 1 + j; }, { ncol: 2})</code></pre>
       </div>
       
       <div>
+        <h4 id="Matrix%25diagView"><code>Matrix#diagView(offset)</code></h4>
+        <p><code>offset</code> is relative to main diagonal being 0.</p>
+      </div>
+      
+      <div>
         <h4 id="Matrix%25mutable"><code>Matrix#mutable(newSetting)</code></h4>
         <p>With no arguments, returns the mutable state of the matrix.</p>
 <p>With a boolean argument, sets the mutable state of the matrix and returns
@@ -223,8 +307,54 @@ its <code>values</code> vector.</p>
       </div>
       
       <div>
-        <h4 id="Matrix%25each"><code>Matrix#each(f, skipZeros)</code></h4>
-        <p>TODO make comment</p>
+        <h4 id="Matrix%25each"><code>Matrix#each(f)</code></h4>
+        <p><code>Each</code> automatically respects the &quot;structure&quot; of the matrix. For instance
+on a Sparse matrix, it will only be called on the non-zero entries, on a
+DiagM matrix it will only be called on the diagonal entries and so on.
+TODO: Add a way for someone to &quot;densify&quot; a matrix so that each acts on all.
+A ViewM on the full dimensions might be able to act that way.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25forEach"><code>Matrix#forEach(f)</code></h4>
+        <p>Alias for <a href="#Matrix%25each"><code>Matrix.prototype.each</code></a></p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25eachRow"><code>Matrix#eachRow(f)</code></h4>
+        <p>Apply the function <code>f</code> to each row in the matrix. The signature of <code>f</code> is
+<code>f(row, i)</code> where <code>row</code> is a <a href="#Vector"><code>Vector</code></a> object representing the <code>i</code>-th row.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25eachCol"><code>Matrix#eachCol(f)</code></h4>
+        <p>Apply the function <code>f</code> to each column in the matrix. The signature of <code>f</code> is
+<code>f(col, j)</code> where <code>col</code> is a <a href="#Vector"><code>Vector</code></a> object representing the <code>j</code>-th col.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25reduce"><code>Matrix#reduce(f, initial)</code></h4>
+        <p>TODO</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25reduceRow"><code>Matrix#reduceRow(f, initial)</code></h4>
+        <p>TODO</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25reduceCol"><code>Matrix#reduceCol(f, initial)</code></h4>
+        <p>TODO</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25mapRow"><code>Matrix#mapRow(f)</code></h4>
+        <p>TODO</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25mapCol"><code>Matrix#mapCol(f)</code></h4>
+        <p>TODO</p>
       </div>
       
       <div>
