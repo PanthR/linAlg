@@ -20,7 +20,10 @@ return function(Matrix) {
    //
    // Using rowView/colView on diagonal matrices may be quite inefficient,
    // as it does not recognize the sparse nature of those vectors.
-   function DiagM(diagonal) {
+   function DiagM(diagonal, len) {
+      if (!(diagonal instanceof Matrix.Vector)) {
+         diagonal = new Matrix.Vector(diagonal, len);
+      }
       this.byRow = false;
       this.values = diagonal;
       this.nrow = this.values.length;

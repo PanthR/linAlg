@@ -109,10 +109,7 @@ define(function(require) {
     * To obtain the diagonal of a matrix, see `Matrix.prototype.diag`.
     */
    Matrix.diag = function diag(diagonal, len) {
-      if (!(diagonal instanceof Matrix.Vector)) {
-         diagonal = new Matrix.Vector(diagonal, len);
-      }
-      return new Matrix.DiagM(diagonal);
+      return new Matrix.DiagM(diagonal, len);
    };
 
    /**
