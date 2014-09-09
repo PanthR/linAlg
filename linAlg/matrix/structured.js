@@ -14,13 +14,11 @@ return function(Matrix) {
 
    StructuredM.prototype.each = function each(f) {
       throw new Error('Subclasses of StructuredM need to implement custom `each`');
-      // var i, j;
-      // for (i = 1; i <= this.nrow; i += 1) {
-      //    for (j = 1; j <= this.ncol; j += 1) {
-      //       f(this._get(i, j), i, j);
-      //    }
-      // }
-      // return this;
+   };
+
+   // preserves structure of the matrix
+   StructuredM.prototype.map = function map(f) {
+      throw new Error('Subclasses of StructuredM need to implement custom `map`');
    };
 
    return StructuredM;

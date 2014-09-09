@@ -2,8 +2,6 @@ var Matrix = require('../../linAlg/matrix');
 var DiagM = Matrix.DiagM;
 var expect = require('chai').expect;
 
-console.log("!!!!!!     TODO: REENABLE DIAGM SPEC    !!!!!!");
-return;
 describe('Diagonal matrices', function() {
    var a1 = [4, 2, 5, 6];
    var v1 = new Matrix.Vector([4, 2, 5, 6]);
@@ -51,17 +49,13 @@ describe('Diagonal matrices', function() {
       d1 = Matrix.diag(a1);
       d2 = Matrix.diag(v1);
       // each with skipZeros == true ---> visit diagonal
-      d1.each(function(v, i, j) {
-         expect(i).to.equal(j);
-         expect(v).to.equal(a1[i - 1]);
-      }, true);
       var c = 0;
-      // each with skipZeros == false
       d1.each(function(v, i, j) {
          c += 1;
-         if (i !== j) { expect(v).to.equal(0); }
+         expect(i).to.equal(j);
+         expect(v).to.equal(a1[i - 1]);
       });
-      expect(c).to.equal(d1.nrow * d1.ncol);
+      expect(c).to.equal(d1.nrow);
       // eachRow, eachCol
       d1.eachRow(function(row, i) {
          expect(row).to.be.instanceof(Matrix.Vector);
@@ -78,21 +72,17 @@ describe('Diagonal matrices', function() {
          }
       });
    });
-   it('have correct map', function() {
-      var d3 = d1.map(function(v, i, j) { return v + i * j; }, true);  // DiagM
-      var d4 = d1.map(function(v, i, j) { return v + i * j; });  // Dense
+   it('have correct map which preserves structure', function() {
+      function f2(v, i, j) { 
+         expect(v).to.equal(d1.get(i,j));
+         expect(i).to.equal(j);
+         return v + i * j;
+      }
+      var d3 = d1.map(f2);  // DiagM
       expect(d3).to.be.instanceof(DiagM);
-      expect(d4).to.not.be.instanceof(DiagM);
-      expect(d4).to.be.instanceof(DenseM);
       expect(d3.sameDims(d1)).to.be.true;
-      expect(d4.sameDims(d2)).to.be.true;
       for (var i = 1; i <= d3.nrow; i += 1) {
          expect(d3.get(i, i)).to.equal(d1.get(i, i) + i * i);
-      }
-      for (var i = 1; i <= d4.nrow; i += 1) {
-         for (var j = 1; j <= d4.ncol; j += 1) {
-            expect(d4.get(i, j)).to.equal(d2.get(i, j) + i * j);
-         }
       }
    });
    it('can use rowView/colView to get/set, but only the diagonal element', function() {

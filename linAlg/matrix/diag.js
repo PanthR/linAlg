@@ -45,8 +45,17 @@ return function(Matrix) {
       return this;
    };
 
-   DiagM.prototype.each = function each(f, skipZeros) {
-      console.log('TODO');
+   DiagM.prototype.each = function each(f) {
+      // apply f along the diagonal
+      this.values.each(function(val, i) {
+         f(val, i, i);
+      }, false);  // want to access all diag elements
+      return this;
+   };
+
+   DiagM.prototype.map = function map(f) {
+      function f2(val, i) { return f(val, i, i); }
+      return new DiagM(this.values.map(f2));
    };
 
    return DiagM;
