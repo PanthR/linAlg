@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="doc.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <title>Permutation</title>
+  </head>
+  <body>
+    <div id="header">
+    <h1>Documentation for module <code>Permutation</code>
+      
+      </h1>
+    </div>
+    <div id="sidebar">
+      <div>
+        <h3>Module Index</h3>
+      <ul>
+        
+        <a href="LinAlg.html"><li><code>LinAlg</code></li></a>
+        
+        <a href="Matrix.html"><li><code>Matrix</code></li></a>
+        
+        <a href="Permutation.html"><li><code>Permutation</code></li></a>
+        
+        <a href="utils.html"><li><code>utils</code></li></a>
+        
+        <a href="Vector.html"><li><code>Vector</code></li></a>
+        
+      </ul>
+      </div>
+      <div>
+        <h3>Contents</h3>
+      <ul>
+        
+        <a href="#Permutation"><li><code>Permutation</code></li></a>
+        
+        <a href="#Permutation.cycleToObject"><li><code>Permutation.cycleToObject</code></li></a>
+        
+        <a href="#Permutation%25compose"><li><code>Permutation#compose</code></li></a>
+        
+        <a href="#Permutation%25toCycles"><li><code>Permutation#toCycles</code></li></a>
+        
+      </ul>
+      </div>
+    </div>
+    <div id="main">
+      <div class="moduleInfo">
+        <h2>Module <code>Permutation</code></h2>
+        <p>Author(s): <a class="author" href="mailto:skiadas@hanover.edu">Haris Skiadas</a>, <a class="author" href="mailto:wahl@hanover.edu">Barb Wahl</a><p>
+        <p>Algebraic Permutations on finite sets.</p>
+      </div>
+      
+      <div>
+        <h4 id="Permutation"><code>Permutation(relation)</code></h4>
+        <p>A class representing permutations on sets <code>{1, 2, ..., n}</code>. Permutations are
+represented via a &quot;function object&quot; whose key-value pairs are non-fixed points of
+the permutation. In other words, if <code>s(i) = j</code> and <code>j</code> is not equal to <code>i</code>, then
+the object contains a key <code>i</code> with value <code>j</code>. If a key <code>i</code> does not appear in the
+object then <code>s(i) = i</code>. For example the cycle <code>(2 4)</code> can be represented as the
+object <code>{ 2: 4, 4: 2 }</code>.</p>
+<p>The size <code>n</code> is only implicit; permutations can be thought of as functions on any
+set big enough to contain their non-fixed points.
+The first argument, <code>relation</code>, needs to be either an array representing a cycle,
+an array of arrays representing a product of cycles, or a &quot;function object&quot;.</p>
+<p>It can also be called with another <a href="#Permutation"><code>Permutation</code></a> as first argument, in which case
+it returns that permutation.</p>
+      </div>
+      
+      <div>
+        <h4 id="Permutation%25compose"><code>Permutation#compose(other)</code></h4>
+        <p>Return the composed permutation of <code>this</code> followed by <code>other</code>.
+<code>other</code> may be a <a href="#Permutation"><code>Permutation</code></a>, a cycle, array of cycles, or a &quot;function object&quot;.</p>
+      </div>
+      
+      <div>
+        <h4 id="Permutation%25toCycles"><code>Permutation#toCycles()</code></h4>
+        <p>Return an array representing the cycle representation of the permutation.</p>
+      </div>
+      
+      <div>
+        <h4 id="Permutation.cycleToObject"><code>Permutation.cycleToObject(cycles)</code></h4>
+        <p>Return the function object represented by the cycle. Helper method.
+It also recognizes an array of cycles, or a &quot;function object&quot;.</p>
+      </div>
+      
+    </div>
+  </body>
+</html>
