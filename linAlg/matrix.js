@@ -43,7 +43,7 @@ define(function(require) {
     *     new Matrix([[0, 2], [1, 0], [1, 1]]);
     *     // Sparse matrix:
     *     new Matrix({ 1: { 2: 1, 3: 1}, 2: { 1: 2, 3: 1 }}, { nrow : 2, ncol: 3 });
-    *     
+    *
     *     // The following produces in rows: [[1, 2, 3], [2, 4, 6]]
     *     new Matrix(function(i, j) { return i * j; }, { nrow: 2, ncol: 3 });
     */
