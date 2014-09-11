@@ -263,6 +263,30 @@ define(function(require) {
       return this;
    };
 
+   /**
+    * Create a clone of the matrix. The clone inherits the values that the matrix
+    * has at the time of cloning. If `faithful` is `true` (default), then the clone
+    * also inherits any structure (e.g. being diagonal) when possible.
+    *
+    * Unfaithful clones are useful if you want to set values of a structured matrix
+    * outside of the structure (e.g. setting off-diagonal elements on a diagonal matrix).
+    * In general, `Matrix.prototype.set` respects any imposed structure the matrix has
+    * on its creation.
+    */
+   Matrix.prototype.clone = function clone(faithful) {
+      if (faithful === false) { // Want faithful to default to true
+         return this._clone();
+      }
+      return this._faithfulClone();
+   };
+   /* Unfaithful clone. Returns a dense matrix. */
+   Matrix.prototype._clone = function _clone() {
+      return new Matrix(this.toArray());
+   };
+   /* Faithful clone. Goes through Matrix#map. */
+   Matrix.prototype._faithfulClone = function _faithfulClone() {
+      return this.map(function(x) { return x; }).force();
+   };
    /*
     * Return the vector index that would correspond to the i-th row and j-th column.
     * This is used to access the appropriate location in the vector that represents
