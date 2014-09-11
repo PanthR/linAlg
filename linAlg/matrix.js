@@ -258,6 +258,11 @@ define(function(require) {
       }.bind(this), this.nrow * this.ncol);
    };
 
+   /** Force unresolved computations for the matrix. */
+   Matrix.prototype.force = function force() {
+      return this;
+   };
+
    /*
     * Return the vector index that would correspond to the i-th row and j-th column.
     * This is used to access the appropriate location in the vector that represents

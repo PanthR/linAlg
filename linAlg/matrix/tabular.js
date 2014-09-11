@@ -19,6 +19,11 @@ return function(Matrix) {
 
    TabularM.prototype = Object.create(Matrix.DenseM.prototype);
 
+   TabularM.prototype.force = function force() {
+      this.values.force();
+      return this;
+   };
+
    return TabularM;
 };
 
