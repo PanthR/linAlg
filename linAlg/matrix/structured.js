@@ -10,7 +10,7 @@ return function(Matrix) {
       throw new Error('Not meant to call StructuredM');
    }
 
-   StructuredM.prototype = Object.create(Matrix.DenseM.prototype);
+   StructuredM.prototype = Object.create(Matrix.prototype);
 
    StructuredM.prototype.each = function each(f) {
       throw new Error('Subclasses of StructuredM need to implement custom `each`');
