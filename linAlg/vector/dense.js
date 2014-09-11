@@ -22,7 +22,7 @@ return function(Vector) {
 
    DenseV.prototype.change = function change(i, val) {
       if (!this.values) { this.values = []; }
-      this.values[i - 1] = val | 0;
+      this.values[i - 1] = val;
       return this;
    };
 

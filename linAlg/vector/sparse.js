@@ -21,11 +21,12 @@ return function(Vector) {
    /* SparseV.prototype methods */
 
    SparseV.prototype._get = function _get(i) {
-      return this._values[i] | 0;
+      // If NaN, we do want to return that, cannot "|| 0"
+      return this._values.hasOwnProperty(i) ? this._values[i] : 0;
    };
 
    SparseV.prototype.change = function change(i, val) {
-      this._values[i] = val | 0;
+      this._values[i] = val;
       return this;
    };
 

@@ -21,4 +21,13 @@ describe('Dense vectors', function() {
       expect(v1.get(3)).to.equal(7);
       expect(v1.get(10)).to.equal(0);
    });
+   it('allow non-integer values', function() {
+      var a1 = [Math.random() * 4, -Math.random() * 3, Math.random()];
+      var v1 = new Vector(a1);
+      expect(v1.get(1)).to.equal(a1[0]);
+      expect(v1.get(2)).to.equal(a1[1]);
+      expect(v1.get(3)).to.equal(a1[2]);
+      v1.mutable(true).set(1, 2.345);
+      expect(v1.get(1)).to.equal(2.345);
+   });
 })
