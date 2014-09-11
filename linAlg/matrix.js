@@ -355,11 +355,12 @@ define(function(require) {
     * A ViewM on the full dimensions might be able to act that way.
     */
    Matrix.prototype.each = function each(f) {
-      var f2 = function f2(val, n) {
-         return f(val, this.rowFromIndex(n), this.colFromIndex(n));
-      }.bind(this);
-      this.values.each(f2, true);
-      return this;
+      var i, j;
+      for (i = 1; i <= this.nrow; i += 1) {
+         for (j = 1; j <= this.ncol; j += 1) {
+            f(this.compute(i, j), i, j);
+         }
+      }
    };
    /** Alias for `Matrix.prototype.each` */
    Matrix.prototype.forEach = function(f) { return this.each(f); };

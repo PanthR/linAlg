@@ -61,13 +61,6 @@ return function(Matrix) {
       return this;
    };
 
-   ViewMV.prototype.each = function each(f) {
-      var i;
-      for (i = 1; i <= this.length; i += 1) {
-         f(this.compute(i), i);
-      }
-   };
-
    return ViewMV;
 };
 
