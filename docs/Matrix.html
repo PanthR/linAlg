@@ -31,17 +31,17 @@
         <h3>Contents</h3>
       <ul>
         
+        <a href="#DenseM.SparseM"><li><code>DenseM.SparseM</code></li></a>
+        
+        <a href="#DenseM.TabularM"><li><code>DenseM.TabularM</code></li></a>
+        
+        <a href="#StructuredM.DiagM"><li><code>StructuredM.DiagM</code></li></a>
+        
         <a href="#Matrix"><li><code>Matrix</code></li></a>
         
         <a href="#Matrix.DenseM"><li><code>Matrix.DenseM</code></li></a>
         
-        <a href="#Matrix.DiagM"><li><code>Matrix.DiagM</code></li></a>
-        
-        <a href="#Matrix.SparseM"><li><code>Matrix.SparseM</code></li></a>
-        
         <a href="#Matrix.StructuredM"><li><code>Matrix.StructuredM</code></li></a>
-        
-        <a href="#Matrix.TabularM"><li><code>Matrix.TabularM</code></li></a>
         
         <a href="#Matrix.ViewM"><li><code>Matrix.ViewM</code></li></a>
         
@@ -54,6 +54,8 @@
         <a href="#Matrix%25_set"><li><code>Matrix#_set</code></li></a>
         
         <a href="#Matrix%25change"><li><code>Matrix#change</code></li></a>
+        
+        <a href="#Matrix%25clone"><li><code>Matrix#clone</code></li></a>
         
         <a href="#Matrix%25colView"><li><code>Matrix#colView</code></li></a>
         
@@ -68,6 +70,8 @@
         <a href="#Matrix%25eachRow"><li><code>Matrix#eachRow</code></li></a>
         
         <a href="#Matrix%25forEach"><li><code>Matrix#forEach</code></li></a>
+        
+        <a href="#Matrix%25force"><li><code>Matrix#force</code></li></a>
         
         <a href="#Matrix%25get"><li><code>Matrix#get</code></li></a>
         
@@ -92,6 +96,8 @@
         <a href="#Matrix%25toArray"><li><code>Matrix#toArray</code></li></a>
         
         <a href="#Matrix%25toVector"><li><code>Matrix#toVector</code></li></a>
+        
+        <a href="#Matrix%25validIndices"><li><code>Matrix#validIndices</code></li></a>
         
         <a href="#Matrix%25view"><li><code>Matrix#view</code></li></a>
         
@@ -151,32 +157,10 @@ Users should not need to access this subclass directly.</p>
       </div>
       
       <div>
-        <h4 id="Matrix.SparseM"><code>Matrix.SparseM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing &quot;sparse&quot; matrices.
-Sparse matrices are stored as objects, whose keys represent the indices
-that have non-zero values.
-Users should not need to access this subclass directly.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix.TabularM"><code>Matrix.TabularM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing matrices whose values are specified via
-a function <code>f(i)</code> of the index.
-The values of the matrix are computed lazily, only when they are accessed.
-Users should not need to access this subclass directly.</p>
-      </div>
-      
-      <div>
         <h4 id="Matrix.StructuredM"><code>Matrix.StructuredM</code></h4>
         <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> acting as a superclass for classes of matrices
 with extra structure. Users should not need to access this subclass
 directly.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix.DiagM"><code>Matrix.DiagM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing diagonal matrices.
-Users should not need to access this subclass directly.</p>
       </div>
       
       <div>
@@ -273,15 +257,37 @@ the matrix, and cannot be used to change the matrix values.</p>
       </div>
       
       <div>
+        <h4 id="Matrix%25force"><code>Matrix#force()</code></h4>
+        <p>Force unresolved computations for the matrix.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25clone"><code>Matrix#clone(faithful)</code></h4>
+        <p>Create a clone of the matrix. The clone inherits the values that the matrix
+has at the time of cloning. If <code>faithful</code> is <code>true</code> (default), then the clone
+also inherits any structure (e.g. being diagonal) when possible.</p>
+<p>Unfaithful clones are useful if you want to set values of a structured matrix
+outside of the structure (e.g. setting off-diagonal elements on a diagonal matrix).
+In general, <a href="#Matrix%25set"><code>Matrix.prototype.set</code></a> respects any imposed structure the matrix has
+on its creation.</p>
+      </div>
+      
+      <div>
         <h4 id="Matrix%25view"><code>Matrix#view(rowIndex, colIndex, dims)</code></h4>
-        <p>Return a view into a submatrix of <code>this</code>. The parameters <code>rowIndex</code>, <code>colIndex</code>
-maybe be either arrays or functions <code>f(i)</code> used to obtain the indices.
-In the latter case, a third argument <code>dims</code> is needed. It is an object with
-properties <code>nrow</code> or <code>ncol</code> as needed, specifying the dimensions of the resulting
-matrix.</p>
-<pre class="prettyprint source"><code>var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 }); // 2x3 matrix
-// Returns 2nd & 3rd column
-var A2 = A1.view([1, 2], function(j) { return 1 + j; }, { ncol: 2})</code></pre>
+        <p>Return a view into a submatrix of <code>this</code>.</p>
+<p>The parameters <code>rowIndex</code>, <code>colIndex</code>
+may be either arrays or functions <code>f(i)</code> used to obtain the indices.
+In the latter case, a third argument <code>dims</code> is required.</p>
+<p><code>dims</code> is an object with properties <code>nrow</code> or <code>ncol</code> as needed, specifying the
+dimensions of the resulting matrix.</p>
+<pre class="prettyprint source"><code>// A 2x3 matrix
+var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 });
+// Both return a view into the 2nd & 3rd columns as a 2x2 matrix
+var A2 = A1.view([1, 2], [2, 3]);
+var A2 = A1.view([1, 2], function(j) { return 1 + j; }, { ncol: 2 });</code></pre><p>The View matrix (vector) is linked to the original matrix.
+The mutable state of the view is that of the original
+matrix. Changing the values in the view also changes the values in the matrix,
+and vice versa. Use <a href="#Matrix%25clone"><code>Matrix.prototype.clone</code></a> on the view matrix to break the link.</p>
       </div>
       
       <div>
@@ -296,7 +302,16 @@ var A2 = A1.view([1, 2], function(j) { return 1 + j; }, { ncol: 2})</code></pre>
       
       <div>
         <h4 id="Matrix%25diagView"><code>Matrix#diagView(offset)</code></h4>
-        <p><code>offset</code> is relative to main diagonal being 0.</p>
+        <p>Return a <a href="#Vector"><code>Vector</code></a> view of the diagonal of the matrix specified by
+the given <code>offset</code> (defaults to 0). The main diagonal has offset 0, the diagonal
+above it has offset 1, while the one below the main diagonal has offset -1.
+Asking for a diagonal beyond the matrix bounds results in an error.</p>
+<pre class="prettyprint source"><code>var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 });
+A1.diagView();    // [2, 5];
+A1.diagView(-1);  // [3];
+A1.diagView(1);   // [4, 7];
+A1.diagView(2);   // [6];
+A1.diagView(3);   // Error;</code></pre>
       </div>
       
       <div>
@@ -304,17 +319,18 @@ var A2 = A1.view([1, 2], function(j) { return 1 + j; }, { ncol: 2})</code></pre>
         <p>With no arguments, returns the mutable state of the matrix.</p>
 <p>With a boolean argument, sets the mutable state of the matrix and returns
 the matrix.</p>
-<p>A matrix's mutable state is simply a reflection of the mutable state of
-its <code>values</code> vector.</p>
       </div>
       
       <div>
         <h4 id="Matrix%25each"><code>Matrix#each(f)</code></h4>
-        <p><code>Each</code> automatically respects the &quot;structure&quot; of the matrix. For instance
+        <p>Apply the given function to each entry in the matrix. The signature of the
+function is <code>f(val, i, j)</code>.</p>
+<p><code>Each</code> respects the &quot;structure&quot; of the matrix. For instance
 on a Sparse matrix, it will only be called on the non-zero entries, on a
-DiagM matrix it will only be called on the diagonal entries and so on.
-TODO: Add a way for someone to &quot;densify&quot; a matrix so that each acts on all.
-A ViewM on the full dimensions might be able to act that way.</p>
+DiagM matrix it will only be called on the diagonal entries and so on.</p>
+<p>If you really need the function to be called on <em>each</em> matrix entry, regardless of
+structure, then you should use <a href="#Matrix%25clone"><code>Matrix.prototype.clone</code></a> first to create an
+&quot;unfaithful clone&quot;.</p>
       </div>
       
       <div>
@@ -336,17 +352,33 @@ A ViewM on the full dimensions might be able to act that way.</p>
       
       <div>
         <h4 id="Matrix%25reduce"><code>Matrix#reduce(f, initial)</code></h4>
-        <p>TODO</p>
+        <p>Return the accumulated value of the calls of <code>f(acc, val, i, j)</code> over the entries
+of the matrix, with <code>acc</code> starting with value <code>initial</code>.</p>
+<p><a href="#Matrix%25reduce"><code>Matrix.prototype.reduce</code></a> is similar to <a href="#Matrix%25each"><code>Matrix.prototype.each</code></a> in how it deals
+with structured matrices.</p>
+<p>Compare with <a href="#Vector%25reduce"><code>Vector.prototype.reduce</code></a>.</p>
+<pre class="prettyprint source"><code>var A = new Matrix(Math.random, { nrow: 3, ncol: 2 });
+// Counts the number of entries in A which exceed 0.5
+A.reduce(function(acc, val, i, j) {
+  return acc + (val > 0.5 ? 1 : 0);
+}, 0);</code></pre>
       </div>
       
       <div>
         <h4 id="Matrix%25reduceRow"><code>Matrix#reduceRow(f, initial)</code></h4>
-        <p>TODO</p>
+        <p>Return the accumulated value of the calls of <code>f(acc, row, i, j)</code> over the rows
+of the matrix, with <code>acc</code> starting with value <code>initial</code>.</p>
+<pre class="prettyprint source"><code>// Add the rows in A with 2-norm >= 1
+A.reduce(function(acc, row, i, j) {
+  if (row.norm() >= 1) { return acc.pAdd(row); }
+  return acc;
+}, Vector.const(0, A.ncol));</code></pre>
       </div>
       
       <div>
         <h4 id="Matrix%25reduceCol"><code>Matrix#reduceCol(f, initial)</code></h4>
-        <p>TODO</p>
+        <p>Return the accumulated value of the calls of <code>f(acc, col, i, j)</code> over the columns
+of the matrix, with <code>acc</code> starting with value <code>initial</code>.</p>
       </div>
       
       <div>
@@ -362,6 +394,33 @@ A ViewM on the full dimensions might be able to act that way.</p>
       <div>
         <h4 id="Matrix%25sameDims"><code>Matrix#sameDims(other)</code></h4>
         <p>Return whether the matrix has the same dimensions as the matrix <code>other</code></p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25validIndices"><code>Matrix#validIndices(i, j)</code></h4>
+        <p>Returns whether the (i, j) pair is within the matrix's bounds.</p>
+      </div>
+      
+      <div>
+        <h4 id="DenseM.SparseM"><code>DenseM.SparseM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing &quot;sparse&quot; matrices.
+Sparse matrices are stored as objects, whose keys represent the indices
+that have non-zero values.
+Users should not need to access this subclass directly.</p>
+      </div>
+      
+      <div>
+        <h4 id="DenseM.TabularM"><code>DenseM.TabularM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing matrices whose values are specified via
+a function <code>f(i)</code> of the index.
+The values of the matrix are computed lazily, only when they are accessed.
+Users should not need to access this subclass directly.</p>
+      </div>
+      
+      <div>
+        <h4 id="StructuredM.DiagM"><code>StructuredM.DiagM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing diagonal matrices.
+Users should not need to access this subclass directly.</p>
       </div>
       
     </div>

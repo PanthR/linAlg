@@ -303,15 +303,25 @@ define(function(require) {
       return new Matrix(tabf, { nrow: this.length, ncol: v2.length });
    };
    /**
-    * Return a view into a submatrix of `this`. The parameters `rowIndex`, `colIndex`
-    * maybe be either arrays or functions `f(i)` used to obtain the indices.
-    * In the latter case, a third argument `dims` is needed. It is an object with
-    * properties `nrow` or `ncol` as needed, specifying the dimensions of the resulting
-    * matrix.
+    * Return a view into a submatrix of `this`.
     *
-    *     var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 }); // 2x3 matrix
-    *     // Returns 2nd & 3rd column
-    *     var A2 = A1.view([1, 2], function(j) { return 1 + j; }, { ncol: 2})
+    * The parameters `rowIndex`, `colIndex`
+    * may be either arrays or functions `f(i)` used to obtain the indices.
+    * In the latter case, a third argument `dims` is required.
+    *
+    * `dims` is an object with properties `nrow` or `ncol` as needed, specifying the
+    * dimensions of the resulting matrix.
+    *
+    *     // A 2x3 matrix
+    *     var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 });
+    *     // Both return a view into the 2nd & 3rd columns as a 2x2 matrix
+    *     var A2 = A1.view([1, 2], [2, 3]);
+    *     var A2 = A1.view([1, 2], function(j) { return 1 + j; }, { ncol: 2 });
+    *
+    * The View matrix (vector) is linked to the original matrix.
+    * The mutable state of the view is that of the original
+    * matrix. Changing the values in the view also changes the values in the matrix,
+    * and vice versa. Use `Matrix.prototype.clone` on the view matrix to break the link.
     */
    Matrix.prototype.view = function view(rowIndex, colIndex, dims) {
       return new Matrix.ViewM(this, rowIndex, colIndex, dims);
@@ -325,7 +335,17 @@ define(function(require) {
       return new Matrix.ViewMV(this, j, 'col');
    };
    /**
-    * `offset` is relative to main diagonal being 0.
+    * Return a `Vector` view of the diagonal of the matrix specified by
+    * the given `offset` (defaults to 0). The main diagonal has offset 0, the diagonal
+    * above it has offset 1, while the one below the main diagonal has offset -1.
+    * Asking for a diagonal beyond the matrix bounds results in an error.
+    *
+    *     var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 });
+    *     A1.diagView();    // [2, 5];
+    *     A1.diagView(-1);  // [3];
+    *     A1.diagView(1);   // [4, 7];
+    *     A1.diagView(2);   // [6];
+    *     A1.diagView(3);   // Error;
     */
    Matrix.prototype.diagView = function diagView(offset) {
       return new Matrix.ViewMV(this, offset || 0, 'diag');
@@ -337,9 +357,6 @@ define(function(require) {
     *
     * With a boolean argument, sets the mutable state of the matrix and returns
     * the matrix.
-    *
-    * A matrix's mutable state is simply a reflection of the mutable state of
-    * its `values` vector.
     */
    Matrix.prototype.mutable = function mutable(newSetting) {
       if (newSetting != null) {
@@ -350,11 +367,16 @@ define(function(require) {
    };
 
    /**
-    * `Each` automatically respects the "structure" of the matrix. For instance
+    * Apply the given function to each entry in the matrix. The signature of the
+    * function is `f(val, i, j)`.
+    *
+    * `Each` respects the "structure" of the matrix. For instance
     * on a Sparse matrix, it will only be called on the non-zero entries, on a
     * DiagM matrix it will only be called on the diagonal entries and so on.
-    * TODO: Add a way for someone to "densify" a matrix so that each acts on all.
-    * A ViewM on the full dimensions might be able to act that way.
+    *
+    * If you really need the function to be called on _each_ matrix entry, regardless of
+    * structure, then you should use `Matrix.prototype.clone` first to create an
+    * "unfaithful clone".
     */
    Matrix.prototype.each = function each(f) {
       var i, j;
@@ -392,7 +414,19 @@ define(function(require) {
    };
 
    /**
-    * TODO
+    * Return the accumulated value of the calls of `f(acc, val, i, j)` over the entries
+    * of the matrix, with `acc` starting with value `initial`.
+    *
+    * `Matrix.prototype.reduce` is similar to `Matrix.prototype.each` in how it deals
+    * with structured matrices.
+    *
+    * Compare with `Vector.prototype.reduce`.
+    *
+    *     var A = new Matrix(Math.random, { nrow: 3, ncol: 2 });
+    *     // Counts the number of entries in A which exceed 0.5
+    *     A.reduce(function(acc, val, i, j) {
+    *       return acc + (val > 0.5 ? 1 : 0);
+    *     }, 0);
     */
    Matrix.prototype.reduce = function reduce(f, initial) {
       this.each(function(val, i, j) {
@@ -402,7 +436,14 @@ define(function(require) {
    };
 
    /**
-    * TODO
+    * Return the accumulated value of the calls of `f(acc, row, i, j)` over the rows
+    * of the matrix, with `acc` starting with value `initial`.
+    *
+    *     // Add the rows in A with 2-norm >= 1
+    *     A.reduce(function(acc, row, i, j) {
+    *       if (row.norm() >= 1) { return acc.pAdd(row); }
+    *       return acc;
+    *     }, Vector.const(0, A.ncol));
     */
    Matrix.prototype.reduceRow = function reduceRow(f, initial) {
       var i;
@@ -413,7 +454,8 @@ define(function(require) {
    };
 
    /**
-    * TODO
+   * Return the accumulated value of the calls of `f(acc, col, i, j)` over the columns
+   * of the matrix, with `acc` starting with value `initial`.
     */
    Matrix.prototype.reduceCol = function reduceCol(f, initial) {
       var j;
@@ -423,6 +465,7 @@ define(function(require) {
       return initial;
    };
 
+   // WE ARE HERE!
    // TODO: Need to respect the structure??
    Matrix.prototype.map = function map(f) {
       return new Matrix(function(i, j) {
