@@ -25,7 +25,7 @@ return function(Matrix) {
       this.values = new Matrix.Vector(values, this.nrow * this.ncol);
    }
 
-   SparseM.prototype = Object.create(Matrix.prototype);
+   SparseM.prototype = Object.create(Matrix.DenseM.prototype);
 
    SparseM.prototype.map = function map(f, skipZeros) {
       if (skipZeros !== true) {

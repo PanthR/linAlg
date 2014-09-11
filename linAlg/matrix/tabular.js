@@ -17,7 +17,7 @@ return function(Matrix) {
       this.values = new Matrix.Vector(f2.bind(this), this.nrow * this.ncol);
    }
 
-   TabularM.prototype = Object.create(Matrix.prototype);
+   TabularM.prototype = Object.create(Matrix.DenseM.prototype);
 
    return TabularM;
 };
