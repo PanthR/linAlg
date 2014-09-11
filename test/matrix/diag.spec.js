@@ -5,19 +5,25 @@ var expect = require('chai').expect;
 describe('Diagonal matrices', function() {
    var a1 = [4, 2, 5, 6];
    var v1 = new Matrix.Vector([4, 2, 5, 6]);
-   var d1, d2;
+   var v3 = new Matrix.Vector(function(i) { return i * i; }, 5);
+   var d1, d2, d3, diags;
    it('are created by providing diagonal as a vector or array', function() {
       expect(Matrix).itself.to.respondTo('diag');
       expect(function() { d1 = Matrix.diag(a1); }).to.not.throw(Error);
       expect(function() { d2 = Matrix.diag(v1); }).to.not.throw(Error);
-      expect(d1).to.be.instanceof(DiagM);
-      expect(d2).to.be.instanceof(DiagM);
+      expect(function() { d3 = Matrix.diag(v3); }).to.not.throw(Error);
+      diags = [d1, d2, d3];
+      diags.forEach(function(d) {
+         expect(d).to.be.instanceof(DiagM);
+      })
    });
    it('have correct dimensions', function() {
+      diags.forEach(function(d) {
+         expect(d.nrow).to.equal(d.ncol);
+      });
       expect(d1.nrow).to.equal(a1.length);
-      expect(d1.ncol).to.equal(a1.length);
       expect(d2.nrow).to.equal(v1.length);
-      expect(d2.ncol).to.equal(v1.length);
+      expect(d3.nrow).to.equal(v3.length);
    });
    it('have correct get/set/mutable', function() {
       for (var i = 1; i <= a1.length; i += 1) {
@@ -42,6 +48,14 @@ describe('Diagonal matrices', function() {
       expect(function() { d2.set(3, 4, 3); }).to.throw(Error);
       expect(function() { d2.set(2, 2, 3); }).to.not.throw(Error);
       expect(d2.get(2,2)).to.equal(3);
+      expect(d3.mutable()).to.be.false;
+      expect(function() { d3.mutable(true); }).to.not.throw(Error);
+      for (var i = 1; i <= 5; i += 1) {
+         expect(d3.get(i, i)).to.equal(i * i);
+         var r = Math.random();
+         expect(function() { d3.set(i, i, r); }).to.not.throw(Error);
+         expect(d3.get(i, i)).to.equal(r);
+      }
    });
    it('have correct each', function() {
       var a1 = [4, 2, 5, 6];
