@@ -27,10 +27,7 @@ return function(Matrix) {
 
    SparseM.prototype = Object.create(Matrix.DenseM.prototype);
 
-   SparseM.prototype.map = function map(f, skipZeros) {
-      if (skipZeros !== true) {
-         return Matrix.prototype.map.call(this, f);
-      }
+   SparseM.prototype.map = function map(f) {
       var newValues = {};
       this.each(function(val, i, j) {
          newValues[i] = newValues[i] || {};

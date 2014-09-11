@@ -227,10 +227,10 @@ describe('Matrix#map', function() {
             }
          }
       }
-      [A1, A2, A3, A4].forEach(testArray);
+      [A1, A3, A4].forEach(testArray);
    });
    it('returns a matrix with the correct entries', function() {
-      var f = function(v) { return v + 2; };
+      var f = function(v) { return v * 2; };
       function test(m) {
          var m2 = m.map(f); // result
          expect(m2.nrow).to.equal(m.nrow);
@@ -243,11 +243,11 @@ describe('Matrix#map', function() {
       }
       [A1, A2, A3, A4].forEach(test);
    });
-   it('preserves sparseness if skipZeros is true', function() {
+   it('preserves sparseness', function() {
       var f = function(val, i, j) { a.push([val, i, j]); };
       var a; // accumulator
       a = [];
-      var m = A2.map(f, true);
+      var m = A2.map(f);
       m.toArray();
       expect(a.length).to.equal(3);
       a.sort(sorter);
