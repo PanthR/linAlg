@@ -51,6 +51,21 @@ describe('View matrices', function() {
       A6.mutable(true).set(3, 6, 100);
       expect(A3.get(2, 1)).to.equal(100);
    });
+   it('work on diagonal targets', function() {
+      var D = Matrix.diag([2, 5, 6, 10]);
+      var V = D.view([1, 2], [2, 3, 4]);
+      expect(V.get(1, 1)).to.equal(0);
+      expect(V.get(2, 1)).to.equal(5);
+      expect(V.get(2, 3)).to.equal(0);
+      expect(V.toArray(true)[0]).to.deep.equal([0, 0, 0]);
+      expect(V.toArray(true)[1]).to.deep.equal([5, 0, 0]);
+      expect(V.mutable()).to.be.false;
+      expect(function() { V.mutable(true); }).to.not.throw(Error);
+      expect(D.mutable()).to.be.true;
+      expect(function() { V.set(2, 1, 3); }).to.not.throw(Error);
+      expect(D.get(2, 2)).to.equal(3);
+      expect(function() { V.set(2, 2, 3); }).to.throw(Error);
+   });
 });
 describe('Matrix to Vector:', function() {
    describe('rowView', function() {

@@ -14,20 +14,33 @@ return function(Matrix) {
          }
          return function(i) { return indices; }; // constant
       }
+      // this.i(i) is the row in target corresponding to the i-th row in view
       this.i = lookup(rowIndex);
       this.j = lookup(colIndex);
       this.nrow = Array.isArray(rowIndex) ? rowIndex.length : dims.nrow;
       this.ncol = Array.isArray(colIndex) ? colIndex.length : dims.ncol;
-      this.byRow = this.target.byRow;
-      // need a ViewV into the target's values
-      this.values = this.target.values.view(function fetch(n) {
-         return this.target.toIndex(this.i(this.rowFromIndex(n)),
-                                    this.j(this.colFromIndex(n)));
-      }.bind(this), this.nrow * this.ncol);
+      this.byRow = false;
       return this;
    }
 
    ViewM.prototype = Object.create(Matrix.prototype);
+
+   ViewM.prototype.compute = function compute(i, j) {
+      return this.target._get(this.i(i), this.j(j));
+   };
+
+   ViewM.prototype.change = function change(i, j, val) {
+      this.target._set(this.i(i), this.j(j), val);
+      return this;
+   };
+
+   ViewM.prototype.mutable = function mutable(newSetting) {
+      if (newSetting != null) {
+         this.target.mutable(newSetting);
+         return this;
+      }
+      return this.target.mutable();
+   };
 
    return ViewM;
 };
