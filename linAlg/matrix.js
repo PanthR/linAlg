@@ -115,8 +115,7 @@ define(function(require) {
     * `Matrix.prototype.get` if both arguments are always present.
     */
    Matrix.prototype._get = function _get(i, j) {
-      if ( i < 1 || i > this.nrow) { return 0; }
-      if ( j < 1 || j > this.ncol) { return 0; }
+      if (!this.validIndices(i, j)) { return 0; }
       return this.compute(i, j);
    };
 
@@ -179,8 +178,7 @@ define(function(require) {
     * instead of `Matrix.prototype._set` if all three arguments are always present.
     */
    Matrix.prototype._set = function _set(i, j, val) {
-      if ( i < 1 || i > this.nrow ||
-           j < 1 || j > this.ncol) {
+      if (!this.validIndices(i, j)) {
          throw new Error('Setting out of Matrix bounds');
       }
       return this.change(i, j, val);
@@ -471,6 +469,11 @@ define(function(require) {
    /** Return whether the matrix has the same dimensions as the matrix `other` */
    Matrix.prototype.sameDims = function sameDims(other) {
       return this.nrow === other.nrow && this.ncol === other.ncol;
+   };
+
+   /** Returns whether the (i, j) pair is within the matrix's bounds. */
+   Matrix.prototype.validIndices = function validIndices(i, j) {
+      return i >= 1 && i <= this.nrow && j >= 1 && j <= this.ncol;
    };
 
    return Matrix;
