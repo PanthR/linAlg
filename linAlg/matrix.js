@@ -49,13 +49,7 @@ define(function(require) {
     */
    function Matrix(arr, options) {
       if (arr instanceof Matrix) { return arr; }
-      if (Array.isArray(arr)) {
-         return new Matrix.DenseM(arr, options);
-      }
-      if (typeof arr === 'function') {
-         return new Matrix.TabularM(arr, options);
-      }
-      return new Matrix.SparseM(arr, options);
+      return new Matrix.DenseM(arr, options);
    }
 
    /* The class `Vector` as it is accessed from `Matrix`. */
@@ -67,30 +61,11 @@ define(function(require) {
     */
    Matrix.DenseM   = require('./matrix/dense')(Matrix);
    /**
-    * Subclass of `Matrix` representing "sparse" matrices.
-    * Sparse matrices are stored as objects, whose keys represent the indices
-    * that have non-zero values.
-    * Users should not need to access this subclass directly.
-    */
-   Matrix.SparseM  = require('./matrix/sparse')(Matrix);
-   /**
-    * Subclass of `Matrix` representing matrices whose values are specified via
-    * a function `f(i)` of the index.
-    * The values of the matrix are computed lazily, only when they are accessed.
-    * Users should not need to access this subclass directly.
-    */
-   Matrix.TabularM = require('./matrix/tabular')(Matrix);
-   /**
     * Subclass of `Matrix` acting as a superclass for classes of matrices
     * with extra structure. Users should not need to access this subclass
     * directly.
     */
    Matrix.StructuredM = require('./matrix/structured')(Matrix);
-   /**
-    * Subclass of `Matrix` representing diagonal matrices.
-    * Users should not need to access this subclass directly.
-    */
-   Matrix.DiagM    = require('./matrix/diag')(Matrix);
    /**
     * Subclass of `Matrix` representing submatrix views into another matrix. Changes
     * to the view are reflected on the original matrix and vice-versa. Use
@@ -119,7 +94,7 @@ define(function(require) {
     * To obtain a diagonal of an arbitrary matrix, see `Matrix.prototype.diagView`.
     */
    Matrix.diag = function diag(diagonal, len) {
-      return new Matrix.DiagM(diagonal, len);
+      return new Matrix.StructuredM.DiagM(diagonal, len);
    };
 
    /**

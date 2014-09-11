@@ -12,6 +12,12 @@ return function(Matrix) {
 
    StructuredM.prototype = Object.create(Matrix.prototype);
 
+   /**
+    * Subclass of `Matrix` representing diagonal matrices.
+    * Users should not need to access this subclass directly.
+    */
+   StructuredM.DiagM    = require('./structured/diag')(Matrix, StructuredM);
+
    StructuredM.prototype.each = function each(f) {
       throw new Error('Subclasses of StructuredM need to implement custom `each`');
    };

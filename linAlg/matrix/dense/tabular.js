@@ -4,7 +4,7 @@ define(function(require) {
 /* Returns a function which takes the Matrix constructor and
  * creates the subclass TabularM of Matrix
  */
-return function(Matrix) {
+return function(Matrix, DenseM) {
 
    // Subclass of `Matrix` representing "Tabular" matrices.
    function TabularM(f, options) {
@@ -17,7 +17,7 @@ return function(Matrix) {
       this.values = new Matrix.Vector(f2.bind(this), this.nrow * this.ncol);
    }
 
-   TabularM.prototype = Object.create(Matrix.DenseM.prototype);
+   TabularM.prototype = Object.create(DenseM.prototype);
 
    TabularM.prototype.force = function force() {
       this.values.force();

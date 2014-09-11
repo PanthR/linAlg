@@ -4,7 +4,7 @@ define(function(require) {
 /* Returns a function which takes the Matrix constructor and
  * creates the subclass DiagM of Matrix
  */
-return function(Matrix) {
+return function(Matrix, StructuredM) {
 
    // Subclass of `StructuredM` representing "Diagonal" matrices.
    // DiagM takes ownership of the diagonal vector and may
@@ -30,7 +30,7 @@ return function(Matrix) {
       this.ncol = this.values.length;
    }
 
-   DiagM.prototype = Object.create(Matrix.StructuredM.prototype);
+   DiagM.prototype = Object.create(StructuredM.prototype);
 
    DiagM.prototype._get = function _get(i, j) {
       if (i !== j) { return 0; }  // Out of bounds check happens in this.values

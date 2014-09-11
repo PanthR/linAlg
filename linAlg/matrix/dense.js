@@ -9,6 +9,12 @@ return function(Matrix) {
    /* eslint-disable complexity */
    // Subclass of `Matrix` representing 'dense' matrices.
    function DenseM(arr, options) {
+      if (!Array.isArray(arr)) {
+         if (typeof arr === 'function') {
+            return new DenseM.TabularM(arr, options);
+         }
+         return new DenseM.SparseM(arr, options);
+      }
       if (arr.length === 0) { throw new Error('Cannot create empty matrix yet.'); }
       if (typeof options === 'boolean') { options = { byRow: options }; }
       if (options == null) { options = {}; }
@@ -31,6 +37,21 @@ return function(Matrix) {
    /* eslint-enable */
 
    DenseM.prototype = Object.create(Matrix.prototype);
+
+   /**
+    * Subclass of `Matrix` representing "sparse" matrices.
+    * Sparse matrices are stored as objects, whose keys represent the indices
+    * that have non-zero values.
+    * Users should not need to access this subclass directly.
+    */
+   DenseM.SparseM  = require('./dense/sparse')(Matrix, DenseM);
+   /**
+    * Subclass of `Matrix` representing matrices whose values are specified via
+    * a function `f(i)` of the index.
+    * The values of the matrix are computed lazily, only when they are accessed.
+    * Users should not need to access this subclass directly.
+    */
+   DenseM.TabularM = require('./dense/tabular')(Matrix, DenseM);
 
    DenseM.prototype.each = function each(f) {
       var f2 = function f2(val, n) {

@@ -1,11 +1,11 @@
 var Matrix = require('../../linAlg/matrix');
-var TabularM = Matrix.TabularM;
+var TabularM = Matrix.DenseM.TabularM;
 var expect = require('chai').expect;
 
 describe('Tabular matrices', function() {
    var f = function(i, j) { return i - j; }
    var A1 = new TabularM(f, { nrow : 4, ncol: 6 });
-   it('have a constructor Matrix.TabularM and are Matrix\'s', function() {
+   it('have a constructor TabularM and are Matrix\'s', function() {
       expect(TabularM).to.exist;
       expect(A1).to.be.instanceof(TabularM);
       expect(A1).to.be.instanceof(Matrix);

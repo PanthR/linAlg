@@ -1,10 +1,10 @@
 var Matrix = require('../../linAlg/matrix');
-var SparseM = Matrix.SparseM;
+var SparseM = Matrix.DenseM.SparseM;
 var expect = require('chai').expect;
 
 describe('Sparse matrices', function() {
    var A1 = new SparseM({ 2: { 3: 23, 4: 2}, 4: { 1: 2 }}, { nrow : 4, ncol: 6 });
-   it('have a constructor Matrix.SparseM and are Matrix\'s', function() {
+   it('have a constructor SparseM and are Matrix\'s', function() {
       expect(SparseM).to.exist;
       expect(A1).to.be.instanceof(SparseM);
       expect(A1).to.be.instanceof(Matrix);

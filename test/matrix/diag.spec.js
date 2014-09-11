@@ -1,5 +1,5 @@
 var Matrix = require('../../linAlg/matrix');
-var DiagM = Matrix.DiagM;
+var DiagM = Matrix.StructuredM.DiagM;
 var expect = require('chai').expect;
 
 describe('Diagonal matrices', function() {

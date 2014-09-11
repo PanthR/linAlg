@@ -4,7 +4,7 @@ define(function(require) {
 /* Returns a function which takes the Matrix constructor and
  * creates the subclass SparseM of Matrix
  */
-return function(Matrix) {
+return function(Matrix, DenseM) {
 
    // Subclass of `Matrix` representing "Sparse" matrices.
    // Sparse matrices are "by row". TODO: Think about it.
@@ -25,7 +25,7 @@ return function(Matrix) {
       this.values = new Matrix.Vector(values, this.nrow * this.ncol);
    }
 
-   SparseM.prototype = Object.create(Matrix.DenseM.prototype);
+   SparseM.prototype = Object.create(DenseM.prototype);
 
    SparseM.prototype.map = function map(f) {
       var newValues = {};
