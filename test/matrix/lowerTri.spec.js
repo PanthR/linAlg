@@ -62,4 +62,26 @@ describe('Lower triangular matrices', function() {
       }
       [[t1, f1], [t2, f2], [t3, f3]].forEach(testPair);
    });
+   it('have correct map which preserves structure', function() {
+      function testPair(pair) {
+         var c = 0;
+         var m = pair[0];
+         var f = function(i, j) { return i < j ? 0 : pair[1](i, j); };
+         var m2 = m.map(function(v, i, j) {
+            c += 1;
+            expect(i).to.be.at.least(j);
+            expect(v).to.equal(f(i, j));
+            return v + i * j;
+         });
+         expect(m2).to.be.instanceof(LowerTriM);
+         expect(m2.sameDims(m)).to.be.true;
+         for (var i = 1; i <= m.nrow; i += 1) {
+            for (var j = 1; j <= i; j += 1) {
+               expect(m2.get(i, j)).to.equal(m.get(i, j) + i * j);
+            }
+         }
+         expect(c).to.equal(m.nrow * (m.nrow + 1) / 2);
+      }
+      [[t1, f1], [t2, f2], [t3, f3]].forEach(testPair);
+   });
 });

@@ -8,14 +8,15 @@ return function(Matrix, StructuredM) {
    // Possible ways to specify:
    // 1. A full square matrix, and we grab the lower triangular part. If the
    // matrix is already `LowerTriM`, returns the matrix itself.
-   // 2. A function. Second argument would then be the nrow = ncol.
+   // 2. A function. Second argument would then be the nrow = ncol, or an
+   // object with an `nrow` property.
    // 3. A single value, to be used for all entries. Second argument nrow needed.
    function LowerTriM(values, nrow) {
       var getValue;
       if (values instanceof LowerTriM) { return values; }
       this.byRow = true;
       this.mutable = false;
-      this.nrow = nrow;
+      this.nrow = nrow && nrow.nrow || nrow; // nrow is object or number
       if (values instanceof Matrix) {
          this.nrow = Math.min(values.nrow, values.ncol);
          getValue = values._get.bind(values);
@@ -49,9 +50,8 @@ return function(Matrix, StructuredM) {
       return false;
    };
 
-   LowerTriM.prototype.map = function map(f) {
-      function f2(val, i) { return f(val, i, i); }
-      return new LowerTriM(this.values.map(f2));
+   LowerTriM.prototype.constr = function constr() {
+      return LowerTriM;
    };
 
    return LowerTriM;

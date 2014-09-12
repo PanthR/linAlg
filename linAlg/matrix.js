@@ -260,6 +260,18 @@ define(function(require) {
    };
 
    /**
+    * Return the constructor method to be used for creating new objects of
+    * this type.
+    *
+    * Each of these constructors will accept the parameter list `(f, obj)`
+    * where `f(i, j)` is a function for generating matrix values, and `obj`
+    * has properties `nrow` and `ncol`.
+    */
+   Matrix.prototype.constr = function constr() {
+      return Matrix;
+   };
+
+   /**
     * Create a clone of the matrix. The clone inherits the values that the matrix
     * has at the time of cloning. If `faithful` is `true` (default), then the clone
     * also inherits any structure (e.g. being diagonal) when possible.
@@ -503,9 +515,9 @@ define(function(require) {
     *     A.map(Math.abs);
     */
    Matrix.prototype.map = function map(f) {
-      return new Matrix(function(i, j) {
+      return new (this.constr())(function(i, j) {
          return f(this.get(i, j), i, j);
-      }.bind(this), { nrow: this.nrow, ncol: this.ncol });
+      }.bind(this), this);
    };
 
    /**

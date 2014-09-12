@@ -11,7 +11,9 @@ return function(Matrix, StructuredM) {
    // change its values when it itself is changed. Clone the
    // array/vector before passing it to avoid this.
    //
-   // `diagonal` needs to be a `Vector`.
+   // `diagonal` needs to be a `Vector`, an array, a function, or a number.
+   //
+   // `nrow` needs to be an object with an `nrow` property, or a number.
    //
    // One can only set values on the diagonal of a DiagM matrix.
    // Trying to set outside the diagonal will result in error.
@@ -20,9 +22,14 @@ return function(Matrix, StructuredM) {
    //
    // Using rowView/colView on diagonal matrices may be quite inefficient,
    // as it does not recognize the sparse nature of those vectors.
-   function DiagM(diagonal, len) {
+   function DiagM(diagonal, nrow) {
       if (!(diagonal instanceof Matrix.Vector)) {
-         diagonal = new Matrix.Vector(diagonal, len);
+         if (typeof diagonal === 'function') {
+            diagonal = function(i) {
+               return this(i, i);
+            }.bind(diagonal);
+         }
+         diagonal = new Matrix.Vector(diagonal, nrow && nrow.nrow || nrow);
       }
       this.byRow = false;
       this.values = diagonal;
@@ -50,9 +57,8 @@ return function(Matrix, StructuredM) {
       return n;
    };
 
-   DiagM.prototype.map = function map(f) {
-      function f2(val, i) { return f(val, i, i); }
-      return new DiagM(this.values.map(f2));
+   DiagM.prototype.constr = function constr() {
+      return DiagM;
    };
 
    return DiagM;

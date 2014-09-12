@@ -8,14 +8,15 @@ return function(Matrix, StructuredM) {
    // Possible ways to specify:
    // 1. A full square matrix, and we grab the Upper triangular part. If the
    // matrix is already `UpperTriM`, returns the matrix itself.
-   // 2. A function. Second argument would then be the nrow = ncol.
+   // 2. A function. Second argument would then be the nrow = ncol, or an
+   // object with an `ncol` property.
    // 3. A single value, to be used for all entries. Second argument ncol needed.
    function UpperTriM(values, ncol) {
       var getValue;
       if (values instanceof UpperTriM) { return values; }
       this.byRow = false;
       this.mutable = false;
-      this.nrow = ncol;
+      this.nrow = ncol && ncol.ncol || ncol;
       if (values instanceof Matrix) {
          this.nrow = Math.min(values.nrow, values.ncol);
          getValue = values._get.bind(values);
@@ -40,6 +41,9 @@ return function(Matrix, StructuredM) {
    UpperTriM.prototype.colFromIndex = function colFromIndex(n) {
       return Math.floor((1 + Math.sqrt(1 + 8 * (n - 1))) / 2);
    };
+   UpperTriM.prototype.constr = function constr() {
+      return UpperTriM;
+   };
 
    UpperTriM.prototype.validate = function(i, j, val) {
       if (i <= j) { return true; }
@@ -47,11 +51,6 @@ return function(Matrix, StructuredM) {
          throw new Error('Trying to set lower entry in Upper triangular matrix');
       }
       return false;
-   };
-
-   UpperTriM.prototype.map = function map(f) {
-      function f2(val, i) { return f(val, i, i); }
-      return new UpperTriM(this.values.map(f2));
    };
 
    return UpperTriM;
