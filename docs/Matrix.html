@@ -61,6 +61,8 @@
         
         <a href="#Matrix%25compute"><li><code>Matrix#compute</code></li></a>
         
+        <a href="#Matrix%25constr"><li><code>Matrix#constr</code></li></a>
+        
         <a href="#Matrix%25diagView"><li><code>Matrix#diagView</code></li></a>
         
         <a href="#Matrix%25each"><li><code>Matrix#each</code></li></a>
@@ -98,6 +100,8 @@
         <a href="#Matrix%25toArray"><li><code>Matrix#toArray</code></li></a>
         
         <a href="#Matrix%25toVector"><li><code>Matrix#toVector</code></li></a>
+        
+        <a href="#Matrix%25transpose"><li><code>Matrix#transpose</code></li></a>
         
         <a href="#Matrix%25validIndices"><li><code>Matrix#validIndices</code></li></a>
         
@@ -230,10 +234,10 @@ A1.set(1, 1, 42);    // Only changes A1, not A2</code></pre><p>Trying to set at 
 &quot;structured&quot;, trying to set at a location outside the structure (e.g. an off-diagonal
 entry of a diagonal matrix) also results in an exception.</p>
 <p><strong>NOTE</strong>: In order to avoid unnecessary computations, many matrix operations avoid
-computing their values until those values are needed. If you have used a matrix or
+computing their values until those values are called for. If you have used a matrix or
 vector in the construction of other matrices/vectors, then you should avoid changing
-that matrice's values, as the effect of those changes on the dependent objects is
-undetermined. In general, you should treat a matrix that has been used in the creation
+that matrice's values, as the effects of those changes on the dependent objects are
+unpredictable. In general, you should treat a matrix that has been used in the creation
 of other matrices as an immutable object, unless <a href="#Matrix%25force"><code>Matrix.prototype.force</code></a> has been called
 on those other matrices.</p>
       </div>
@@ -255,8 +259,8 @@ various checks and should only be used with extreme care.</p>
         <h4 id="Matrix%25validate"><code>Matrix#validate(i, j, val)</code></h4>
         <p>Overriden by subclasses that need special index/value validation.</p>
 <p>This method will be called from <a href="#Matrix%25_get"><code>Matrix.prototype._get</code></a> with two arguments <code>(i, j)</code>.
-It should return whether the pair <code>(i, j)</code> is valid for that array, without worrying
-about being out of bounds (that is checked separately).</p>
+It should return whether the pair <code>(i, j)</code> is valid for that array's structure, without
+worrying about being out of bounds (which is checked separately).</p>
 <p>This method is also called from <a href="#Matrix%25_set"><code>Matrix.prototype._set</code></a> with three arguments
 <code>(i, j, val)</code>, where <code>val</code> is the value that is to be set in those coordinates.
 It should either return <code>false</code> or throw an error if the assignment should not
@@ -282,6 +286,15 @@ the matrix, and cannot be used to change the matrix values.</p>
       <div>
         <h4 id="Matrix%25force"><code>Matrix#force()</code></h4>
         <p>Force unresolved computations for the matrix.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25constr"><code>Matrix#constr()</code></h4>
+        <p>Return the constructor method to be used for creating new objects of
+this type.</p>
+<p>Each of these constructors will accept the parameter list <code>(f, obj)</code>
+where <code>f(i, j)</code> is a function for generating matrix values, and <code>obj</code>
+has properties <code>nrow</code> and <code>ncol</code>.</p>
       </div>
       
       <div>
@@ -350,7 +363,8 @@ the matrix.</p>
 function is <code>f(val, i, j)</code>.</p>
 <p><code>Each</code> respects the &quot;structure&quot; of the matrix. For instance
 on a <code>SparseM</code> matrix, it will only be called on the non-zero entries, on a
-<code>DiagM</code> matrix it will only be called on the diagonal entries and so on.</p>
+<code>DiagM</code> matrix it will only be called on the diagonal entries, on a <code>SymmetricM</code>
+matrix it will be called on only roughly one half of the entries and so on.</p>
 <p>If you really need the function to be called on <em>each</em> matrix entry, regardless of
 structure, then you should use <a href="#Matrix%25clone"><code>Matrix.prototype.clone</code></a> first to create an
 &quot;unfaithful clone&quot;.</p>
@@ -425,7 +439,7 @@ values.</p>
 are arrays or <a href="#Vector"><code>Vector</code></a>s, then they must be of the same length, and they are assembled
 into a matrix with <code>nrow</code> equal to the original matrix's <code>nrow</code>, and <code>ncol</code> equal to
 the value's length.</p>
-<pre class="prettyprint source"><code>// Create a n x 3 array of index, 1-norm and 2-norm of each row.
+<pre class="prettyprint source"><code>// Create an n x 3 array of the index, 1-norm and 2-norm of each row.
 A.mapRow(function(row, i) { return [i, row.norm(1), row.norm(2) ]; });</code></pre>
       </div>
       
@@ -436,13 +450,19 @@ instead.</p>
       </div>
       
       <div>
+        <h4 id="Matrix%25transpose"><code>Matrix#transpose()</code></h4>
+        <p>Return the transpose of the matrix, preserving any appropriate structure.</p>
+      </div>
+      
+      <div>
         <h4 id="Matrix%25sameDims"><code>Matrix#sameDims(other)</code></h4>
-        <p>Return whether the matrix has the same dimensions as the matrix <code>other</code></p>
+        <p>Return whether the matrix has the same dimensions as the matrix <code>other</code>.</p>
       </div>
       
       <div>
         <h4 id="Matrix%25validIndices"><code>Matrix#validIndices(i, j)</code></h4>
-        <p>Returns whether the (i, j) pair is within the matrix's bounds.</p>
+        <p>Return whether the (i, j) pair is within the matrix's bounds. Matrices with extra
+extra structure do further checks via <a href="#Matrix%25validate"><code>Matrix.prototype.validate</code></a>.</p>
       </div>
       
       <div>

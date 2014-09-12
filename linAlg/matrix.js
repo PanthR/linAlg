@@ -150,10 +150,10 @@ define(function(require) {
     * entry of a diagonal matrix) also results in an exception.
     *
     * __NOTE__: In order to avoid unnecessary computations, many matrix operations avoid
-    * computing their values until those values are needed. If you have used a matrix or
+    * computing their values until those values are called for. If you have used a matrix or
     * vector in the construction of other matrices/vectors, then you should avoid changing
-    * that matrice's values, as the effect of those changes on the dependent objects is
-    * undetermined. In general, you should treat a matrix that has been used in the creation
+    * that matrice's values, as the effects of those changes on the dependent objects are
+    * unpredictable. In general, you should treat a matrix that has been used in the creation
     * of other matrices as an immutable object, unless `Matrix.prototype.force` has been called
     * on those other matrices.
     */
@@ -206,8 +206,8 @@ define(function(require) {
     * Overriden by subclasses that need special index/value validation.
     *
     * This method will be called from `Matrix.prototype._get` with two arguments `(i, j)`.
-    * It should return whether the pair `(i, j)` is valid for that array, without worrying
-    * about being out of bounds (that is checked separately).
+    * It should return whether the pair `(i, j)` is valid for that array's structure, without
+    * worrying about being out of bounds (which is checked separately).
     *
     * This method is also called from `Matrix.prototype._set` with three arguments
     * `(i, j, val)`, where `val` is the value that is to be set in those coordinates.
@@ -530,7 +530,7 @@ define(function(require) {
     * into a matrix with `nrow` equal to the original matrix's `nrow`, and `ncol` equal to
     * the value's length.
     *
-    *     // Create a n x 3 array of index, 1-norm and 2-norm of each row.
+    *     // Create an n x 3 array of the index, 1-norm and 2-norm of each row.
     *     A.mapRow(function(row, i) { return [i, row.norm(1), row.norm(2) ]; });
     */
    Matrix.prototype.mapRow = function mapRow(f) {
@@ -567,18 +567,22 @@ define(function(require) {
       return new Matrix.Vector(newCols);
    };
 
+   /** Return the transpose of the matrix, preserving any appropriate structure. */
    Matrix.prototype.transpose = function transpose() {
       return new Matrix(function(i, j) {
          return this.get(j, i);
       }.bind(this), { nrow: this.ncol, ncol: this.nrow });
    };
 
-   /** Return whether the matrix has the same dimensions as the matrix `other` */
+   /** Return whether the matrix has the same dimensions as the matrix `other`. */
    Matrix.prototype.sameDims = function sameDims(other) {
       return this.nrow === other.nrow && this.ncol === other.ncol;
    };
 
-   /** Returns whether the (i, j) pair is within the matrix's bounds. */
+   /**
+    * Return whether the (i, j) pair is within the matrix's bounds. Matrices with extra
+    * extra structure do further checks via `Matrix.prototype.validate`.
+    */
    Matrix.prototype.validIndices = function validIndices(i, j) {
       return i >= 1 && i <= this.nrow && j >= 1 && j <= this.ncol;
    };

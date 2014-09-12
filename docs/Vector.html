@@ -45,8 +45,6 @@
         
         <a href="#Vector.const"><li><code>Vector.const</code></li></a>
         
-        <a href="#Vector.fill"><li><code>Vector.fill</code></li></a>
-        
         <a href="#Vector.ones"><li><code>Vector.ones</code></li></a>
         
         <a href="#Vector.seq"><li><code>Vector.seq</code></li></a>
@@ -145,6 +143,7 @@ They are constructed in one of three ways depending on the type of the first par
 <li>Based on an array of values. In this case, the resulting vector length <code>len</code> is optional.</li>
 <li>Based on a key-value object representing the non-zero indices and their values (sparse vectors)</li>
 <li>Based on a function <code>f(n)</code> describing how the i-th index is meant to be computed.</li>
+<li>Based on a single number (constant value).</li>
 </ol>
 <p>When <code>arr</code> is a <a href="#Vector"><code>Vector</code></a>, it is simply returned unchanged.</p>
 <p><a href="#Vector"><code>Vector</code></a> objects are 1-indexed. By default, they are immutable structures, they cannot be edited
@@ -157,7 +156,9 @@ var v1 = new Vector([3, 5, 1, 2]);
 var v2 = new Vector({ 4: 10, 2: 12 }, 10);
 // A length-3 vector with values exp(1), exp(2), exp(3)
 var v3 = new Vector(Math.exp, 3);
-v3.length === 3  // true</code></pre>
+v3.length === 3  // true
+// A length-5 vector with all values equal to 4
+var v4 = new Vector(4, 5);</code></pre>
       </div>
       
       <div>
@@ -217,15 +218,9 @@ Vector.seq(3)        // Produces [1, 2, 3]</code></pre>
       </div>
       
       <div>
-        <h4 id="Vector.fill"><code>Vector.fill(val, len)</code></h4>
-        <p>Generate a vector of length <code>len</code>, with all entries having value <code>val</code>.
-This vector can become mutable. Use this to set starting values for a vector.</p>
-      </div>
-      
-      <div>
         <h4 id="Vector.const"><code>Vector.const(val, len)</code></h4>
         <p>Generate a constant vector of length <code>len</code>, with all entries having value <code>val</code>.
-<em>Constant vectors are immutable</em>. Use <a href="#Vector.fill"><code>Vector.fill</code></a> if you want to initialize a
+<em>Constant vectors are immutable</em>. Use <code>Vector.fill</code> if you want to initialize a
 vector with some value(s).</p>
       </div>
       
