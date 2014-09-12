@@ -5,11 +5,14 @@ var expect = chai.expect;
 
 describe('Lower triangular matrices', function() {
    var t1, t2, t3, triangs;
+   var f1 = function(i, j) { return i / j; };
+   var f2 = function(i, j) { return 2; };
    var a = new Matrix(Math.random, { nrow: 4, ncol: 5});
+   var f3 = a.get.bind(a);
    it('can be constructed in 3 different ways', function() {
       expect(LowerTriM).to.be.defined;
       expect(function() {
-         t1 = new LowerTriM(function(i, j) { return i / j; }, 4);
+         t1 = new LowerTriM(f1, 4);
       }).to.not.throw(Error);
       expect(function() { t2 = new LowerTriM(2, 4); }).to.not.throw(Error);
       expect(function() { t3 = new LowerTriM(a); }).to.not.throw(Error);
@@ -31,5 +34,32 @@ describe('Lower triangular matrices', function() {
             expect(t3.get(i, j)).to.equal(i < j ? 0 : a.get(i, j));
          }
       }
+   });
+   it('have correct each', function() {
+      function testPair(pair) {
+         var c = 0;
+         var m = pair[0];
+         var f = function(i, j) { return i < j ? 0 :pair[1](i, j); };
+         m.each(function(v, i, j) {
+            c += 1;
+            expect(i).to.be.at.least(j);
+            expect(v).to.equal(f(i, j));
+         });
+         expect(c).to.equal(m.nrow * (m.nrow + 1) / 2);
+         // eachRow, eachCol
+         m.eachRow(function(row, i) {
+            expect(row).to.be.instanceof(Matrix.Vector);
+            for (var j = 1; j <= m.ncol; j += 1) {
+               expect(row.get(j)).to.equal(f(i, j));
+            }
+         });
+         m.eachCol(function(col, j) {
+            expect(col).to.be.instanceof(Matrix.Vector);
+            for (var i = 1; i <= m.nrow; i += 1) {
+               expect(col.get(i)).to.equal(f(i, j));
+            }
+         });
+      }
+      [[t1, f1], [t2, f2], [t3, f3]].forEach(testPair);
    });
 });
