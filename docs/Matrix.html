@@ -101,6 +101,8 @@
         
         <a href="#Matrix%25validIndices"><li><code>Matrix#validIndices</code></li></a>
         
+        <a href="#Matrix%25validate"><li><code>Matrix#validate</code></li></a>
+        
         <a href="#Matrix%25view"><li><code>Matrix#view</code></li></a>
         
       </ul>
@@ -227,6 +229,13 @@ A1.set(A2);          // Sets all values of A1 based on those from A2
 A1.set(1, 1, 42);    // Only changes A1, not A2</code></pre><p>Trying to set at an out-of-bounds location results in an exception. If the matrix is
 &quot;structured&quot;, trying to set at a location outside the structure (e.g. an off-diagonal
 entry of a diagonal matrix) also results in an exception.</p>
+<p><strong>NOTE</strong>: In order to avoid unnecessary computations, many matrix operations avoid
+computing their values until those values are needed. If you have used a matrix or
+vector in the construction of other matrices/vectors, then you should avoid changing
+that matrice's values, as the effect of those changes on the dependent objects is
+undetermined. In general, you should treat a matrix that has been used in the creation
+of other matrices as an immutable object, unless <a href="#Matrix%25force"><code>Matrix.prototype.force</code></a> has been called
+on those other matrices.</p>
       </div>
       
       <div>
@@ -240,6 +249,18 @@ instead of <a href="#Matrix%25_set"><code>Matrix.prototype._set</code></a> if al
         <p>Internal method used by <a href="#Matrix%25_set"><code>Matrix.prototype._set</code></a> to change the value of the
 matrix at a particular location. <em>Internal method</em>. This method bypasses
 various checks and should only be used with extreme care.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25validate"><code>Matrix#validate(i, j, val)</code></h4>
+        <p>Overriden by subclasses that need special index/value validation.</p>
+<p>This method will be called from <a href="#Matrix%25_get"><code>Matrix.prototype._get</code></a> with two arguments <code>(i, j)</code>.
+It should return whether the pair <code>(i, j)</code> is valid for that array, without worrying
+about being out of bounds (that is checked separately).</p>
+<p>This method is also called from <a href="#Matrix%25_set"><code>Matrix.prototype._set</code></a> with three arguments
+<code>(i, j, val)</code>, where <code>val</code> is the value that is to be set in those coordinates.
+It should either return <code>false</code> or throw an error if the assignment should not
+happen, and return true if it should be allowed to happen.</p>
       </div>
       
       <div>

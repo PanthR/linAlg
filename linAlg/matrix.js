@@ -148,6 +148,14 @@ define(function(require) {
     * Trying to set at an out-of-bounds location results in an exception. If the matrix is
     * "structured", trying to set at a location outside the structure (e.g. an off-diagonal
     * entry of a diagonal matrix) also results in an exception.
+    *
+    * __NOTE__: In order to avoid unnecessary computations, many matrix operations avoid
+    * computing their values until those values are needed. If you have used a matrix or
+    * vector in the construction of other matrices/vectors, then you should avoid changing
+    * that matrice's values, as the effect of those changes on the dependent objects is
+    * undetermined. In general, you should treat a matrix that has been used in the creation
+    * of other matrices as an immutable object, unless `Matrix.prototype.force` has been called
+    * on those other matrices.
     */
    Matrix.prototype.set = function set(i, j, val) {
       function changeAll(target, vals) {
