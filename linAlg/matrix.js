@@ -407,7 +407,8 @@ define(function(require) {
     *
     * `Each` respects the "structure" of the matrix. For instance
     * on a `SparseM` matrix, it will only be called on the non-zero entries, on a
-    * `DiagM` matrix it will only be called on the diagonal entries and so on.
+    * `DiagM` matrix it will only be called on the diagonal entries, on a `SymmetricM`
+    * matrix it will be called on only roughly one half of the entries and so on.
     *
     * If you really need the function to be called on _each_ matrix entry, regardless of
     * structure, then you should use `Matrix.prototype.clone` first to create an
