@@ -17,6 +17,7 @@ define(function(require) {
     * 1. Based on an array of values. In this case, the resulting vector length `len` is optional.
     * 2. Based on a key-value object representing the non-zero indices and their values (sparse vectors)
     * 3. Based on a function `f(n)` describing how the i-th index is meant to be computed.
+    * 4. Based on a single number (constant value).
     *
     * When `arr` is a `Vector`, it is simply returned unchanged.
     *
@@ -33,6 +34,8 @@ define(function(require) {
     *     // A length-3 vector with values exp(1), exp(2), exp(3)
     *     var v3 = new Vector(Math.exp, 3);
     *     v3.length === 3  // true
+    *     // A length-5 vector with all values equal to 4
+    *     var v4 = new Vector(4, 5);
     */
    function Vector(arr, len) {
       if (arr instanceof Vector) { return arr; }
@@ -41,6 +44,11 @@ define(function(require) {
       }
       if (typeof arr === 'function') {
          return new Vector.TabularV(arr, len);
+      }
+      if (typeof arr === 'number') {
+         return new Vector.TabularV(function(i) {
+            return arr;
+         }, len);
       }
       return new Vector.SparseV(arr, len);
    }
@@ -106,14 +114,6 @@ define(function(require) {
       step = step || (b > a ? 1 : -1);
       length = Math.floor((b - a) / step) + 1;
       return new Vector(function(i) { return a + (i - 1) * step; }, length);
-   };
-
-   /**
-    * Generate a vector of length `len`, with all entries having value `val`.
-    * This vector can become mutable. Use this to set starting values for a vector.
-    */
-   Vector.fill = function fill(val, len) {
-      return new Vector(function() { return val; }, len);
    };
 
    /**

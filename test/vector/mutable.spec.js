@@ -74,6 +74,6 @@ describe('Vectors', function() {
       expect(v1.fill(13, 2, 3).get()).to.deep.equal([12, 13, 13, 11]);
       expect(v1.fill(14, [1, 4]).get()).to.deep.equal([14, 13, 13, 14]);
       expect(v1.fill(15, Vector([1, 4])).get()).to.deep.equal([15, 13, 13, 15]);
-      expect(Vector.fill(5, 4).mutable(true).fill(6, 2, 3).toArray()).to.deep.equal([5, 6, 6, 5]);
+      expect(new Vector(5, 4).mutable(true).fill(6, 2, 3).toArray()).to.deep.equal([5, 6, 6, 5]);
    });
 });
