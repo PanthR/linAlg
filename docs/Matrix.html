@@ -75,6 +75,8 @@
         
         <a href="#Matrix%25get"><li><code>Matrix#get</code></li></a>
         
+        <a href="#Matrix%25map"><li><code>Matrix#map</code></li></a>
+        
         <a href="#Matrix%25mapCol"><li><code>Matrix#mapCol</code></li></a>
         
         <a href="#Matrix%25mapRow"><li><code>Matrix#mapRow</code></li></a>
@@ -326,8 +328,8 @@ the matrix.</p>
         <p>Apply the given function to each entry in the matrix. The signature of the
 function is <code>f(val, i, j)</code>.</p>
 <p><code>Each</code> respects the &quot;structure&quot; of the matrix. For instance
-on a Sparse matrix, it will only be called on the non-zero entries, on a
-DiagM matrix it will only be called on the diagonal entries and so on.</p>
+on a <code>SparseM</code> matrix, it will only be called on the non-zero entries, on a
+<code>DiagM</code> matrix it will only be called on the diagonal entries and so on.</p>
 <p>If you really need the function to be called on <em>each</em> matrix entry, regardless of
 structure, then you should use <a href="#Matrix%25clone"><code>Matrix.prototype.clone</code></a> first to create an
 &quot;unfaithful clone&quot;.</p>
@@ -382,13 +384,34 @@ of the matrix, with <code>acc</code> starting with value <code>initial</code>.</
       </div>
       
       <div>
+        <h4 id="Matrix%25map"><code>Matrix#map(f)</code></h4>
+        <p>Apply the function <code>f(val, i, j)</code> to every entry of the matrix, and assemble the
+returned values into a new matrix. Just like <a href="#Matrix%25each"><code>Matrix.prototype.each</code></a>, this method
+respects the structure of the input matrix, and will return a matrix with the
+same structure, only applying <code>f</code> on the values pertinent to the structure.</p>
+<p>If you really need the function to be called on <em>each</em> matrix entry, regardless of
+structure, then you should use <a href="#Matrix%25clone"><code>Matrix.prototype.clone</code></a> first to create an
+&quot;unfaithful clone&quot;.</p>
+<pre class="prettyprint source"><code>// Create a matrix containing the absolute values of the values in A.
+A.map(Math.abs);</code></pre>
+      </div>
+      
+      <div>
         <h4 id="Matrix%25mapRow"><code>Matrix#mapRow(f)</code></h4>
-        <p>TODO</p>
+        <p>Apply the function <code>f(row, i)</code> to each row in the matrix, and assemble the resulting
+values.</p>
+<p>If the return values of <code>f</code> are numbers, they are assembled into a <a href="#Vector"><code>Vector</code></a>. If they
+are arrays or <a href="#Vector"><code>Vector</code></a>s, then they must be of the same length, and they are assembled
+into a matrix with <code>nrow</code> equal to the original matrix's <code>nrow</code>, and <code>ncol</code> equal to
+the value's length.</p>
+<pre class="prettyprint source"><code>// Create a n x 3 array of index, 1-norm and 2-norm of each row.
+A.mapRow(function(row, i) { return [i, row.norm(1), row.norm(2) ]; });</code></pre>
       </div>
       
       <div>
         <h4 id="Matrix%25mapCol"><code>Matrix#mapCol(f)</code></h4>
-        <p>TODO</p>
+        <p>Similar to <a href="#Matrix%25mapRow"><code>Matrix.prototype.mapRow</code></a>, but operating on the columns of the matrix
+instead.</p>
       </div>
       
       <div>

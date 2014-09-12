@@ -371,8 +371,8 @@ define(function(require) {
     * function is `f(val, i, j)`.
     *
     * `Each` respects the "structure" of the matrix. For instance
-    * on a Sparse matrix, it will only be called on the non-zero entries, on a
-    * DiagM matrix it will only be called on the diagonal entries and so on.
+    * on a `SparseM` matrix, it will only be called on the non-zero entries, on a
+    * `DiagM` matrix it will only be called on the diagonal entries and so on.
     *
     * If you really need the function to be called on _each_ matrix entry, regardless of
     * structure, then you should use `Matrix.prototype.clone` first to create an
@@ -466,7 +466,19 @@ define(function(require) {
    };
 
    // WE ARE HERE!
-   // TODO: Need to respect the structure??
+   /**
+    * Apply the function `f(val, i, j)` to every entry of the matrix, and assemble the
+    * returned values into a new matrix. Just like `Matrix.prototype.each`, this method
+    * respects the structure of the input matrix, and will return a matrix with the
+    * same structure, only applying `f` on the values pertinent to the structure.
+    *
+    * If you really need the function to be called on _each_ matrix entry, regardless of
+    * structure, then you should use `Matrix.prototype.clone` first to create an
+    * "unfaithful clone".
+    *
+    *     // Create a matrix containing the absolute values of the values in A.
+    *     A.map(Math.abs);
+    */
    Matrix.prototype.map = function map(f) {
       return new Matrix(function(i, j) {
          return f(this.get(i, j), i, j);
@@ -474,7 +486,16 @@ define(function(require) {
    };
 
    /**
-    * TODO
+    * Apply the function `f(row, i)` to each row in the matrix, and assemble the resulting
+    * values.
+    *
+    * If the return values of `f` are numbers, they are assembled into a `Vector`. If they
+    * are arrays or `Vector`s, then they must be of the same length, and they are assembled
+    * into a matrix with `nrow` equal to the original matrix's `nrow`, and `ncol` equal to
+    * the value's length.
+    *
+    *     // Create a n x 3 array of index, 1-norm and 2-norm of each row.
+    *     A.mapRow(function(row, i) { return [i, row.norm(1), row.norm(2) ]; });
     */
    Matrix.prototype.mapRow = function mapRow(f) {
       var newRows = [];
@@ -492,7 +513,8 @@ define(function(require) {
    };
 
    /**
-    * TODO
+    * Similar to `Matrix.prototype.mapRow`, but operating on the columns of the matrix
+    * instead.
     */
    Matrix.prototype.mapCol = function mapCol(f) {
       var newCols = [];
