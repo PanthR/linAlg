@@ -20,10 +20,6 @@ return function(Matrix) {
    StructuredM.LowerTriM = require('./structured/lowerTri')(Matrix, StructuredM);
    StructuredM.UpperTriM = require('./structured/upperTri')(Matrix, StructuredM);
 
-   // StructuredM.prototype.each = function each(f) {
-   //    throw new Error('Subclasses of StructuredM need to implement custom `each`');
-   // };
-
    // preserves structure of the matrix
    StructuredM.prototype.map = function map(f) {
       throw new Error('Subclasses of StructuredM need to implement custom `map`');

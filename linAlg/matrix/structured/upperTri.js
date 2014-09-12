@@ -49,14 +49,6 @@ return function(Matrix, StructuredM) {
       return false;
    };
 
-   // UpperTriM.prototype.each = function each(f) {
-   //    // apply f along the diagonal
-   //    this.values.each(function(val, i) {
-   //       f(val, i, i);
-   //    }, false);  // want to access all diag elements
-   //    return this;
-   // };
-
    UpperTriM.prototype.map = function map(f) {
       function f2(val, i) { return f(val, i, i); }
       return new UpperTriM(this.values.map(f2));

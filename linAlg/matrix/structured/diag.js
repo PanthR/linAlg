@@ -38,7 +38,7 @@ return function(Matrix, StructuredM) {
          throw new Error('Trying to set non-diagonal entry in diagonal matrix');
       }
       return false;
-   }
+   };
 
    DiagM.prototype.toIndex = function toIndex(i, j) {
       return i;
@@ -48,14 +48,6 @@ return function(Matrix, StructuredM) {
    };
    DiagM.prototype.colFromIndex = function colFromIndex(n) {
       return n;
-   };
-
-   DiagM.prototype.each = function each(f) {
-      // apply f along the diagonal
-      this.values.each(function(val, i) {
-         f(val, i, i);
-      }, false);  // want to access all diag elements
-      return this;
    };
 
    DiagM.prototype.map = function map(f) {
