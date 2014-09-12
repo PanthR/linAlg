@@ -32,17 +32,22 @@ return function(Matrix, StructuredM) {
 
    DiagM.prototype = Object.create(StructuredM.prototype);
 
-   DiagM.prototype._get = function _get(i, j) {
-      if (i !== j) { return 0; }  // Out of bounds check happens in this.values
-      return this.values.get(i);
-   };
-
-   DiagM.prototype._set = function _set(i, j, v) {
-      if (i !== j && v !== 0) {
+   DiagM.prototype.validate = function(i, j, val) {
+      if (i === j) { return true; }
+      if (arguments.length > 2 && val !== 0) {
          throw new Error('Trying to set non-diagonal entry in diagonal matrix');
       }
-      if (i === j) { this.values._set(i, v); }
-      return this;
+      return false;
+   }
+
+   DiagM.prototype.toIndex = function toIndex(i, j) {
+      return i;
+   };
+   DiagM.prototype.rowFromIndex = function rowFromIndex(n) {
+      return n;
+   };
+   DiagM.prototype.colFromIndex = function colFromIndex(n) {
+      return n;
    };
 
    DiagM.prototype.each = function each(f) {

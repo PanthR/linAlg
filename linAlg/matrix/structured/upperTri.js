@@ -41,21 +41,12 @@ return function(Matrix, StructuredM) {
       return Math.floor((1 + Math.sqrt(1 + 8 * (n - 1))) / 2);
    };
 
-   UpperTriM.prototype._get = function _get(i, j) {
-      if (i > j || !this.validIndices(i, j)) { return 0; }
-      return this.compute(i, j);
-   };
-
-   UpperTriM.prototype._set = function _set(i, j, v) {
-      if (!this.validIndices(i, j)) {
-             throw new Error('Trying to set out of Matrix bounds');
+   UpperTriM.prototype.validate = function(i, j, val) {
+      if (i <= j) { return true; }
+      if (arguments.length > 2 && val !== 0) {
+         throw new Error('Trying to set lower entry in Upper triangular matrix');
       }
-      if (i <= j) {
-         this.change(i, j, v);
-      } else if (v !== 0) {
-         throw new Error('Trying to set upper entry in Upper triangular matrix');
-      }
-      return this;
+      return false;
    };
 
    // UpperTriM.prototype.each = function each(f) {

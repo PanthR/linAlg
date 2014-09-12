@@ -115,7 +115,7 @@ define(function(require) {
     * `Matrix.prototype.get` if both arguments are always present.
     */
    Matrix.prototype._get = function _get(i, j) {
-      if (!this.validIndices(i, j)) { return 0; }
+      if (!this.validate(i, j) || !this.validIndices(i, j)) { return 0; }
       return this.compute(i, j);
    };
 
@@ -178,7 +178,7 @@ define(function(require) {
     * instead of `Matrix.prototype._set` if all three arguments are always present.
     */
    Matrix.prototype._set = function _set(i, j, val) {
-      if (!this.validIndices(i, j)) {
+      if (!this.validate(i, j, val) || !this.validIndices(i, j)) {
          throw new Error('Setting out of Matrix bounds');
       }
       return this.change(i, j, val);
@@ -194,6 +194,21 @@ define(function(require) {
       return this;
    };
 
+   /**
+    * Overriden by subclasses that need special index/value validation.
+    *
+    * This method will be called from `Matrix.prototype._get` with two arguments `(i, j)`.
+    * It should return whether the pair `(i, j)` is valid for that array, without worrying
+    * about being out of bounds (that is checked separately).
+    *
+    * This method is also called from `Matrix.prototype._set` with three arguments
+    * `(i, j, val)`, where `val` is the value that is to be set in those coordinates.
+    * It should either return `false ` or throw an error if the assignment should not
+    * happen, and return true if it should be allowed to happen.
+    */
+   Matrix.prototype.validate = function validate(i, j, val) {
+      return true;
+   };
    /**
     * Return an array of arrays representing the matrix. This representation is
     * as an array of columns (or an array of rows if `byRow` is `true`).
