@@ -567,6 +567,12 @@ define(function(require) {
       return new Matrix.Vector(newCols);
    };
 
+   Matrix.prototype.transpose = function transpose() {
+      return new Matrix(function(i, j) {
+         return this.get(j, i);
+      }.bind(this), { nrow: this.ncol, ncol: this.nrow });
+   };
+
    /** Return whether the matrix has the same dimensions as the matrix `other` */
    Matrix.prototype.sameDims = function sameDims(other) {
       return this.nrow === other.nrow && this.ncol === other.ncol;

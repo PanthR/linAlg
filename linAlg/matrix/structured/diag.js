@@ -61,6 +61,10 @@ return function(Matrix, StructuredM) {
       return DiagM;
    };
 
+   DiagM.prototype.transpose = function transpose() {
+      return this;
+   };
+
    return DiagM;
 };
 

@@ -36,6 +36,15 @@ return function(Matrix, DenseM) {
       return new Matrix(newValues, { nrow: this.nrow, ncol: this.ncol });
    };
 
+   SparseM.prototype.transpose = function transpose() {
+      var newValues = {};
+      this.each(function(val, i, j) {
+         newValues[j] = newValues[j] || {};
+         newValues[j][i] = val;
+      }, true);
+      return new Matrix(newValues, { nrow: this.ncol, ncol: this.nrow });
+   };
+
    return SparseM;
 };
 

@@ -53,6 +53,12 @@ return function(Matrix, StructuredM) {
       return false;
    };
 
+   UpperTriM.prototype.transpose = function transpose() {
+      return new StructuredM.LowerTriM(function(i, j) {
+         return this.get(j, i);
+      }.bind(this), { nrow: this.ncol, ncol: this.nrow });
+   };
+
    return UpperTriM;
 };
 
