@@ -26,6 +26,12 @@ return function(Matrix, StructuredM) {
 
    CDiagM.prototype = Object.create(StructuredM.DiagM.prototype);
 
+   CDiagM.prototype.classes = [
+      CDiagM, StructuredM.DiagM, StructuredM.LowerTriM,
+      StructuredM.UpperTriM, StructuredM.SymmetricM,
+      Matrix
+   ];
+
    CDiagM.prototype.mutable = function mutable(newSetting) {
       if (newSetting == null) { return false; }
       throw new Error('Cannot set constant to be mutable');

@@ -39,6 +39,12 @@ return function(Matrix, StructuredM) {
 
    DiagM.prototype = Object.create(StructuredM.prototype);
 
+   DiagM.prototype.classes = [
+      DiagM, StructuredM.LowerTriM,
+      StructuredM.UpperTriM, StructuredM.SymmetricM,
+      Matrix
+   ];
+
    DiagM.prototype.validate = function(i, j, val) {
       if (i === j) { return true; }
       if (arguments.length > 2 && val !== 0) {

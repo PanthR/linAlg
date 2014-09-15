@@ -111,6 +111,31 @@ define(function(require) {
    };
 
    /**
+    * The array of constructors for this type and its supertypes, in order from
+    * most specific to most general.
+    */
+   Matrix.prototype.classes = [ Matrix ];
+
+   /**
+    * [isA description]
+    */
+   Matrix.prototype.isA = function(constr) {
+      return this.classes.reduce(function(acc, con2) {
+         return acc || constr === con2;
+      }, false);
+   };
+
+   Matrix.commonConstr = function(A, B) {
+      var i;
+      for (i = 0; i < A.classes.length; i += 1) {
+         if (B.isA(A.classes[i])) {
+            return A.classes[i];
+         }
+      }
+      throw new Error('Matrix is not a common ancestor for these BAD guys.');
+   };
+
+   /**
     * Return the value at location `(i, j)`. Returns `0` if accessing a location out
     * of bounds.
     *

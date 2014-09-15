@@ -31,6 +31,8 @@ return function(Matrix, StructuredM) {
 
    SymmetricM.prototype = Object.create(StructuredM.prototype);
 
+   SymmetricM.prototype.classes = [ SymmetricM, Matrix ];
+
    SymmetricM.prototype.toIndex = function toIndex(i, j) {
       if (j > i) { return j * (j - 1) / 2 + i; }
       return i * (i - 1) / 2 + j;

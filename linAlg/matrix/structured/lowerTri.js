@@ -31,6 +31,8 @@ return function(Matrix, StructuredM) {
 
    LowerTriM.prototype = Object.create(StructuredM.prototype);
 
+   LowerTriM.prototype.classes = [ LowerTriM, Matrix ];
+
    LowerTriM.prototype.toIndex = function toIndex(i, j) {
       return i * (i - 1) / 2 + j;
    };

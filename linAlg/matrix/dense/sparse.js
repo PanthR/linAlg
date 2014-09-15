@@ -27,6 +27,8 @@ return function(Matrix, DenseM) {
 
    SparseM.prototype = Object.create(DenseM.prototype);
 
+   SparseM.prototype.classes = [SparseM, Matrix];
+
    SparseM.prototype.map = function map(f) {
       var newValues = {};
       this.each(function(val, i, j) {
