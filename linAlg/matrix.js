@@ -98,6 +98,19 @@ define(function(require) {
    };
 
    /**
+    * Return a constant multiple of the identity matrix. These matrices cannot become mutable.
+    * They should be treated as constants.
+    * The second argument, `nrow` can be the number of rows, or an object with an `nrow`
+    * argument. For instance to create an identity matrix with size same as the matrix `A`
+    * one would do:
+    *
+    *     Matrix.const(1, A);  // Identity matrix with dimension same as A.
+    */
+   Matrix.const = function constant(val, nrow) {
+      return new Matrix.StructuredM.CDiagM(val, nrow);
+   };
+
+   /**
     * Return the value at location `(i, j)`. Returns `0` if accessing a location out
     * of bounds.
     *

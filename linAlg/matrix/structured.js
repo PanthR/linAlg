@@ -17,6 +17,7 @@ return function(Matrix) {
     * Users should not need to access this subclass directly.
     */
    StructuredM.DiagM      = require('./structured/diag')(Matrix, StructuredM);
+   StructuredM.CDiagM     = require('./structured/cDiag')(Matrix, StructuredM);
    StructuredM.LowerTriM  = require('./structured/lowerTri')(Matrix, StructuredM);
    StructuredM.UpperTriM  = require('./structured/upperTri')(Matrix, StructuredM);
    StructuredM.SymmetricM = require('./structured/symmetric')(Matrix, StructuredM);
