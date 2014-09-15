@@ -19,7 +19,7 @@ describe('Unfaithful clones', function() {
    it('have the correct values', function() {
       matrices.forEach(function(m) {
          var c = m.clone(false);
-         expect(c.sameDims(m)).to.be.true;
+         expect(Matrix.sameDims(c, m)).to.be.true;
          for (var i = 0; i < m.nrow; i += 1) {
             for (var j = 0; j < m.ncol; j += 1) {
                expect(c.get(i, j)).to.equal(m.get(i, j));
@@ -57,7 +57,7 @@ describe('Faithful clones', function() {
    it('have the correct values', function() {
       matrices.forEach(function(m) {
          var c = m.clone();
-         expect(c.sameDims(m)).to.be.true;
+         expect(Matrix.sameDims(c, m)).to.be.true;
          for (var i = 0; i < m.nrow; i += 1) {
             for (var j = 0; j < m.ncol; j += 1) {
                expect(c.get(i, j)).to.equal(m.get(i, j));

@@ -176,7 +176,7 @@ define(function(require) {
          function makeLookup(vals) {
             if (typeof vals === 'function') { return vals; }
             if (vals instanceof Matrix) {
-               if (!target.sameDims(vals)) {
+               if (!Matrix.sameDims(target, vals)) {
                   throw new Error('Incompatible matrix dimensions');
                }
                return vals.get.bind(vals);
@@ -611,9 +611,9 @@ define(function(require) {
       }.bind(this), { nrow: this.ncol, ncol: this.nrow });
    };
 
-   /** Return whether the matrix has the same dimensions as the matrix `other`. */
-   Matrix.prototype.sameDims = function sameDims(other) {
-      return this.nrow === other.nrow && this.ncol === other.ncol;
+   /** Return whether the matrix `A` has the same dimensions as the matrix `B`. */
+   Matrix.sameDims = function sameDims(A, B) {
+      return A.nrow === B.nrow && A.ncol === B.ncol;
    };
 
    /**

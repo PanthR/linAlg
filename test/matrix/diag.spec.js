@@ -94,7 +94,7 @@ describe('Diagonal matrices', function() {
       }
       var d3 = d1.map(f2);  // DiagM
       expect(d3).to.be.instanceof(DiagM);
-      expect(d3.sameDims(d1)).to.be.true;
+      expect(Matrix.sameDims(d3, d1)).to.be.true;
       for (var i = 1; i <= d3.nrow; i += 1) {
          expect(d3.get(i, i)).to.equal(d1.get(i, i) + i * i);
       }

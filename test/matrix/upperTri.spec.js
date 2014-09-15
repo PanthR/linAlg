@@ -74,7 +74,7 @@ describe('Upper triangular matrices', function() {
             return v + i * j;
          });
          expect(m2).to.be.instanceof(UpperTriM);
-         expect(m2.sameDims(m)).to.be.true;
+         expect(Matrix.sameDims(m2, m)).to.be.true;
          for (var i = 1; i <= m.nrow; i += 1) {
             for (var j = i; j <= m.nrow; j += 1) {
                expect(m2.get(i, j)).to.equal(m.get(i, j) + i * j);

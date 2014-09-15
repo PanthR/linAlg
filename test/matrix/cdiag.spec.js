@@ -73,7 +73,7 @@ describe('Constant-Diagonal matrices', function() {
          }
          var m = d.map(f2);  // DiagM
          expect(m).to.be.instanceof(Matrix.StructuredM.DiagM);
-         expect(m.sameDims(d)).to.be.true;
+         expect(Matrix.sameDims(m, d)).to.be.true;
          for (var i = 1; i <= d.nrow; i += 1) {
             expect(m.get(i, i)).to.equal(vals[ind] + i * i);
          }
