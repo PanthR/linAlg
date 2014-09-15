@@ -35,15 +35,20 @@ return function(Matrix, StructuredM) {
       throw new Error('Trying to set entry in constant matrix');
    };
 
-   CDiagM.prototype._get = function(i, j) {
+   CDiagM.prototype.compute = function(i, j) {
       return i === j ? this.val : 0;
    };
 
+   // constructor to use for applying map
    CDiagM.prototype.constr = function constr() {
-      return CDiagM; // TODO: Test this works properly (with map)
+      return StructuredM.DiagM;
    };
 
-   CDiagM.prototype.transpose = function transpose() {
+   CDiagM.prototype.each = function each(f) {
+      var i;
+      for (i = 1; i <= this.nrow; i += 1) {
+         f(this.val, i, i);
+      }
       return this;
    };
 
