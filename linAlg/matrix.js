@@ -350,6 +350,30 @@ define(function(require) {
       tabf = function(i, j) { return f(this.get(i), v2.get(j), i, j); }.bind(this);
       return new Matrix(tabf, { nrow: this.length, ncol: v2.length });
    };
+
+   /**
+    * Return `this + k * other`, where `this` and `other` are matrices of the
+    * same dimensions, and `k` is a scalar.
+    */
+   Matrix.prototype.pAdd = function pAdd(other, k) {
+      return new Matrix.StructuredM.SumM(this, other, k);
+   };
+
+   /**
+    * Return `k * this`, where `k` is a scalar (required numerical argument).
+    */
+   Matrix.prototype.sMult = function sMult(k) {
+      return this.map(function(val) { return k * val; });
+   };
+
+   /**
+    * Return the matrix product `this * other`, where `this` and `other` have
+    * compatible dimensions.
+    */
+   Matrix.prototype.mult = function mult(other) {
+      return new Matrix.StructuredM.ProdM(this, other);
+   };
+
    /**
     * Return a view into a submatrix of `this`.
     *
@@ -590,6 +614,17 @@ define(function(require) {
    /** Return whether the matrix has the same dimensions as the matrix `other`. */
    Matrix.prototype.sameDims = function sameDims(other) {
       return this.nrow === other.nrow && this.ncol === other.ncol;
+   };
+
+   /**
+    * Return whether `A` and `B` have compatible dimensions for
+    * forming the product `A * B`.  If `A` and; `B` are not both matrices, then
+    * one of them is a matrix and the other is a vector.
+    */
+   Matrix.compatibleDims = function compatibleDims(A, B) {
+      if (A instanceof Matrix.Vector) { return A.length === B.nrow; }
+      if (B instanceof Matrix.Vector) { return A.ncol === B.length; }
+      return A.ncol === B.nrow;
    };
 
    /**
