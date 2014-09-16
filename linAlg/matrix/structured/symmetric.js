@@ -53,6 +53,13 @@ return function(Matrix, StructuredM) {
       return this;
    };
 
+   // Needs its own sMult to ensure the result is still symmetric
+   SymmetricM.prototype.sMult = function sMult(k) {
+      return new SymmetricM(function(i, j) {
+         return k * this.get(i, j);
+      }.bind(this), this);
+   };
+
    return SymmetricM;
 };
 

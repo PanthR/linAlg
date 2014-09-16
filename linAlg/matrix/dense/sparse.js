@@ -44,6 +44,22 @@ return function(Matrix, DenseM) {
       return new SparseM(res, A);
    };
 
+   SparseM.mult = function mult(A, B) {
+      var res;
+      res = {};
+      function addValue(val, i, j) {
+         if (val === 0) { return; }
+         if (res[i] == null) { res[i] = {}; }
+         res[i][j] = (res[i][j] || 0) + val;
+      }
+      A.forEach(function(Aval, i, k) {
+         Object.keys(B.values[k] || {}).forEach(function(j) {
+            addValue(Aval * B.values[k][j], i, j);
+         });
+      });
+      return new SparseM(res, { nrow: A.nrow, ncol: B.ncol });
+   };
+
    SparseM.prototype.classes = [SparseM, Matrix];
 
    SparseM.prototype.map = function map(f) {

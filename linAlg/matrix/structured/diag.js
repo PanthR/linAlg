@@ -71,6 +71,20 @@ return function(Matrix, StructuredM) {
       return this;
    };
 
+   // Multiply on the left with B
+   DiagM.prototype.lMult = function lMult(B) {
+      return B.map(function(val, i, j) {
+         return val * this.get(j, j);
+      }.bind(this));
+   };
+
+   // Multiply on the right with B
+   DiagM.prototype.rMult = function rMult(B) {
+      return B.map(function(val, i, j) {
+         return val * this.get(i, i);
+      }.bind(this));
+   };
+
    return DiagM;
 };
 

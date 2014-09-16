@@ -441,7 +441,27 @@ define(function(require) {
    Matrix.prototype.mult = function mult(other) {
       return new Matrix.ProdM(this, other);
    };
-
+   Matrix.Vector.prototype.mult = function mult(other) {
+      return new Matrix.ProdM(this, other);
+   };
+   /**
+    * Multiply the matrix on the left with a vector `vec`. `vec.length` must equal `this.nrow`.
+    * Returns a vector of length `this.ncol`. This is an _internal method_ and bypasses certain tests.
+    */
+   Matrix.prototype.lvMult = function lvMult(vec) {
+      return new Matrix.Vector(function(j) {
+         return vec.dot(this.colView(j));
+      }.bind(this), this.ncol);
+   };
+   /**
+    * Multiply on the right with a vector `vec`. `vec.length` must equal `this.ncol`.
+    * Returns a vector of length `this.nrow`. This is an _internal method_ and bypasses certain tests.
+    */
+   Matrix.prototype.rvMult = function rvMult(vec) {
+      return new Matrix.Vector(function(i) {
+         return vec.dot(this.rowView(i));
+      }.bind(this), this.nrow);
+   };
    /**
     * Return a view into a submatrix of `this`.
     *

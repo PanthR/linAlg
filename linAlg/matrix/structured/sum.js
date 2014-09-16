@@ -19,8 +19,8 @@ return function(Matrix, StructuredM) {
          return Matrix.SparseM.add(A, B, k);
       }
       // if both cdiag, return a cdiag
-      if (A.isA(StructuredM.CDiagM) && B.isA(StructuredM.CDiagM)) {
-         return StructuredM.CDiagM.add(A, B, k);
+      if (A.isA(Matrix.CDiagM) && B.isA(Matrix.CDiagM)) {
+         return Matrix.CDiagM.add(A, B, k);
       }
       // in every other case, use commonConstr (give constructor a function)
       return new (Matrix.commonConstr(A, B))(function(i, j) {
