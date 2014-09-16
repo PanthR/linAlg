@@ -699,6 +699,19 @@ define(function(require) {
       }.bind(this), { nrow: this.ncol, ncol: this.nrow });
    };
 
+   /**
+    * Return a lower-triangular matrix created by the lower triangle of `this`.
+    */
+   Matrix.prototype.lower = function lower() {
+      return new Matrix.LowerTriM(this);
+   };
+   /**
+    * Return a upper-triangular matrix created by the upper triangle of `this`.
+    */
+   Matrix.prototype.upper = function upper() {
+      return new Matrix.UpperTriM(this);
+   };
+
    /** Return whether the matrix `A` has the same dimensions as the matrix `B`. */
    Matrix.sameDims = function sameDims(A, B) {
       return A.nrow === B.nrow && A.ncol === B.ncol;
