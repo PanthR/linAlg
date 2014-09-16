@@ -9,9 +9,9 @@ A[2] = new Matrix({ 2: { 3: 8, 1: 2}, 1: { 1: 5 }}, { nrow : 3, ncol: 3 });
 A[3] = new Matrix(function(i, j) { return i * j; }, { nrow: 3, ncol: 3 });
 A[4] = Matrix.diag([4, 3.3, 5.1]);
 A[5] = Matrix.const(5.8, 3);
-A[6] = new Matrix.StructuredM.LowerTriM(A[1]);
-A[7] = new Matrix.StructuredM.UpperTriM(A[1]);
-A[8] = new Matrix.StructuredM.SymmetricM(A[1]);
+A[6] = new Matrix.LowerTriM(A[1]);
+A[7] = new Matrix.UpperTriM(A[1]);
+A[8] = new Matrix.SymmetricM(A[1]);
 
 describe('Matrix addition', function() {
    function execute(f) { // do f for each pair in A
@@ -48,17 +48,17 @@ describe('Matrix addition', function() {
    });
    it('returns correct classes', function() {
       // lower trim with lower, diag -- etc...
-      expect(A[6].pAdd(A[6]).isA(Matrix.StructuredM.LowerTriM)).to.be.ok;
-      expect(A[4].pAdd(A[6]).isA(Matrix.StructuredM.LowerTriM)).to.be.ok;
-      expect(A[5].pAdd(A[6]).isA(Matrix.StructuredM.LowerTriM)).to.be.ok;
-      expect(A[6].pAdd(A[5]).isA(Matrix.StructuredM.LowerTriM)).to.be.ok;
-      expect(A[4].pAdd(A[4]).isA(Matrix.StructuredM.DiagM)).to.be.ok;
-      expect(A[4].pAdd(A[5]).isA(Matrix.StructuredM.DiagM)).to.be.ok;
-      expect(A[5].pAdd(A[5]).isA(Matrix.StructuredM.CDiagM)).to.be.ok;
-      expect(A[4].pAdd(A[8]).isA(Matrix.StructuredM.SymmetricM)).to.be.ok;
-      expect(A[5].pAdd(A[8]).isA(Matrix.StructuredM.SymmetricM)).to.be.ok;
-      expect(A[8].pAdd(A[8]).isA(Matrix.StructuredM.SymmetricM)).to.be.ok;
-      expect(A[2].pAdd(A[2]).isA(Matrix.DenseM.SparseM)).to.be.ok;
+      expect(A[6].pAdd(A[6]).isA(Matrix.LowerTriM)).to.be.ok;
+      expect(A[4].pAdd(A[6]).isA(Matrix.LowerTriM)).to.be.ok;
+      expect(A[5].pAdd(A[6]).isA(Matrix.LowerTriM)).to.be.ok;
+      expect(A[6].pAdd(A[5]).isA(Matrix.LowerTriM)).to.be.ok;
+      expect(A[4].pAdd(A[4]).isA(Matrix.DiagM)).to.be.ok;
+      expect(A[4].pAdd(A[5]).isA(Matrix.DiagM)).to.be.ok;
+      expect(A[5].pAdd(A[5]).isA(Matrix.CDiagM)).to.be.ok;
+      expect(A[4].pAdd(A[8]).isA(Matrix.SymmetricM)).to.be.ok;
+      expect(A[5].pAdd(A[8]).isA(Matrix.SymmetricM)).to.be.ok;
+      expect(A[8].pAdd(A[8]).isA(Matrix.SymmetricM)).to.be.ok;
+      expect(A[2].pAdd(A[2]).isA(Matrix.SparseM)).to.be.ok;
    });
    it('throws error for incompatible dimensions', function() {
       execute(function(m, n) {

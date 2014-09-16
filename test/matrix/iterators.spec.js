@@ -251,7 +251,7 @@ describe('Matrix#map', function() {
       m.toArray();
       expect(a.length).to.equal(3);
       a.sort(sorter);
-      expect(m).to.be.instanceof(Matrix.DenseM.SparseM);
+      expect(m).to.be.instanceof(Matrix.SparseM);
       expect(m.nrow).to.equal(A2.nrow);
       expect(m.ncol).to.equal(A2.ncol);
       expect(a[0]).to.deep.equal([8, 2, 3]);

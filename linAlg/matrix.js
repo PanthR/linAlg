@@ -61,11 +61,54 @@ define(function(require) {
     */
    Matrix.DenseM   = require('./matrix/dense')(Matrix);
    /**
+    * Subclass of `Matrix` representing "sparse" matrices.
+    * Sparse matrices are stored as objects, whose keys represent the indices
+    * that have non-zero values.
+    * Users should not need to access this subclass directly.
+    */
+   Matrix.SparseM  = Matrix.DenseM.SparseM;
+   /**
+    * Subclass of `Matrix` representing matrices whose values are specified via
+    * a function `f(i)` of the index.
+    * The values of the matrix are computed lazily, only when they are accessed.
+    * Users should not need to access this subclass directly.
+    */
+   Matrix.TabularM = Matrix.DenseM.TabularM;
+   /**
     * Subclass of `Matrix` acting as a superclass for classes of matrices
     * with extra structure. Users should not need to access this subclass
     * directly.
     */
    Matrix.StructuredM = require('./matrix/structured')(Matrix);
+   /**
+    * TODO
+    */
+   Matrix.LowerTriM   = Matrix.StructuredM.LowerTriM;
+   /**
+    * TODO
+    */
+   Matrix.UpperTriM   = Matrix.StructuredM.UpperTriM;
+   /**
+    * TODO
+    */
+   Matrix.SymmetricM  = Matrix.StructuredM.SymmetricM;
+   /**
+    * TODO
+    */
+   Matrix.SumM        = Matrix.StructuredM.SumM;
+   /**
+    * TODO
+    */
+   Matrix.ProdM       = Matrix.StructuredM.ProdM;
+   /**
+    * Subclass of `Matrix` representing diagonal matrices.
+    * Users should not need to access this subclass directly.
+    */
+   Matrix.DiagM       = Matrix.StructuredM.DiagM;
+   /**
+    * TODO
+    */
+   Matrix.CDiagM      = Matrix.StructuredM.CDiagM;
    /**
     * Subclass of `Matrix` representing submatrix views into another matrix. Changes
     * to the view are reflected on the original matrix and vice-versa. Use
@@ -94,7 +137,7 @@ define(function(require) {
     * To obtain a diagonal of an arbitrary matrix, see `Matrix.prototype.diagView`.
     */
    Matrix.diag = function diag(diagonal, len) {
-      return new Matrix.StructuredM.DiagM(diagonal, len);
+      return new Matrix.DiagM(diagonal, len);
    };
 
    /**
@@ -107,7 +150,7 @@ define(function(require) {
     *     Matrix.const(1, A);  // Identity matrix with dimension same as A.
     */
    Matrix.const = function constant(val, nrow) {
-      return new Matrix.StructuredM.CDiagM(val, nrow);
+      return new Matrix.CDiagM(val, nrow);
    };
 
    /**
@@ -381,7 +424,7 @@ define(function(require) {
     * same dimensions, and `k` is a scalar.
     */
    Matrix.prototype.pAdd = function pAdd(other, k) {
-      return new Matrix.StructuredM.SumM(this, other, k);
+      return new Matrix.SumM(this, other, k);
    };
 
    /**
@@ -396,7 +439,7 @@ define(function(require) {
     * compatible dimensions.
     */
    Matrix.prototype.mult = function mult(other) {
-      return new Matrix.StructuredM.ProdM(this, other);
+      return new Matrix.ProdM(this, other);
    };
 
    /**

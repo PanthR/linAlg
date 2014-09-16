@@ -15,8 +15,8 @@ return function(Matrix, StructuredM) {
 
    function computeSum(A, B, k) {
       // if both sparse, return a sparse (via SparseM.add??)
-      if (A.isA(Matrix.DenseM.SparseM) && B.isA(Matrix.DenseM.SparseM)) {
-         return Matrix.DenseM.SparseM.add(A, B, k);
+      if (A.isA(Matrix.SparseM) && B.isA(Matrix.SparseM)) {
+         return Matrix.SparseM.add(A, B, k);
       }
       // if both cdiag, return a cdiag
       if (A.isA(StructuredM.CDiagM) && B.isA(StructuredM.CDiagM)) {

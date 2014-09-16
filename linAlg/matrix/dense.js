@@ -38,19 +38,7 @@ return function(Matrix) {
 
    DenseM.prototype = Object.create(Matrix.prototype);
 
-   /**
-    * Subclass of `Matrix` representing "sparse" matrices.
-    * Sparse matrices are stored as objects, whose keys represent the indices
-    * that have non-zero values.
-    * Users should not need to access this subclass directly.
-    */
    DenseM.SparseM  = require('./dense/sparse')(Matrix, DenseM);
-   /**
-    * Subclass of `Matrix` representing matrices whose values are specified via
-    * a function `f(i)` of the index.
-    * The values of the matrix are computed lazily, only when they are accessed.
-    * Users should not need to access this subclass directly.
-    */
    DenseM.TabularM = require('./dense/tabular')(Matrix, DenseM);
 
    DenseM.prototype.each = function each(f) {

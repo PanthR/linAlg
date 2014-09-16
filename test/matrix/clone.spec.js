@@ -47,7 +47,7 @@ describe('Faithful clones', function() {
       matrices.forEach(function(m) {
          var c;
          expect(function() { c = m.clone(); }).to.not.throw(Error);
-         if (m.constructor === Matrix.ViewM || m.constructor == Matrix.DenseM.TabularM) {
+         if (m.constructor === Matrix.ViewM || m.constructor == Matrix.TabularM) {
             expect(c).to.be.instanceof(Matrix.DenseM);
          } else {
             expect(c).to.be.instanceof(m.constructor);

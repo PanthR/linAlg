@@ -6,12 +6,12 @@ describe('Matrix transpose', function() {
    var A1 = new Matrix.DenseM([4, 6, 7, 2, 1, 3], { ncol : 2 });
    var A2 = new Matrix.DenseM([[4, 6, 7], [2, 1, 3]]);
    var A3 = new Matrix.DenseM([[4, 6, 7], [2, 1, 3]], { byRow : true });
-   var A4 = new Matrix.DenseM.SparseM({ 2: { 3: 23, 4: 2}, 4: { 1: 2 }}, { nrow : 4, ncol: 6 });
-   var A5 = new Matrix.StructuredM.DiagM([4, 2, 5, 6]);
+   var A4 = new Matrix.SparseM({ 2: { 3: 23, 4: 2}, 4: { 1: 2 }}, { nrow : 4, ncol: 6 });
+   var A5 = new Matrix.DiagM([4, 2, 5, 6]);
    var a  = new Matrix(Math.random, { nrow: 4, ncol: 5});
-   var A6 = new Matrix.StructuredM.LowerTriM(a);
-   var A7 = new Matrix.StructuredM.UpperTriM(a);
-   var A8 = new Matrix.StructuredM.SymmetricM(function(i, j) { return i * j; }, 5);
+   var A6 = new Matrix.LowerTriM(a);
+   var A7 = new Matrix.UpperTriM(a);
+   var A8 = new Matrix.SymmetricM(function(i, j) { return i * j; }, 5);
    var matrices = [A1, A2, A3, A4, A5, A6, A7, A8];
    it('exists', function() {
       expect(Matrix).to.respondTo('transpose');
@@ -37,10 +37,10 @@ describe('Matrix transpose', function() {
       });
    });
    it('"preserves" appropriate structure', function() {
-      expect(A4.transpose()).to.be.instanceof(Matrix.DenseM.SparseM);
-      expect(A5.transpose()).to.be.instanceof(Matrix.StructuredM.DiagM);
-      expect(A6.transpose()).to.be.instanceof(Matrix.StructuredM.UpperTriM);
-      expect(A7.transpose()).to.be.instanceof(Matrix.StructuredM.LowerTriM);
-      expect(A8.transpose()).to.be.instanceof(Matrix.StructuredM.SymmetricM);
+      expect(A4.transpose()).to.be.instanceof(Matrix.SparseM);
+      expect(A5.transpose()).to.be.instanceof(Matrix.DiagM);
+      expect(A6.transpose()).to.be.instanceof(Matrix.UpperTriM);
+      expect(A7.transpose()).to.be.instanceof(Matrix.LowerTriM);
+      expect(A8.transpose()).to.be.instanceof(Matrix.SymmetricM);
    });
 });
