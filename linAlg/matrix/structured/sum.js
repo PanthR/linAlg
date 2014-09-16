@@ -5,9 +5,7 @@ return function(Matrix, StructuredM) {
    // return A + kB
    function SumM(A, B, k) {
       if (k == null) { k = 1; }
-      if (!Matrix.sameDims(A, B)) {
-         throw new Error('Cannot add matrices with different dimensions.');
-      }
+      Matrix.ensureSameDims(A, B);
       return computeSum(A, B, k);
    }
 

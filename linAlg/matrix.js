@@ -244,9 +244,7 @@ define(function(require) {
          function makeLookup(vals) {
             if (typeof vals === 'function') { return vals; }
             if (vals instanceof Matrix) {
-               if (!Matrix.sameDims(target, vals)) {
-                  throw new Error('Incompatible matrix dimensions');
-               }
+               Matrix.ensureSameDims(target, vals);
                return vals.get.bind(vals);
             }
             return function(i, j) { return vals; };
@@ -716,6 +714,12 @@ define(function(require) {
    Matrix.sameDims = function sameDims(A, B) {
       return A.nrow === B.nrow && A.ncol === B.ncol;
    };
+   
+   Matrix.ensureSameDims = function ensureSameDims(A, B) {
+      if (!Matrix.sameDims(A, B)) {
+         throw new Error('Expected matrices of same dimensions.');
+      }
+   }
 
    /**
     * Return whether `A` and `B` have compatible dimensions for
