@@ -690,6 +690,50 @@ define(function(require) {
       return new Matrix.Vector(newCols);
    };
 
+   /**
+    * Apply function `f(val1, val2, i, j)` to all pairwise entries of `this` and `other`.
+    * The matrices must have the same dimensions. No promises are made about the order of
+    * iteration.
+    */
+   Matrix.prototype.eachPair = function eachPair(other, f) {
+      var i, j;
+      Matrix.ensureSameDims(this, other);
+      for (i = 1; i <= this.nrow; i += 1) {
+         for (j = 1; j <= this.ncol; j += 1) {
+            f(this.get(i, j), other.get(i, j), i, j);
+         }
+      }
+   };
+
+   /**
+    * Reduce on the pair of matrices `this` and `other` using the function
+    * `f(acc, val1, val2, i, j)`, with an `initial` value.
+    * The matrices must have the same dimensions. No promises are made about the order of
+    * iteration.
+    */
+   Matrix.prototype.reducePair = function reducePair(other, f, initial) {
+      var i, j;
+      Matrix.ensureSameDims(this, other);
+      for (i = 1; i <= this.nrow; i += 1) {
+         for (j = 1; j <= this.ncol; j += 1) {
+            initial = f(initial, this.get(i, j), other.get(i, j), i, j);
+         }
+      }
+      return initial;
+   };
+
+   /**
+    * Create a new matrix by applying the function `f(val1, val2, i, j)` to all pairwise entries
+    * of `this` and `other`. No matrix structure is preserved.
+    * The matrices must have the same dimensions.
+    */
+   Matrix.prototype.mapPair = function mapPair(other, f) {
+      Matrix.ensureSameDims(this, other);
+      return new Matrix(function(i, j) {
+         return f(this.get(i, j), other.get(i, j), i, j);
+      }.bind(this), this);
+   };
+
    /** Return the transpose of the matrix, preserving any appropriate structure. */
    Matrix.prototype.transpose = function transpose() {
       return new Matrix(function(i, j) {
@@ -714,12 +758,13 @@ define(function(require) {
    Matrix.sameDims = function sameDims(A, B) {
       return A.nrow === B.nrow && A.ncol === B.ncol;
    };
-   
+
+   /** Throw error if `A`, `B` don't have same dimensions. */
    Matrix.ensureSameDims = function ensureSameDims(A, B) {
       if (!Matrix.sameDims(A, B)) {
          throw new Error('Expected matrices of same dimensions.');
       }
-   }
+   };
 
    /**
     * Return whether `A` and `B` have compatible dimensions for
