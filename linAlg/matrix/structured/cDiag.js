@@ -62,6 +62,10 @@ return function(Matrix, StructuredM) {
       return this;
    };
 
+   CDiagM.prototype.sMult = function sMult(k) {
+      return new CDiagM(k * this.val, this);
+   };
+
    return CDiagM;
 };
 
