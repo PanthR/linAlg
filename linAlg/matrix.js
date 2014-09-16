@@ -81,32 +81,63 @@ define(function(require) {
     */
    Matrix.StructuredM = require('./matrix/structured')(Matrix);
    /**
-    * TODO
+    * Subclass of `StructuredM` representing "Lower triangular" matrices.
+    *
+    * The constructor expects two arguments:
+    * - The first argument,`values`, cam be:
+    *     1. A full square matrix, in which case its lower triangular part is used.
+    *     See also `Matrix.prototype.lower`. If the passed matrix is already of class
+    *     `Matrix.LowerTriM`, it is simply returned by the constructor.
+    *     2. A function `f(i, j)`. The second argument `nrow` is then needed to specify the
+    *     number of rows/columns of the resulting matrix. The `nrow` argument may be either a
+    *     number or an object with an `nrow` property.
+    *     3. A single value, to be used for all entries. The second argument `nrow` is needed.
     */
    Matrix.LowerTriM   = Matrix.StructuredM.LowerTriM;
    /**
-    * TODO
+    * Subclass of `StructuredM` representing "Upper triangular" matrices.
+    *
+    * See `Matrix.LowerTriM` for the constructor parameters. See `Matrix.prototype.upper` for
+    * obtaining the upper triangle of a given square matrix.
     */
    Matrix.UpperTriM   = Matrix.StructuredM.UpperTriM;
    /**
-    * TODO
+    * Subclass of `StructuredM` representing symmetric matrices.
+    *
+    * A symmetric matrix behaves exactly like a `Matrix.LowerTriM` matrix reflected across the
+    * main diagonal.
     */
    Matrix.SymmetricM  = Matrix.StructuredM.SymmetricM;
    /**
-    * TODO
+     * Subclass of `Matrix` representing sums (A + k * B) of matrices.
+     * Users should not need to access this subclass directly.
     */
    Matrix.SumM        = Matrix.StructuredM.SumM;
    /**
-    * TODO
+     * Subclass of `Matrix` representing products of matrices.
+     * Users should not need to access this subclass directly.
     */
    Matrix.ProdM       = Matrix.StructuredM.ProdM;
    /**
     * Subclass of `Matrix` representing diagonal matrices.
-    * Users should not need to access this subclass directly.
+    * Users should not need to access this subclass directly. Use `Matrix.diag` instead.
+    *
+    * One can only set values on the diagonal of a DiagM matrix.
+    * Trying to set outside the diagonal will result in error.
+    * In order to set values outside the diagonal, would need to
+    * "unstructure" the matrix.
+    *
+    * Using rowView/colView on diagonal matrices may be quite inefficient,
+    * as it does not recognize the sparse nature of those vectors.
     */
    Matrix.DiagM       = Matrix.StructuredM.DiagM;
    /**
-    * TODO
+    * Subclass of `Matrix` representing matrices that are constant multiples of
+    * the identity. The constructor expects two arguments: `val` with the value to be
+    * used, and `nrow`, which is either a number indicating the number of rows or
+    * an object with an `nrow` property.
+    *
+    * CDiagM matrices are immutable.
     */
    Matrix.CDiagM      = Matrix.StructuredM.CDiagM;
    /**
@@ -133,6 +164,11 @@ define(function(require) {
     * Return a square diagonal matrix with values given by `diagonal`. The argument
     * `diagonal` may be an array, a `Vector`, or a function `f(i)`. In the latter case,
     * a second argument `len` is required to provide the length of the resulting diagonal.
+    * `len` may also be an object with an `nrow` property.
+    *
+    * This method takes ownership of the `diagonal` vector and may
+    * change its values when it itself is changed. Clone the
+    * array/vector before passing it to avoid this.
     *
     * To obtain a diagonal of an arbitrary matrix, see `Matrix.prototype.diagView`.
     */
@@ -160,7 +196,8 @@ define(function(require) {
    Matrix.prototype.classes = [ Matrix ];
 
    /**
-    * [isA description]
+    * Return whether `constr` is in the list of class constructors produced by
+    * `Matrix.prototype.classes`.
     */
    Matrix.prototype.isA = function(constr) {
       return this.classes.reduce(function(acc, con2) {
@@ -168,6 +205,10 @@ define(function(require) {
       }, false);
    };
 
+   /**
+    * Return a common constructor for `A` and `B`, from the lists provided by
+    * `Matrix.prototype.classes`.
+    */
    Matrix.commonConstr = function(A, B) {
       var i;
       for (i = 0; i < A.classes.length; i += 1) {
@@ -439,6 +480,7 @@ define(function(require) {
    Matrix.prototype.mult = function mult(other) {
       return new Matrix.ProdM(this, other);
    };
+   /** TODO: Find a way to add to Vector docs */
    Matrix.Vector.prototype.mult = function mult(other) {
       return new Matrix.ProdM(this, other);
    };

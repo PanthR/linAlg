@@ -31,29 +31,57 @@
         <h3>Contents</h3>
       <ul>
         
-        <a href="#DenseM.SparseM"><li><code>DenseM.SparseM</code></li></a>
-        
-        <a href="#DenseM.TabularM"><li><code>DenseM.TabularM</code></li></a>
-        
-        <a href="#StructuredM.DiagM"><li><code>StructuredM.DiagM</code></li></a>
+        <a href="#StructuredM.LowerTriM"><li><code>StructuredM.LowerTriM</code></li></a>
         
         <a href="#Matrix"><li><code>Matrix</code></li></a>
         
+        <a href="#Matrix.CDiagM"><li><code>Matrix.CDiagM</code></li></a>
+        
         <a href="#Matrix.DenseM"><li><code>Matrix.DenseM</code></li></a>
         
+        <a href="#Matrix.DiagM"><li><code>Matrix.DiagM</code></li></a>
+        
+        <a href="#Matrix.LowerTriM"><li><code>Matrix.LowerTriM</code></li></a>
+        
+        <a href="#Matrix.ProdM"><li><code>Matrix.ProdM</code></li></a>
+        
+        <a href="#Matrix.SparseM"><li><code>Matrix.SparseM</code></li></a>
+        
         <a href="#Matrix.StructuredM"><li><code>Matrix.StructuredM</code></li></a>
+        
+        <a href="#Matrix.SumM"><li><code>Matrix.SumM</code></li></a>
+        
+        <a href="#Matrix.SymmetricM"><li><code>Matrix.SymmetricM</code></li></a>
+        
+        <a href="#Matrix.TabularM"><li><code>Matrix.TabularM</code></li></a>
+        
+        <a href="#Matrix.UpperTriM"><li><code>Matrix.UpperTriM</code></li></a>
         
         <a href="#Matrix.ViewM"><li><code>Matrix.ViewM</code></li></a>
         
         <a href="#Matrix.ViewMV"><li><code>Matrix.ViewMV</code></li></a>
         
+        <a href="#Matrix.Vector%25mult"><li><code>Matrix.Vector#mult</code></li></a>
+        
+        <a href="#Matrix.commonConstr"><li><code>Matrix.commonConstr</code></li></a>
+        
+        <a href="#Matrix.compatibleDims"><li><code>Matrix.compatibleDims</code></li></a>
+        
+        <a href="#Matrix.const"><li><code>Matrix.const</code></li></a>
+        
         <a href="#Matrix.diag"><li><code>Matrix.diag</code></li></a>
+        
+        <a href="#Matrix.ensureSameDims"><li><code>Matrix.ensureSameDims</code></li></a>
+        
+        <a href="#Matrix.sameDims"><li><code>Matrix.sameDims</code></li></a>
         
         <a href="#Matrix%25_get"><li><code>Matrix#_get</code></li></a>
         
         <a href="#Matrix%25_set"><li><code>Matrix#_set</code></li></a>
         
         <a href="#Matrix%25change"><li><code>Matrix#change</code></li></a>
+        
+        <a href="#Matrix%25classes"><li><code>Matrix#classes</code></li></a>
         
         <a href="#Matrix%25clone"><li><code>Matrix#clone</code></li></a>
         
@@ -69,6 +97,8 @@
         
         <a href="#Matrix%25eachCol"><li><code>Matrix#eachCol</code></li></a>
         
+        <a href="#Matrix%25eachPair"><li><code>Matrix#eachPair</code></li></a>
+        
         <a href="#Matrix%25eachRow"><li><code>Matrix#eachRow</code></li></a>
         
         <a href="#Matrix%25forEach"><li><code>Matrix#forEach</code></li></a>
@@ -77,23 +107,39 @@
         
         <a href="#Matrix%25get"><li><code>Matrix#get</code></li></a>
         
+        <a href="#Matrix%25isA"><li><code>Matrix#isA</code></li></a>
+        
+        <a href="#Matrix%25lower"><li><code>Matrix#lower</code></li></a>
+        
+        <a href="#Matrix%25lvMult"><li><code>Matrix#lvMult</code></li></a>
+        
         <a href="#Matrix%25map"><li><code>Matrix#map</code></li></a>
         
         <a href="#Matrix%25mapCol"><li><code>Matrix#mapCol</code></li></a>
         
+        <a href="#Matrix%25mapPair"><li><code>Matrix#mapPair</code></li></a>
+        
         <a href="#Matrix%25mapRow"><li><code>Matrix#mapRow</code></li></a>
         
+        <a href="#Matrix%25mult"><li><code>Matrix#mult</code></li></a>
+        
         <a href="#Matrix%25mutable"><li><code>Matrix#mutable</code></li></a>
+        
+        <a href="#Matrix%25pAdd"><li><code>Matrix#pAdd</code></li></a>
         
         <a href="#Matrix%25reduce"><li><code>Matrix#reduce</code></li></a>
         
         <a href="#Matrix%25reduceCol"><li><code>Matrix#reduceCol</code></li></a>
         
+        <a href="#Matrix%25reducePair"><li><code>Matrix#reducePair</code></li></a>
+        
         <a href="#Matrix%25reduceRow"><li><code>Matrix#reduceRow</code></li></a>
         
         <a href="#Matrix%25rowView"><li><code>Matrix#rowView</code></li></a>
         
-        <a href="#Matrix%25sameDims"><li><code>Matrix#sameDims</code></li></a>
+        <a href="#Matrix%25rvMult"><li><code>Matrix#rvMult</code></li></a>
+        
+        <a href="#Matrix%25sMult"><li><code>Matrix#sMult</code></li></a>
         
         <a href="#Matrix%25set"><li><code>Matrix#set</code></li></a>
         
@@ -102,6 +148,8 @@
         <a href="#Matrix%25toVector"><li><code>Matrix#toVector</code></li></a>
         
         <a href="#Matrix%25transpose"><li><code>Matrix#transpose</code></li></a>
+        
+        <a href="#Matrix%25upper"><li><code>Matrix#upper</code></li></a>
         
         <a href="#Matrix%25validIndices"><li><code>Matrix#validIndices</code></li></a>
         
@@ -165,10 +213,91 @@ Users should not need to access this subclass directly.</p>
       </div>
       
       <div>
+        <h4 id="Matrix.SparseM"><code>Matrix.SparseM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing &quot;sparse&quot; matrices.
+Sparse matrices are stored as objects, whose keys represent the indices
+that have non-zero values.
+Users should not need to access this subclass directly.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.TabularM"><code>Matrix.TabularM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing matrices whose values are specified via
+a function <code>f(i)</code> of the index.
+The values of the matrix are computed lazily, only when they are accessed.
+Users should not need to access this subclass directly.</p>
+      </div>
+      
+      <div>
         <h4 id="Matrix.StructuredM"><code>Matrix.StructuredM</code></h4>
         <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> acting as a superclass for classes of matrices
 with extra structure. Users should not need to access this subclass
 directly.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.LowerTriM"><code>Matrix.LowerTriM</code></h4>
+        <p>Subclass of <code>StructuredM</code> representing &quot;Lower triangular&quot; matrices.</p>
+<p>The constructor expects two arguments:</p>
+<ul>
+<li>The first argument,<code>values</code>, cam be:<ol>
+<li>A full square matrix, in which case its lower triangular part is used.
+See also <a href="#Matrix%25lower"><code>Matrix.prototype.lower</code></a>. If the passed matrix is already of class
+<a href="#Matrix.LowerTriM"><code>Matrix.LowerTriM</code></a>, it is simply returned by the constructor.</li>
+<li>A function <code>f(i, j)</code>. The second argument <code>nrow</code> is then needed to specify the
+number of rows/columns of the resulting matrix. The <code>nrow</code> argument may be either a
+number or an object with an <code>nrow</code> property.</li>
+<li>A single value, to be used for all entries. The second argument <code>nrow</code> is needed.</li>
+</ol>
+</li>
+</ul>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.UpperTriM"><code>Matrix.UpperTriM</code></h4>
+        <p>Subclass of <code>StructuredM</code> representing &quot;Upper triangular&quot; matrices.</p>
+<p>See <a href="#Matrix.LowerTriM"><code>Matrix.LowerTriM</code></a> for the constructor parameters. See <a href="#Matrix%25upper"><code>Matrix.prototype.upper</code></a> for
+obtaining the upper triangle of a given square matrix.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.SymmetricM"><code>Matrix.SymmetricM</code></h4>
+        <p>Subclass of <code>StructuredM</code> representing symmetric matrices.</p>
+<p>A symmetric matrix behaves exactly like a <a href="#Matrix.LowerTriM"><code>Matrix.LowerTriM</code></a> matrix reflected across the
+main diagonal.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.SumM"><code>Matrix.SumM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing sums (A + k * B) of matrices.
+Users should not need to access this subclass directly.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.ProdM"><code>Matrix.ProdM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing products of matrices.
+Users should not need to access this subclass directly.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.DiagM"><code>Matrix.DiagM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing diagonal matrices.
+Users should not need to access this subclass directly. Use <a href="#Matrix.diag"><code>Matrix.diag</code></a> instead.</p>
+<p>One can only set values on the diagonal of a DiagM matrix.
+Trying to set outside the diagonal will result in error.
+In order to set values outside the diagonal, would need to
+&quot;unstructure&quot; the matrix.</p>
+<p>Using rowView/colView on diagonal matrices may be quite inefficient,
+as it does not recognize the sparse nature of those vectors.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.CDiagM"><code>Matrix.CDiagM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing matrices that are constant multiples of
+the identity. The constructor expects two arguments: <code>val</code> with the value to be
+used, and <code>nrow</code>, which is either a number indicating the number of rows or
+an object with an <code>nrow</code> property.</p>
+<p>CDiagM matrices are immutable.</p>
       </div>
       
       <div>
@@ -192,8 +321,40 @@ the rows/columns/diagonals of a matrix as vectors.</p>
         <h4 id="Matrix.diag"><code>Matrix.diag(diagonal, len)</code></h4>
         <p>Return a square diagonal matrix with values given by <code>diagonal</code>. The argument
 <code>diagonal</code> may be an array, a <a href="#Vector"><code>Vector</code></a>, or a function <code>f(i)</code>. In the latter case,
-a second argument <code>len</code> is required to provide the length of the resulting diagonal.</p>
+a second argument <code>len</code> is required to provide the length of the resulting diagonal.
+<code>len</code> may also be an object with an <code>nrow</code> property.</p>
+<p>This method takes ownership of the <code>diagonal</code> vector and may
+change its values when it itself is changed. Clone the
+array/vector before passing it to avoid this.</p>
 <p>To obtain a diagonal of an arbitrary matrix, see <a href="#Matrix%25diagView"><code>Matrix.prototype.diagView</code></a>.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.const"><code>Matrix.const(val, nrow)</code></h4>
+        <p>Return a constant multiple of the identity matrix. These matrices cannot become mutable.
+They should be treated as constants.
+The second argument, <code>nrow</code> can be the number of rows, or an object with an <code>nrow</code>
+argument. For instance to create an identity matrix with size same as the matrix <code>A</code>
+one would do:</p>
+<pre class="prettyprint source"><a href="#Matrix.const"><code>Matrix.const(1, A);  // Identity matrix with dimension same as A.</code></a></pre>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25classes"><code>Matrix#classes</code></h4>
+        <p>The array of constructors for this type and its supertypes, in order from
+most specific to most general.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25isA"><code>Matrix#isA(constr)</code></h4>
+        <p>Return whether <code>constr</code> is in the list of class constructors produced by
+<a href="#Matrix%25classes"><code>Matrix.prototype.classes</code></a>.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.commonConstr"><code>Matrix.commonConstr(A, B)</code></h4>
+        <p>Return a common constructor for <code>A</code> and <code>B</code>, from the lists provided by
+<a href="#Matrix%25classes"><code>Matrix.prototype.classes</code></a>.</p>
       </div>
       
       <div>
@@ -306,6 +467,40 @@ also inherits any structure (e.g. being diagonal) when possible.</p>
 outside of the structure (e.g. setting off-diagonal elements on a diagonal matrix).
 In general, <a href="#Matrix%25set"><code>Matrix.prototype.set</code></a> respects any imposed structure the matrix has
 on its creation.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25pAdd"><code>Matrix#pAdd(other, k)</code></h4>
+        <p>Return <code>this + k * other</code>, where <code>this</code> and <code>other</code> are matrices of the
+same dimensions, and <code>k</code> is a scalar.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25sMult"><code>Matrix#sMult(k)</code></h4>
+        <p>Return <code>k * this</code>, where <code>k</code> is a scalar (required numerical argument).</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25mult"><code>Matrix#mult(other)</code></h4>
+        <p>Return the matrix product <code>this * other</code>, where <code>this</code> and <code>other</code> have
+compatible dimensions.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.Vector%25mult"><code>Matrix.Vector#mult(other)</code></h4>
+        <p>TODO: Find a way to add to Vector docs</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25lvMult"><code>Matrix#lvMult(vec)</code></h4>
+        <p>Multiply the matrix on the left with a vector <code>vec</code>. <code>vec.length</code> must equal <code>this.nrow</code>.
+Returns a vector of length <code>this.ncol</code>. This is an <em>internal method</em> and bypasses certain tests.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25rvMult"><code>Matrix#rvMult(vec)</code></h4>
+        <p>Multiply on the right with a vector <code>vec</code>. <code>vec.length</code> must equal <code>this.ncol</code>.
+Returns a vector of length <code>this.nrow</code>. This is an <em>internal method</em> and bypasses certain tests.</p>
       </div>
       
       <div>
@@ -450,13 +645,57 @@ instead.</p>
       </div>
       
       <div>
+        <h4 id="Matrix%25eachPair"><code>Matrix#eachPair(other, f)</code></h4>
+        <p>Apply function <code>f(val1, val2, i, j)</code> to all pairwise entries of <code>this</code> and <code>other</code>.
+The matrices must have the same dimensions. No promises are made about the order of
+iteration.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25reducePair"><code>Matrix#reducePair(other, f, initial)</code></h4>
+        <p>Reduce on the pair of matrices <code>this</code> and <code>other</code> using the function
+<code>f(acc, val1, val2, i, j)</code>, with an <code>initial</code> value.
+The matrices must have the same dimensions. No promises are made about the order of
+iteration.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25mapPair"><code>Matrix#mapPair(other, f)</code></h4>
+        <p>Create a new matrix by applying the function <code>f(val1, val2, i, j)</code> to all pairwise entries
+of <code>this</code> and <code>other</code>. No matrix structure is preserved.
+The matrices must have the same dimensions.</p>
+      </div>
+      
+      <div>
         <h4 id="Matrix%25transpose"><code>Matrix#transpose()</code></h4>
         <p>Return the transpose of the matrix, preserving any appropriate structure.</p>
       </div>
       
       <div>
-        <h4 id="Matrix%25sameDims"><code>Matrix#sameDims(other)</code></h4>
-        <p>Return whether the matrix has the same dimensions as the matrix <code>other</code>.</p>
+        <h4 id="Matrix%25lower"><code>Matrix#lower()</code></h4>
+        <p>Return a lower-triangular matrix created by the lower triangle of <code>this</code>.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25upper"><code>Matrix#upper()</code></h4>
+        <p>Return a upper-triangular matrix created by the upper triangle of <code>this</code>.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.sameDims"><code>Matrix.sameDims(A, B)</code></h4>
+        <p>Return whether the matrix <code>A</code> has the same dimensions as the matrix <code>B</code>.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.ensureSameDims"><code>Matrix.ensureSameDims(A, B)</code></h4>
+        <p>Throw error if <code>A</code>, <code>B</code> don't have same dimensions.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.compatibleDims"><code>Matrix.compatibleDims(A, B)</code></h4>
+        <p>Return whether <code>A</code> and <code>B</code> have compatible dimensions for
+forming the product <code>A * B</code>.  If <code>A</code> and; <code>B</code> are not both matrices, then
+one of them is a matrix and the other is a vector.</p>
       </div>
       
       <div>
@@ -466,23 +705,7 @@ extra structure do further checks via <a href="#Matrix%25validate"><code>Matrix.
       </div>
       
       <div>
-        <h4 id="DenseM.SparseM"><code>DenseM.SparseM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing &quot;sparse&quot; matrices.
-Sparse matrices are stored as objects, whose keys represent the indices
-that have non-zero values.
-Users should not need to access this subclass directly.</p>
-      </div>
-      
-      <div>
-        <h4 id="DenseM.TabularM"><code>DenseM.TabularM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing matrices whose values are specified via
-a function <code>f(i)</code> of the index.
-The values of the matrix are computed lazily, only when they are accessed.
-Users should not need to access this subclass directly.</p>
-      </div>
-      
-      <div>
-        <h4 id="StructuredM.DiagM"><code>StructuredM.DiagM</code></h4>
+        <h4 id="StructuredM.LowerTriM"><code>StructuredM.LowerTriM</code></h4>
         <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing diagonal matrices.
 Users should not need to access this subclass directly.</p>
       </div>
