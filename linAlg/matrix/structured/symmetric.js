@@ -46,7 +46,7 @@ return function(Matrix, StructuredM) {
    };
 
    SymmetricM.prototype.constr = function constr() {
-      return SymmetricM;
+      return Matrix;
    };
 
    SymmetricM.prototype.transpose = function transpose() {

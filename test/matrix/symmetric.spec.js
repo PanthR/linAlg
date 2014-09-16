@@ -71,7 +71,7 @@ describe('Symmetric matrices', function() {
       }
       [[t1, f1], [t2, f2], [t3, f3]].forEach(testPair);
    });
-   it('have correct map which preserves structure', function() {
+   it('have correct map which does not preserve structure', function() {
       function testPair(pair) {
          var c = 0;
          var m = pair[0];
@@ -79,16 +79,16 @@ describe('Symmetric matrices', function() {
          var m2 = m.map(function(v, i, j) {
             c += 1;
             expect(v).to.equal(f(i, j));
-            return v + i * j;
+            return v + i * (j + 1);
          });
-         expect(m2).to.be.instanceof(SymmetricM);
+         expect(m2).to.not.be.instanceof(SymmetricM);
          expect(Matrix.sameDims(m2, m)).to.be.true;
          for (var i = 1; i <= m.nrow; i += 1) {
             for (var j = 1; j <= m.nrow; j += 1) {
-               expect(m2.get(i, j)).to.equal(m.get(i, j) + i * j);
+               expect(m2.get(i, j)).to.equal(m.get(i, j) + i * (j + 1));
             }
          }
-         expect(c).to.equal(m.nrow * (m.nrow + 1) / 2);
+         expect(c).to.equal(m.nrow * m.nrow);
       }
       [[t1, f1], [t2, f2], [t3, f3]].forEach(testPair);
    });
