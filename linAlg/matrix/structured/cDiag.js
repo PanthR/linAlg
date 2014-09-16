@@ -26,6 +26,10 @@ return function(Matrix, StructuredM) {
 
    CDiagM.prototype = Object.create(StructuredM.DiagM.prototype);
 
+   CDiagM.add = function add(A, B, k) {
+      return new CDiagM(A.val + k * B.val, A);
+   };
+
    CDiagM.prototype.classes = [
       CDiagM, StructuredM.DiagM, StructuredM.LowerTriM,
       StructuredM.UpperTriM, StructuredM.SymmetricM,

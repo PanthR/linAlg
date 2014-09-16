@@ -27,6 +27,23 @@ return function(Matrix, DenseM) {
 
    SparseM.prototype = Object.create(DenseM.prototype);
 
+   // A, B are matrices (any subclass) of the same dimensions
+   // returns the A + kB as a Sparse matrix
+   SparseM.add = function add(A, B, k) {
+      var res;
+      res = {};
+      function addValue(val, i, j) {
+         if (val === 0) { return; }
+         if (res[i] == null) { res[i] = {}; }
+         res[i][j] = (res[i][j] || 0) + val;
+      }
+      A.forEach(addValue);
+      B.forEach(function(val, i, j) {
+         addValue(k * val, i, j);
+      });
+      return new SparseM(res, A);
+   };
+
    SparseM.prototype.classes = [SparseM, Matrix];
 
    SparseM.prototype.map = function map(f) {
