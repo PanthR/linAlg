@@ -190,6 +190,62 @@ define(function(require) {
    };
 
    /**
+    * Bind the arguments row-wise into a matrix. The arguments may be a
+    * mixture of matrices and vectors, but their `ncol/length` must all be the same.
+    */
+   Matrix.rowBind = function rowBind(matrices) {
+      var nrow;
+      matrices = [].concat.apply([], // byRow = true
+         [].map.call(arguments, function(m) {
+            return (m instanceof Matrix) ? m.toArray(true) : [m.toArray()];
+         })
+      );
+      nrow = matrices[0].length;
+      if (!matrices.every(function(m) { return m.length === nrow; })) {
+         throw new Error('Trying to rowBind rows of unequal length.');
+      }
+      return new Matrix(matrices, true); // byRow = true
+   };
+   /** See `Matrix.rowBind` */
+   Matrix.prototype.rowBind = function rowBind(matrices) {
+      matrices = Array.prototype.slice.call(arguments);
+      matrices.unshift(this);
+      return Matrix.rowBind.apply(null, matrices);
+   };
+   /** See `Matrix.rowBind` */
+   Matrix.Vector.rowBind = Matrix.rowBind;
+   /** See `Matrix.rowBind` */
+   Matrix.Vector.prototype.rowBind = Matrix.prototype.rowBind;
+
+   /**
+    * Bind the arguments column-wise into a matrix. The arguments may be a
+    * mixture of matrices and vectors, but their `nrow/length` must all be the same.
+    */
+   Matrix.colBind = function colBind(matrices) {
+      var ncol;
+      matrices = [].concat.apply([], // byRow = false
+         [].map.call(arguments, function(m) {
+            return (m instanceof Matrix) ? m.toArray() : [m.toArray()];
+         })
+      );
+      ncol = matrices[0].length;
+      if (!matrices.every(function(m) { return m.length === ncol; })) {
+         throw new Error('Trying to colBind columns of unequal length.');
+      }
+      return new Matrix(matrices, false); // byRow = false
+   };
+   /** See `Matrix.colBind` */
+   Matrix.prototype.colBind = function colBind(matrices) {
+      matrices = Array.prototype.slice.call(arguments);
+      matrices.unshift(this);
+      return Matrix.colBind.apply(null, matrices);
+   };
+   /** See `Matrix.colBind` */
+   Matrix.Vector.colBind = Matrix.colBind;
+   /** See `Matrix.colBind` */
+   Matrix.Vector.prototype.colBind = Matrix.prototype.colBind;
+
+   /**
     * The array of constructors for this type and its supertypes, in order from
     * most specific to most general.
     */
