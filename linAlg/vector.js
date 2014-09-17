@@ -136,6 +136,19 @@ define(function(require) {
       return Vector.const(1, len);
    };
 
+   /**
+    * Returns the concatenation of its arguments. The arguments may be vectors, arrays
+    * or plain numbers.
+    */
+   Vector.concat = function concat(vectors) {
+      vectors = Array.prototype.concat.apply([],
+         Array.prototype.map.call(arguments, function(vector) {
+            if (vector instanceof Vector) { return vector.get(); }
+            return Array.isArray(vector) ? vector : [vector];
+         })
+      );
+      return new Vector(vectors);
+   };
    // Vector.prototype methods
 
    /**
@@ -328,6 +341,12 @@ define(function(require) {
    };
    /* eslint-enable */
 
+   /** See `Vector.concat`. */
+   Vector.prototype.concat = function(vectors) {
+      vectors = Array.prototype.slice.call(arguments);
+      vectors.unshift(this);
+      return Vector.concat.apply(null, vectors);
+   };
    /**
     * Execute the function `f` for each entry of the vector,
     * starting with the entry with index 1. `f` will be called as `f(value, index)`.

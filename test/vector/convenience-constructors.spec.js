@@ -86,3 +86,29 @@ describe('clone', function() {
    });
 
 });
+describe('concat', function() {
+   var v1 = new Vector([4, 5, 2, 3]);
+   var v2 = new Vector({2:5, 3:2},4); // [0, 5, 2, 0]
+   var v3 = new Vector(function(i) { return i; }, 4);
+   var v4 = v1.view([4, 1, 2]); // [3, 4, 5]
+   it('exists', function() {
+      expect(Vector).to.respondTo('concat');
+      expect(Vector).itself.to.respondTo('concat');
+      expect(function() { Vector.concat(v1, 23.2, v3, v4); }).to.not.throw(Error);
+      expect(Vector.concat(v1, 23.2, v3, v4)).to.be.instanceof(Vector);
+      expect(function() { v1.concat(23.2, v3, v4); }).to.not.throw(Error);
+      expect(v1.concat(23.2, v3, v4)).to.be.instanceof(Vector);
+   });
+   it('has correct length and values', function() {
+      var res1, res2, c;
+      res1 = Vector.concat(v1, 23.2, v3, v4);
+      res2 = Vector.concat(v1, 23.2, v3, v4);
+      expect(res1.get()).to.deep.equal(res2.get());
+      c = 1;
+      v1.forEach(function(v) { expect(res1.get(c++)).to.equal(v); });
+      expect(res1.get(c++)).to.equal(23.2);
+      v3.forEach(function(v) { expect(res1.get(c++)).to.equal(v); });
+      v4.forEach(function(v) { expect(res1.get(c++)).to.equal(v); });
+      expect(c - 1).to.equal(res1.length);
+   });
+});
