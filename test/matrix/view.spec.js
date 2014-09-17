@@ -227,3 +227,61 @@ describe('diagView', function() {
       });
    });
 });
+describe('Matrix#rows', function() {
+   var A1 = new Matrix([4, 6, 7, 2, 1, 3, 8, 9, 12, 5, 33, 25], { nrow : 3 });
+   var A2 = new Matrix({ 2: { 3: 8, 4: 2}, 4: { 1: 5 }}, { nrow : 4, ncol: 6 });
+   var f  = function(i, j) { return i - j; }
+   var A3 = new Matrix(f, { nrow : 4, ncol: 6 });
+   var A4 = A1.view([1, 3],[4, 2]);
+   var A5 = A2.view(function a(i) { return 2;}, [3, 2], { nrow : 2}); // [[8,0],[8,0]]
+   var A6 = A3.view(function a(i) { return 5 - i; }, 
+      function b(j) { return 7 - j}, { nrow : 4, ncol: 6 });
+   it('exists and returns an array of rowViews', function() {
+      expect(Matrix).to.respondTo('rows');
+      [A1, A2, A3, A4, A5, A6].forEach(function(m) {
+         expect(function() { m.rows(); }).to.not.throw(Error);
+         expect(m.rows().length).to.equal(m.nrow);
+         expect(m.rows()[0]).to.be.instanceof(Matrix.Vector);
+         expect(m.rows()[0].length).to.equal(m.ncol);
+      });
+   });
+   it('has the correct values', function() {
+      [A1, A2, A3, A4, A5, A6].forEach(function(m) {
+         var rows = m.rows();
+         for (var i = 1; i <= m.nrow; i += 1) {
+            for (var j = 1; j <= m.ncol; j += 1) {
+               expect(rows[i - 1].get(j)).to.equal(m.get(i, j));
+            }
+         }
+      });
+   });
+});
+describe('Matrix#cols', function() {
+   var A1 = new Matrix([4, 6, 7, 2, 1, 3, 8, 9, 12, 5, 33, 25], { nrow : 3 });
+   var A2 = new Matrix({ 2: { 3: 8, 4: 2}, 4: { 1: 5 }}, { nrow : 4, ncol: 6 });
+   var f  = function(i, j) { return i - j; }
+   var A3 = new Matrix(f, { nrow : 4, ncol: 6 });
+   var A4 = A1.view([1, 3],[4, 2]);
+   var A5 = A2.view(function a(i) { return 2;}, [3, 2], { nrow : 2}); // [[8,0],[8,0]]
+   var A6 = A3.view(function a(i) { return 5 - i; }, 
+      function b(j) { return 7 - j}, { nrow : 4, ncol: 6 });
+   it('exists and returns an array of colViews', function() {
+      expect(Matrix).to.respondTo('cols');
+      [A1, A2, A3, A4, A5, A6].forEach(function(m) {
+         expect(function() { m.cols(); }).to.not.throw(Error);
+         expect(m.cols().length).to.equal(m.ncol);
+         expect(m.cols()[0]).to.be.instanceof(Matrix.Vector);
+         expect(m.cols()[0].length).to.equal(m.nrow);
+      });
+   });
+   it('has the correct values', function() {
+      [A1, A2, A3, A4, A5, A6].forEach(function(m) {
+         var cols = m.cols();
+         for (var i = 1; i <= m.nrow; i += 1) {
+            for (var j = 1; j <= m.ncol; j += 1) {
+               expect(cols[j - 1].get(i)).to.equal(m.get(i, j));
+            }
+         }
+      });
+   });
+});

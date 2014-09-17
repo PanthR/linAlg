@@ -590,6 +590,20 @@ define(function(require) {
    Matrix.prototype.colView = function colView(j) {
       return new Matrix.ViewMV(this, j, 'col');
    };
+   /** Return an array of all matrix rows as rowViews */
+   Matrix.prototype.rows = function rows() {
+      var res, i;
+      res = [];
+      for (i = 1; i <= this.nrow; i += 1) { res.push(this.rowView(i)); }
+      return res;
+   };
+   /** Return an array of all matrix columns as colViews */
+   Matrix.prototype.cols = function cols() {
+      var res, j;
+      res = [];
+      for (j = 1; j <= this.ncol; j += 1) { res.push(this.colView(j)); }
+      return res;
+   };
    /**
     * Return a `Vector` view of the diagonal of the matrix specified by
     * the given `offset` (defaults to 0). The main diagonal has offset 0, the diagonal
