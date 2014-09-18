@@ -194,14 +194,14 @@ define(function(require) {
     * mixture of matrices and vectors, but their `ncol/length` must all be the same.
     */
    Matrix.rowBind = function rowBind(matrices) {
-      var nrow;
+      var ncol;
       matrices = [].concat.apply([], // byRow = true
          [].map.call(arguments, function(m) {
             return (m instanceof Matrix) ? m.toArray(true) : [m.toArray()];
          })
       );
-      nrow = matrices[0].length;
-      if (!matrices.every(function(m) { return m.length === nrow; })) {
+      ncol = matrices[0].length;
+      if (!matrices.every(function(m) { return m.length === ncol; })) {
          throw new Error('Trying to rowBind rows of unequal length.');
       }
       return new Matrix(matrices, true); // byRow = true
@@ -222,14 +222,14 @@ define(function(require) {
     * mixture of matrices and vectors, but their `nrow/length` must all be the same.
     */
    Matrix.colBind = function colBind(matrices) {
-      var ncol;
+      var nrow;
       matrices = [].concat.apply([], // byRow = false
          [].map.call(arguments, function(m) {
             return (m instanceof Matrix) ? m.toArray() : [m.toArray()];
          })
       );
-      ncol = matrices[0].length;
-      if (!matrices.every(function(m) { return m.length === ncol; })) {
+      nrow = matrices[0].length;
+      if (!matrices.every(function(m) { return m.length === nrow; })) {
          throw new Error('Trying to colBind columns of unequal length.');
       }
       return new Matrix(matrices, false); // byRow = false
