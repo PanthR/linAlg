@@ -33,5 +33,7 @@ describe('Other methods', function() {
       var v4 = new Vector([4.0002, -2, 1]);
       expect(v4.equals(v1)).to.not.be.ok;
       expect(v4.equals(v1, 1e-3)).to.be.ok;
+      var v5 = new Vector([4, 2.5, 3, NaN]);
+      expect(v5.equals(v5)).to.not.be.ok; 
    });
 });

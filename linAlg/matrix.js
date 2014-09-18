@@ -866,6 +866,19 @@ define(function(require) {
       return new Matrix.UpperTriM(this);
    };
 
+   /** Test if `this` pointwise equals `m2`, within a given pointwise `tolerance`
+    * (defaults to `Vector.tolerance`). */
+   Matrix.prototype.equals = function equals(m2, tolerance) {
+      var i;
+      if (!Matrix.sameDims(this, m2)) { return false; }
+      for (i = 1; i <= this.nrow; i += 1) {
+         if (!this.rowView(i).equals(m2.rowView(i), tolerance)) {
+            return false;
+         }
+      }
+      return true;
+   };
+
    /** Return whether the matrix `A` has the same dimensions as the matrix `B`. */
    Matrix.sameDims = function sameDims(A, B) {
       return A.nrow === B.nrow && A.ncol === B.ncol;

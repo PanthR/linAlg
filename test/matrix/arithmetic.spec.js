@@ -200,3 +200,10 @@ describe('Multiplying vector with matrix', function() {
       });
    });
 });
+describe('Matrix equality', function() {
+   expect(A[1].equals(A[1])).to.be.ok;
+   expect(A[2].equals(A[1])).to.not.be.ok;
+   var B1 = new Matrix(function(i, j) { return i * j + .001; }, { nrow: 3, ncol: 3 });
+   expect(B1.equals(A[3],.01)).to.be.ok;
+   expect(B1.equals(A[3],.00001)).to.not.be.ok;
+});
