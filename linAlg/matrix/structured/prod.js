@@ -14,7 +14,7 @@ return function(Matrix, StructuredM) {
 
    /* eslint-disable complexity */
    function computeProd(A, B) {
-      var Constr;
+      var Constr, rowsA, colsB;
       // A or B Vector
       if (A instanceof Matrix.Vector) { return B.lvMult(A); }
       if (B instanceof Matrix.Vector) { return A.rvMult(B); }
@@ -37,8 +37,10 @@ return function(Matrix, StructuredM) {
       // TODO: Optimize this later
       Constr = Matrix.commonConstr(A, B);
       if (Constr === Matrix.SymmetricM) { Constr = Matrix; }
+      rowsA = A.rows();
+      colsB = B.cols();
       return new Constr(function(i, j) {
-         return A.rowView(i).dot(B.colView(j));
+         return rowsA[i - 1].dot(colsB[j - 1]);
       }, { nrow: A.nrow, ncol: B.ncol });
    }
    /* eslint-enable */
