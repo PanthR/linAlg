@@ -197,7 +197,7 @@ define(function(require) {
       var ncol;
       matrices = [].concat.apply([], // byRow = true
          [].map.call(arguments, function(m) {
-            return (m instanceof Matrix) ? m.toArray(true) : [m.toArray()];
+            return m instanceof Matrix ? m.toArray(true) : [m.toArray()];
          })
       );
       ncol = matrices[0].length;
@@ -225,7 +225,7 @@ define(function(require) {
       var nrow;
       matrices = [].concat.apply([], // byRow = false
          [].map.call(arguments, function(m) {
-            return (m instanceof Matrix) ? m.toArray() : [m.toArray()];
+            return m instanceof Matrix ? m.toArray() : [m.toArray()];
          })
       );
       nrow = matrices[0].length;
