@@ -49,6 +49,19 @@ define(function(require) {
    // Helper methods
 
    /**
+    * Return the inverse permutation
+    */
+   Permutation.prototype.inverse = function inverse() {
+      var newNonfixed, oldNonfixed;
+      oldNonfixed = this.nonfixed;
+      newNonfixed = {};
+      Object.keys(oldNonfixed).forEach(function (key) {
+         newNonfixed[oldNonfixed[key]] = parseInt(key);
+      });
+      return new Permutation(newNonfixed);
+   };
+
+   /**
     * Return an array representing the cycle representation of the permutation.
     */
    Permutation.prototype.toCycles = function toCycles() {
