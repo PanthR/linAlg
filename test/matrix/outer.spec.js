@@ -45,3 +45,30 @@ describe('outer product of two vectors', function() {
       expect(Vector2.prototype.outer).to.exist;
    });
 });
+describe('OuterM matrices', function() {
+   var v1 = new Vector([1, 3, 3, 5]);
+   var v2 = new Vector(function(i) { return i * i; }, 3);
+   var m1 = v1.outer(v2); // 4 x 3
+   var m2 = v2.outer(v1); // 3 x 4
+   it('are formed when no function is given to `outer`', function() {
+      expect(m1.isA(Matrix.OuterM)).to.be.ok;
+   });
+   it('have correct vector multiplication (left, right)', function() {
+      expect(v1.mult(m1).equals(v2.sMult(v1.dot(v1)))).to.be.ok;
+      expect(m1.mult(v2).equals(v1.sMult(v2.dot(v2)))).to.be.ok;
+   });
+   it('have correct matrix multiplication (left, right)', function() {
+     expect(m1.mult(m2) .equals((v1.outer(v1).sMult(v2.dot(v2))))).to.be.ok;
+      expect(m1.rMult(m2).equals((v1.outer(v1).sMult(v2.dot(v2))))).to.be.ok;
+      expect(m2.lMult(m1).equals((v1.outer(v1).sMult(v2.dot(v2))))).to.be.ok;
+   });
+   it('when transposed are also OuterM with correct entries', function() {
+      expect(m1.transpose().isA(Matrix.OuterM)).to.be.ok;
+      var tr = m1.transpose();
+      for (var i = 1; i <= tr.nrow; i += 1) {
+         for (var j = 1; j <= tr.ncol; j += 1) {
+            expect(tr.get(i, j)).to.equal(m1.get(j, i));
+         }
+      }
+   })
+});;

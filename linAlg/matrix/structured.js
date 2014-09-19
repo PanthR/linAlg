@@ -19,6 +19,7 @@ return function(Matrix) {
    StructuredM.LowerTriM  = require('./structured/lowerTri')(Matrix, StructuredM);
    StructuredM.UpperTriM  = require('./structured/upperTri')(Matrix, StructuredM);
    StructuredM.SymmetricM = require('./structured/symmetric')(Matrix, StructuredM);
+   StructuredM.OuterM     = require('./structured/outer')(Matrix, StructuredM);
    StructuredM.SumM       = require('./structured/sum')(Matrix, StructuredM);
    StructuredM.ProdM      = require('./structured/prod')(Matrix, StructuredM);
    StructuredM.DiagM      = require('./structured/diag')(Matrix, StructuredM);

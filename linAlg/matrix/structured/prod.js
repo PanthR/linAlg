@@ -26,8 +26,8 @@ return function(Matrix, StructuredM) {
       // if both cdiag, return a cdiag
       if (A.isA(Matrix.CDiagM)) { return B.sMult(A.val); }
       if (B.isA(Matrix.CDiagM)) { return A.sMult(B.val); }
-      if (A.isA(Matrix.DiagM)) { return A.rMult(B); }
-      if (B.isA(Matrix.DiagM)) { return B.lMult(A); }
+      if (A.isA(Matrix.DiagM) || A.isA(Matrix.OuterM)) { return A.rMult(B); }
+      if (B.isA(Matrix.DiagM) || B.isA(Matrix.OuterM)) { return B.lMult(A); }
       if (A.isA(Matrix.UpperTriM) && B.isA(Matrix.LowerTriM)) {
          return Matrix.diag(function(i) {
             return A.rowView(i).dot(B.colView(i));

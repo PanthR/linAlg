@@ -109,6 +109,11 @@ define(function(require) {
     */
    Matrix.SymmetricM  = Matrix.StructuredM.SymmetricM;
    /**
+     * Subclass of `Matrix` representing outer products of vectors (i.e., rank-1
+     * matrices).  Users should not need to access this subclass directly.
+    */
+   Matrix.OuterM      = Matrix.StructuredM.OuterM;
+   /**
      * Subclass of `Matrix` representing sums (A + k * B) of matrices.
      * Users should not need to access this subclass directly.
     */
@@ -500,16 +505,20 @@ define(function(require) {
       return Math.floor((n - 1) / this.nrow) + 1;
    };
    /**
-    * Return the outer product matrix of two vectors. If a function `f(i, j)` is
-    * provided as the second argument, it will be used. Otherwise, normal number
-    * multiplication is used resulting in the standard outer product.
+    * Return the outer product matrix of two vectors. If a function
+    * `f(val1, val2, i, j)` is provided as the second argument, it will be used.
+    * If no second argument is provided, the usual multiplication of numbers is
+    * used resulting in the standard outer product.
+    *
+    * TODO: Include helpful examples.
     *
     * TODO: Find a way to add this the Vector docs
     * @memberof Vector
     */
    Matrix.Vector.prototype.outer = function outer(v2, f) {
       var tabf;
-      f = op[f] != null ? op[f] : f || op.mult;
+      if (f == null) { return new Matrix.OuterM(this, v2); }
+      f = op[f] != null ? op[f] : f;
       tabf = function(i, j) { return f(this.get(i), v2.get(j), i, j); }.bind(this);
       return new Matrix(tabf, { nrow: this.length, ncol: v2.length });
    };
