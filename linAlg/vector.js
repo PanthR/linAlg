@@ -7,8 +7,9 @@
 (function(define) {'use strict';
 define(function(require) {
 
-   var utils, op;
+   var utils, op, Permutation;
 
+   Permutation = require('./permutation.js');
    utils = require('./utils');
    op = utils.op;
    /**
@@ -347,6 +348,14 @@ define(function(require) {
       vectors.unshift(this);
       return Vector.concat.apply(null, vectors);
    };
+
+   /** Permute the vector entries according to `perm` */
+   Vector.prototype.permute = function permute(perm) {
+      var invPerm;
+      invPerm = new Permutation(perm).inverse();
+      return this.view(invPerm.get.bind(invPerm), this.length);
+   };
+
    /**
     * Execute the function `f` for each entry of the vector,
     * starting with the entry with index 1. `f` will be called as `f(value, index)`.

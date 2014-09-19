@@ -36,4 +36,14 @@ describe('Other methods', function() {
       var v5 = new Vector([4, 2.5, 3, NaN]);
       expect(v5.equals(v5)).to.not.be.ok; 
    });
+   it('permute', function() {
+      var v1 = new Vector(Math.random, 6);
+      var v2 = v1.permute([1, 4, 3]);
+      expect(v2.get(4)).to.equal(v1.get(1));
+      expect(v2.get(2)).to.equal(v1.get(2));
+      expect(v2.get(3)).to.equal(v1.get(4));
+      expect(v2.get(1)).to.equal(v1.get(3));
+      expect(v2.get(6)).to.equal(v1.get(6));
+      expect(v2.get(7)).to.equal(v1.get(7));
+   });
 });
