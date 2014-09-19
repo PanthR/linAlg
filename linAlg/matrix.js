@@ -169,6 +169,11 @@ define(function(require) {
     * `Matrix.prototype.diagView`.
     */
    Matrix.ViewMV    = require('./matrix/viewmv')(Matrix);
+
+   /**
+    * TODO
+    */
+   Matrix.Solver    = require('./solver')(Matrix);
    // Static methods
 
    /**
