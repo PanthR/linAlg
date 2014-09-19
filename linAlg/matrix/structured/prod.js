@@ -20,6 +20,8 @@ return function(Matrix, StructuredM) {
       if (B instanceof Matrix.Vector) { return A.rvMult(B); }
       // A, B both Matrices
       // if both sparse, return a sparse
+      if (A.isA(Matrix.PermM)) { return A.rMult(B); }
+      if (B.isA(Matrix.PermM)) { return B.lMult(A); }
       if (A.isA(Matrix.SparseM) && B.isA(Matrix.SparseM)) {
          return Matrix.SparseM.mult(A, B);
       }

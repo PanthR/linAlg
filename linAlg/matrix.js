@@ -146,6 +146,12 @@ define(function(require) {
     */
    Matrix.CDiagM      = Matrix.StructuredM.CDiagM;
    /**
+    * Subclass of `Matrix` representing permutation matrices. The constructor expects two
+    * arguments, a `perm` object that determines a `Permutation`, and an `nrow` number/object
+    * specifying the matrix dimensions.
+    */
+   Matrix.PermM       = Matrix.StructuredM.PermM;
+   /**
     * Subclass of `Matrix` representing submatrix views into another matrix. Changes
     * to the view are reflected on the original matrix and vice-versa. Use
     * `Matrix.prototype.view` to create these.
@@ -194,6 +200,13 @@ define(function(require) {
       return new Matrix.CDiagM(val, nrow);
    };
 
+   /**
+    * Return a permutation matrix based on the permutation indicated by `perm`. `perm` can be
+    * a `Permutation` object, or anything that can be turned to one (see `Permutation`).
+    */
+   Matrix.perm = function perm(perm, nrow) {
+      return new Matrix.PermM(perm, nrow);
+   };
    /**
     * Bind the arguments row-wise into a matrix. The arguments may be a
     * mixture of matrices and vectors, but their `ncol/length` must all be the same.
@@ -630,6 +643,15 @@ define(function(require) {
       return new Matrix.ViewMV(this, offset || 0, 'diag');
    };
 
+   /** Permute the rows of the matrix. */
+   Matrix.prototype.rowPermute = function rowPermute(perm) {
+      return Matrix.perm(perm, this.nrow).mult(this);
+   };
+
+   /** Permute the columns of the matrix. */
+   Matrix.prototype.colPermute = function colPermute(perm) {
+      return this.mult(Matrix.perm(perm, this.ncol).transpose());
+   };
 
    /**
     * With no arguments, returns the mutable state of the matrix.

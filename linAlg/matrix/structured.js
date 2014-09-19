@@ -24,6 +24,7 @@ return function(Matrix) {
    StructuredM.ProdM      = require('./structured/prod')(Matrix, StructuredM);
    StructuredM.DiagM      = require('./structured/diag')(Matrix, StructuredM);
    StructuredM.CDiagM     = require('./structured/cDiag')(Matrix, StructuredM);
+   StructuredM.PermM      = require('./structured/perm')(Matrix, StructuredM);
 
    return StructuredM;
 };
