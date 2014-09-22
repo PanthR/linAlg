@@ -481,6 +481,26 @@ define(function(require) {
       }.bind(this), this.length);
    };
 
+   // Predicates
+
+   /** Return true, if the predicate `pred(val, i)` is true for at least one entry, false otherwise. */
+   Vector.prototype.any = function any(pred) {
+      var i;
+      for (i = 1; i <= this.length; i += 1) {
+         if (pred(this.get(i), i)) { return true; }
+      }
+      return false;
+   };
+
+   /** Return true, if the predicate `pred(val, i)` is true for all entries, false otherwise. */
+   Vector.prototype.all = function all(pred) {
+      var i;
+      for (i = 1; i <= this.length; i += 1) {
+         if (!pred(this.get(i), i)) { return false; }
+      }
+      return true;
+   };
+
    // Vector operations
 
    /**

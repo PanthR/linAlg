@@ -385,3 +385,12 @@ describe('Matrix#mapCol', function() {
       [A1, A2, A3, A4].forEach(test);
    });
 });
+describe('Predicates', function() {
+   it('any and all', function() {
+      var M = new Matrix([0.23, 1.2, -1.1, 1.1], { nrow: 2 });
+      expect(M.any(function(x) { return x < 0; })).to.be.true;
+      expect(M.any(function(x) { return x < -2; })).to.be.false;
+      expect(M.all(function(x) { return x < 2; })).to.be.true;
+      expect(M.all(function(x) { return x < 1; })).to.be.false;
+   });
+});

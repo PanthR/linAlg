@@ -886,6 +886,31 @@ define(function(require) {
       }.bind(this), this);
    };
 
+   /**
+    * Return true, if the predicate `pred(val, i, j)` is true for at least one entry,
+    * false otherwise.
+    */
+   Matrix.prototype.any = function any(pred) {
+      var i, j;
+      for (i = 1; i <= this.nrow; i += 1) {
+         for (j = 1; j <= this.ncol; j += 1) {
+            if (pred(this.get(i, j), i, j)) { return true; }
+         }
+      }
+      return false;
+   };
+
+   /** Return true, if the predicate `pred(val, i, j)` is true for all entries, false otherwise. */
+   Matrix.prototype.all = function all(pred) {
+      var i, j;
+      for (i = 1; i <= this.nrow; i += 1) {
+         for (j = 1; j <= this.ncol; j += 1) {
+            if (!pred(this.get(i, j), i, j)) { return false; }
+         }
+      }
+      return true;
+   };
+
    /** Return the transpose of the matrix, preserving any appropriate structure. */
    Matrix.prototype.transpose = function transpose() {
       return new Matrix(function(i, j) {

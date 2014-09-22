@@ -46,4 +46,11 @@ describe('Other methods', function() {
       expect(v2.get(6)).to.equal(v1.get(6));
       expect(v2.get(7)).to.equal(v1.get(7));
    });
+   it('any and all', function() {
+      var v1 = new Vector([0.23, 1.2, -1.1, 1.1]);
+      expect(v1.any(function(x) { return x < 0; })).to.be.true;
+      expect(v1.any(function(x) { return x < -2; })).to.be.false;
+      expect(v1.all(function(x) { return x < 2; })).to.be.true;
+      expect(v1.all(function(x) { return x < 1; })).to.be.false;
+   });
 });
