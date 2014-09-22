@@ -15,7 +15,6 @@ return function(Matrix, StructuredM) {
       var getValue;
       if (values instanceof SymmetricM) { return values; }
       this.byRow = true;
-      this.mutable = false;
       this.nrow = nrow && nrow.nrow || nrow; // nrow is object or number
       if (values instanceof Matrix) {
          this.nrow = Math.min(values.nrow, values.ncol);

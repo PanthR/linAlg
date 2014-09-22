@@ -15,7 +15,6 @@ return function(Matrix, StructuredM) {
       var getValue;
       if (values instanceof UpperTriM) { return values; }
       this.byRow = false;
-      this.mutable = false;
       this.nrow = ncol && ncol.ncol || ncol;
       if (values instanceof Matrix) {
          this.nrow = Math.min(values.nrow, values.ncol);
