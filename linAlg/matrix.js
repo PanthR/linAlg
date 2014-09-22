@@ -154,7 +154,6 @@ define(function(require) {
     * returns an appropriate view (`Matrix.ViewM`) into m.  Multiplying two permutation
     * matrices returns the matrix for the composed permutation (`Matrix.PermM`).
     */
-    */
    Matrix.PermM       = Matrix.StructuredM.PermM;
    /**
     * Subclass of `Matrix` representing submatrix views into another matrix. Changes

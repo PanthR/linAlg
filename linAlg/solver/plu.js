@@ -29,10 +29,27 @@ return function(Solver) {
    // computePLU sets the P, L, U for this so that P*A = L*U.
    // TODO:  add the ability to handle 'complete' pivoting strategy
    function computePLU() {
-      var A, i, j, k;
-      A = this.A.clone(false).mutable(true);
+      var A, origA, i, j, k, pivot;
+      // returns the rowIndex of the maximum of the values A(k, k) through A(n, k)
+      function getPivot(A, k) {
+         var max, maxRow, r;
+         max = -Infinity;
+         for (r = k; r <= A.nrow; r += 1) {
+            if (A.get(r, k) > max) {
+               max = A.get(r, k);
+               maxRow = r;
+            }
+         }
+         return maxRow;
+      }
+      A = origA = this.A.clone(false).mutable(true);
       this.P = Matrix.perm({}, A.nrow); // ID matrix as a PermM
       for (k = 1; k < A.ncol; k += 1) {
+         pivot = getPivot(A, k);
+         if (pivot !== k) {
+            this.P = Matrix.perm([pivot, k], A.nrow).mult(this.P);
+            A = this.P.mult(origA);
+         }
          for (i = k + 1; i <= A.nrow; i += 1) {
             A.set(i, k, A.get(i, k) / A.get(k, k));
             for (j = k + 1; j <= A.ncol; j += 1) {

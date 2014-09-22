@@ -15,7 +15,7 @@ describe('PLU solver', function() {
          expect(A.mult(x).equals(b, 0.00001)).to.be.ok;
       }
    });
-   it('works for non-zero diagonal entries and matrix RHS', function() {
+   it('works for matrix on RHS', function() {
       for (var i = 0; i < 10; i += 1) {
          n = 2 + Math.floor(Math.random() * 30);
          A = new Matrix(function() { return Math.random() * 10 }, {nrow: n, ncol:n});
