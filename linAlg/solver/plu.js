@@ -3,9 +3,11 @@ define(function(require) {
 
 return function(Solver) {
 
-   var Matrix;
+   var Matrix, utils;
 
-   Matrix      = Solver.Matrix;
+   utils  = require('./../utils');
+   Matrix = Solver.Matrix;
+
    /**
     * Solves the system Ax = b by computing a PLU decomposition.
     * `A` is a square matrix and `strategy` specifies the pivoting
@@ -14,6 +16,7 @@ return function(Solver) {
    function PLUS(A, strategy) {
       this.A = A;
       this.strategy = strategy || 'partial';
+      this.singular = false;
       computePLU.call(this); // sets P (perm), L (solver), U (solver)
       this.nrow = A.nrow;
    }
@@ -30,13 +33,18 @@ return function(Solver) {
    // TODO:  add the ability to handle 'complete' pivoting strategy
    function computePLU() {
       var A, origA, i, j, k, pivot;
-      // returns the rowIndex of the maximum of the values A(k, k) through A(n, k)
+      function setSingular() {
+         this.singular = true;
+         this.P = this.U = this.L = null;
+         return;
+      }
+      // returns the rowIndex of the maximum of the values |A(k, k)| through |A(n, k)|
       function getPivot(A, k) {
          var max, maxRow, r;
          max = -Infinity;
          for (r = k; r <= A.nrow; r += 1) {
-            if (A.get(r, k) > max) {
-               max = A.get(r, k);
+            if (Math.abs(A.get(r, k)) > max) {
+               max = Math.abs(A.get(r, k));
                maxRow = r;
             }
          }
@@ -44,8 +52,11 @@ return function(Solver) {
       }
       A = origA = this.A.clone(false).mutable(true);
       this.P = Matrix.perm({}, A.nrow); // ID matrix as a PermM
-      for (k = 1; k < A.ncol; k += 1) {
+      for (k = 1; k <= A.ncol; k += 1) {
          pivot = getPivot(A, k);
+         if (utils.veryClose(A.get(pivot, k), 0, Matrix.Vector.tolerance)) {
+            return setSingular.call(this);
+         }
          if (pivot !== k) {
             this.P = Matrix.perm([pivot, k], A.nrow).mult(this.P);
             A = this.P.mult(origA);
