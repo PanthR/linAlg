@@ -3,8 +3,9 @@ define(function(require) {
 
 return function(Solver) {
 
-   var Vector, Matrix;
+   var Vector, Matrix, utils;
 
+   utils = require('./../utils');
    Matrix = Solver.Matrix;
    Vector = Matrix.Vector;
    /**
@@ -28,6 +29,12 @@ return function(Solver) {
          x[i - 1] = v / this.A.get(i, i);
       }
       return new Vector(x);
+   };
+
+   UpperS.prototype.isSingular = function isSingular() {
+      return this.A.diagView().any(function(x) {
+         return utils.veryClose(x, 0, Vector.tolerance);
+      });
    };
 
    return UpperS;

@@ -41,7 +41,7 @@ describe('PLU solver', function() {
          new Matrix([[1 - (1e-12), 1], [2, 2 - (1e-12)]]),
          new Matrix([[1 + (1e-12), 1], [2, 2 + (1e-12)]])
       ].forEach(function(A) {
-         expect(new PLUS(A).singular).to.be.true;
+         expect(new PLUS(A).isSingular()).to.be.true;
       });
    });
 });

@@ -23,6 +23,10 @@ return function(Solver) {
       return b.pDiv(this.diag);
    };
 
+   DiagS.prototype.isSingular = function isSingular() {
+      return this.diag.any(function(x) { return x === 0; });
+   };
+
    return DiagS;
 };
 

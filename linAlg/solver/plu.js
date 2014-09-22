@@ -16,7 +16,6 @@ return function(Solver) {
    function PLUS(A, strategy) {
       this.A = A;
       this.strategy = strategy || 'partial';
-      this.singular = false;
       computePLU.call(this); // sets P (perm), L (solver), U (solver)
       this.nrow = A.nrow;
    }
@@ -33,11 +32,6 @@ return function(Solver) {
    // TODO:  add the ability to handle 'complete' pivoting strategy
    function computePLU() {
       var A, origA, i, j, k, pivot;
-      function setSingular() {
-         this.singular = true;
-         this.P = this.U = this.L = null;
-         return;
-      }
       // returns the rowIndex of the maximum of the values |A(k, k)| through |A(n, k)|
       function getPivot(A, k) {
          var max, maxRow, r;
@@ -55,7 +49,7 @@ return function(Solver) {
       for (k = 1; k <= A.ncol; k += 1) {
          pivot = getPivot(A, k);
          if (utils.veryClose(A.get(pivot, k), 0, Matrix.Vector.tolerance)) {
-            return setSingular.call(this);
+            continue;
          }
          if (pivot !== k) {
             this.P = Matrix.perm([pivot, k], A.nrow).mult(this.P);
@@ -74,6 +68,10 @@ return function(Solver) {
       }
       this.L = new Solver.LowerS(new Matrix.LowerTriM(lowerLookup, A.nrow));
    }
+
+   PLUS.prototype.isSingular = function isSingular() {
+      return this.U.isSingular();
+   };
 
    return PLUS;
 };

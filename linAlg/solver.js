@@ -29,6 +29,15 @@ return function(Matrix) {
       return new Matrix(b.mapCol(this._solve.bind(this)));
    };
 
+   /**
+    * Return whether the system that the solver solves is "singular". Overridden in
+    * subclasses.
+    * When `isSingular` returns true, you should not call `solve`.
+    */
+   Solver.prototype.isSingular = function isSingular() {
+      return false;
+   };
+
    Solver.prototype.ensureCompatibleDims = function ensureCompatibleDims(b) {
       if (this.nrow !== (b instanceof Vector ? b.length : b.nrow)) {
          throw new Error('Solver and RHS have incompatible dimensions.');
