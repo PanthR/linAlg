@@ -49,6 +49,8 @@ return function(Matrix, StructuredM) {
       return v.permute(this.perm);
    };
 
+   // Solvers may depend on the fact that lMult & mMult
+   // return a ViewM.
    PermM.prototype.lMult = function lMult(m) {
       if (m.isA(PermM)) { return PermM.mult(m, this); }
       return m.view(ident, this.perm.get.bind(this.perm), m);

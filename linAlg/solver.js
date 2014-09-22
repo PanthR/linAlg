@@ -20,6 +20,7 @@ return function(Matrix) {
    Solver.DiagS   = require('./solver/diag')(Solver);
    Solver.LowerS  = require('./solver/lower')(Solver);
    Solver.UpperS  = require('./solver/upper')(Solver);
+   Solver.PLUS    = require('./solver/plu')(Solver);
 
    /** Expects b to be a Vector or Matrix (maybe array also?) */
    Solver.prototype.solve = function solve(b) {

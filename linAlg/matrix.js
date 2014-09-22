@@ -149,6 +149,11 @@ define(function(require) {
     * Subclass of `Matrix` representing permutation matrices. The constructor expects two
     * arguments, a `perm` object that determines a `Permutation`, and an `nrow` number/object
     * specifying the matrix dimensions.
+    *
+    * Multiplying a non-permutation matrix m by a permutation matrix p
+    * returns an appropriate view (`Matrix.ViewM`) into m.  Multiplying two permutation
+    * matrices returns the matrix for the composed permutation (`Matrix.PermM`).
+    */
     */
    Matrix.PermM       = Matrix.StructuredM.PermM;
    /**
