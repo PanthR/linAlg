@@ -8,15 +8,22 @@ describe('Cholesky solver', function() {
    it('works for a vector on RHS', function() {
       for (var i = 0; i < 100; i += 1) {
          n = 2 + Math.floor(Math.random() * 20);
-         G = new Matrix.LowerTriM(function() { return Math.random() * 10 }, {nrow: n, ncol:n});
+         G = new Matrix.LowerTriM(function() { return 1 + Math.random() * 10 }, {nrow: n, ncol:n});
          A = G.mult(G.transpose());
          b = new Matrix.Vector(Math.random, n);
          S = new CholeskyS(A);
          x = S.solve(b);
-         // console.log(G.toArray(true), S.G.A.toArray(true));
          expect(x.length).to.equal(n);
          expect(A.mult(x).equals(b, 0.00001)).to.be.ok;
       }
+   });
+   it('fails if G is not positive-definite', function() {
+      A = new Matrix([1, 2, 2, 1], {nrow: 2, byRow:true});
+      b = new Matrix.Vector(Math.random, 2);
+      S = new CholeskyS(A);
+      x = S.solve(b);
+      expect(A.mult(x).equals(b, 0.00001)).to.be.false;
+      expect(S.isSingular()).to.be.true;
    });
    // it('works for matrix on RHS', function() {
    //    for (var i = 0; i < 10; i += 1) {

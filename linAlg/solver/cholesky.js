@@ -42,7 +42,7 @@ return function(Solver) {
    }
 
    CholeskyS.prototype.isSingular = function isSingular() {
-      return "TODO";
+      return this.G.isSingular();
    };
 
    return CholeskyS;
