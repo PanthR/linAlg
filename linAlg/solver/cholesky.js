@@ -3,11 +3,6 @@ define(function(require) {
 
 return function(Solver) {
 
-   var Matrix, utils;
-
-   utils  = require('./../utils');
-   Matrix = Solver.Matrix;
-
    /**
     * Solves the system Ax = b for a symmetric positive definite A by computing
     * a Cholesky decomposition. `A` is a square symmetric positive definite matrix.
@@ -28,7 +23,7 @@ return function(Solver) {
    // local methods
    // computeCholesky sets the G, G^T solvers for `this` so that A = G*G^T.
    function computeCholesky() {
-      var G, i, j, k, val, pivot;
+      var G, i, j, k, val;
       G = this.A.lower().mutable(true);
       for (j = 1; j <= G.ncol; j += 1) {
          for (k = 1; k < j; k += 1) {
