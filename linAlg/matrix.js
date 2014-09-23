@@ -175,7 +175,7 @@ define(function(require) {
    Matrix.ViewMV    = require('./matrix/viewmv')(Matrix);
 
    /**
-    * TODO
+    * Class containing solvers for various linear systems. TODO: Add Solver module docs
     */
    Matrix.Solver    = require('./solver')(Matrix);
    // Static methods
@@ -498,6 +498,20 @@ define(function(require) {
    Matrix.prototype._faithfulClone = function _faithfulClone() {
       return this.map(function(x) { return x; }).force();
    };
+
+   /** Return the solution to `Ax = b`, where `A` is `this` and  `b` is a `Matrix` or `Vector`.
+    * Only works for square non-singular matrices `A` at the moment. */
+   Matrix.prototype.solve = function solve(b) {
+      if (this._solver == null) { this._solver = this.getSolver(); }
+      if (this._solver.isSingular()) { throw new Error('System not solvable'); }
+      return this._solver.solve(b);
+   };
+
+   /** Internally used to obtain a solver for systems. */
+   Matrix.prototype.getSolver = function getSolver() {
+      return new Matrix.Solver(this);
+   };
+
    /*
     * Return the vector index that would correspond to the i-th row and j-th column.
     * This is used to access the appropriate location in the vector that represents

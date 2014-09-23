@@ -11,7 +11,16 @@ return function(Matrix) {
     * Top level class for solving linear systems
     */
    function Solver(A) {
-      /** Each subclass should define this.nrow */
+      /* Each subclass should define this.nrow */
+      var ret;
+      if (A.isUpper()) {
+         return A.isLower() ? new Solver.DiagS(A.diagView()) : new Solver.UpperS(A);
+      } else if (A.isLower()) { return new Solver.LowerS(A); }
+      if (A.isSymmetric()) {
+         ret = new Solver.CholeskyS(A);
+         if (!ret.isSingular()) { return ret; }
+      }
+      return new Solver.PLUS(A);
    }
 
    Solver.Matrix = Matrix;
