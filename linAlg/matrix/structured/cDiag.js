@@ -62,6 +62,11 @@ return function(Matrix, StructuredM) {
       return this;
    };
 
+   CDiagM.prototype.inverse = function inverse() {
+      if (this.val === 0) { throw new Error('Cannot invert zero matrix.'); }
+      return new CDiagM(1 / this.val, this);
+   };
+
    CDiagM.prototype.sMult = function sMult(k) {
       return new CDiagM(k * this.val, this);
    };

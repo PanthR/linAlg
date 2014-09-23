@@ -74,6 +74,7 @@ return function(Matrix, StructuredM) {
       return this;
    };
 
+   PermM.prototype.inverse =
    PermM.prototype.transpose = function transpose() {
       return new PermM(this.invPerm, this);
    };

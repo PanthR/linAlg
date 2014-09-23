@@ -60,6 +60,10 @@ return function(Matrix, StructuredM) {
       }.bind(this), { nrow: this.ncol, ncol: this.nrow });
    };
 
+   UpperTriM.prototype.inverse = function inverse() {
+      return Matrix.prototype.inverse.call(this).upper();
+   };
+
    UpperTriM.prototype.isUpper = function() { return true; };
 
    return UpperTriM;

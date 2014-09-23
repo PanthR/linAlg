@@ -54,6 +54,10 @@ return function(Matrix, StructuredM) {
 
    SymmetricM.prototype.isSymmetric = function() { return true; };
 
+   SymmetricM.prototype.inverse = function inverse() {
+      return new SymmetricM(Matrix.prototype.inverse.call(this));
+   };
+
    // Needs its own sMult to ensure the result is still symmetric
    SymmetricM.prototype.sMult = function sMult(k) {
       return new SymmetricM(function(i, j) {

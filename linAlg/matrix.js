@@ -512,6 +512,11 @@ define(function(require) {
       return new Matrix.Solver(this);
    };
 
+   /** Return the inverse of `this`, if `this` is a square non-singular matrix. */
+   Matrix.prototype.inverse = function inverse() {
+      return this.solve(Matrix.const(1, this));
+   };
+
    /*
     * Return the vector index that would correspond to the i-th row and j-th column.
     * This is used to access the appropriate location in the vector that represents

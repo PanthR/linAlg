@@ -61,6 +61,10 @@ return function(Matrix, StructuredM) {
       }.bind(this), { nrow: this.ncol, ncol: this.nrow });
    };
 
+   LowerTriM.prototype.inverse = function inverse() {
+      return Matrix.prototype.inverse.call(this).lower();
+   };
+
    LowerTriM.prototype.isLower = function() { return true; };
 
    return LowerTriM;
