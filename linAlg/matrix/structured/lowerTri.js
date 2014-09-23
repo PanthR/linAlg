@@ -61,6 +61,8 @@ return function(Matrix, StructuredM) {
       }.bind(this), { nrow: this.ncol, ncol: this.nrow });
    };
 
+   LowerTriM.prototype.isLower = function() { return true; };
+
    return LowerTriM;
 };
 

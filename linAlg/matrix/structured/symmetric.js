@@ -52,6 +52,8 @@ return function(Matrix, StructuredM) {
       return this;
    };
 
+   SymmetricM.prototype.isSymmetric = function() { return true; };
+
    // Needs its own sMult to ensure the result is still symmetric
    SymmetricM.prototype.sMult = function sMult(k) {
       return new SymmetricM(function(i, j) {

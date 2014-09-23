@@ -201,9 +201,34 @@ describe('Multiplying vector with matrix', function() {
    });
 });
 describe('Matrix equality', function() {
-   expect(A[1].equals(A[1])).to.be.ok;
-   expect(A[2].equals(A[1])).to.not.be.ok;
-   var B1 = new Matrix(function(i, j) { return i * j + .001; }, { nrow: 3, ncol: 3 });
-   expect(B1.equals(A[3],.01)).to.be.ok;
-   expect(B1.equals(A[3],.00001)).to.not.be.ok;
+   it('using Matrix#equals', function() {
+      expect(A[1].equals(A[1])).to.be.ok;
+      expect(A[2].equals(A[1])).to.not.be.ok;
+      var B1 = new Matrix(function(i, j) { return i * j + .001; }, { nrow: 3, ncol: 3 });
+      expect(B1.equals(A[3],.01)).to.be.ok;
+      expect(B1.equals(A[3],.00001)).to.not.be.ok;
+   });
+});
+describe('Detecting structure', function() {
+   it('isLower', function() {
+      [1, 2, 3, 7, 8].forEach(function(i) { expect(A[i].isLower()).to.be.false; });
+      [4, 5, 6].forEach(function(i) { expect(A[i].isLower()).to.be.true; });
+      for (var i = 1; i < A.length; i += 1) {
+         expect(A[i].lower().clone(false).isLower()).to.be.true;
+      }
+   });
+   it('isUpper', function() {
+      [1, 2, 3, 6, 8].forEach(function(i) { expect(A[i].isUpper()).to.be.false; });
+      [4, 5, 7].forEach(function(i) { expect(A[i].isUpper()).to.be.true; });
+      for (var i = 1; i < A.length; i += 1) {
+         expect(A[i].upper().clone(false).isUpper()).to.be.true;
+      }
+   });
+   it('isSymmetric', function() {
+      [1, 2, 6, 7].forEach(function(i) { expect(A[i].isSymmetric()).to.be.false; });
+      [3, 4, 5, 8].forEach(function(i) { expect(A[i].isSymmetric()).to.be.true; });
+      for (var i = 1; i < A.length; i += 1) {
+         expect(A[i].pAdd(A[i].transpose()).isSymmetric()).to.be.true;
+      }
+   });
 });

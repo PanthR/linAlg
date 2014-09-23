@@ -60,6 +60,8 @@ return function(Matrix, StructuredM) {
       }.bind(this), { nrow: this.ncol, ncol: this.nrow });
    };
 
+   UpperTriM.prototype.isUpper = function() { return true; };
+
    return UpperTriM;
 };
 

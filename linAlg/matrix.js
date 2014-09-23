@@ -931,6 +931,18 @@ define(function(require) {
       return new Matrix.UpperTriM(this);
    };
 
+   Matrix.prototype.isSymmetric = function isSymmetric() {
+      return this.equals(this.transpose());
+   };
+
+   Matrix.prototype.isLower = function isLower() {
+      return this.equals(this.lower());
+   };
+
+   Matrix.prototype.isUpper = function isUpper() {
+      return this.equals(this.upper());
+   };
+
    /** Test if `this` pointwise equals `m2`, within a given pointwise `tolerance`
     * (defaults to `Vector.tolerance`). */
    Matrix.prototype.equals = function equals(m2, tolerance) {

@@ -71,6 +71,9 @@ return function(Matrix, StructuredM) {
       return this;
    };
 
+   DiagM.prototype.isSymmetric =
+   DiagM.prototype.isLower =
+   DiagM.prototype.isUpper = function() { return true; };
    // Multiply on the left with B
    DiagM.prototype.lMult = function lMult(B) {
       return B.map(function(val, i, j) {
