@@ -43,7 +43,13 @@
         
         <a href="#Matrix.LowerTriM"><li><code>Matrix.LowerTriM</code></li></a>
         
+        <a href="#Matrix.OuterM"><li><code>Matrix.OuterM</code></li></a>
+        
+        <a href="#Matrix.PermM"><li><code>Matrix.PermM</code></li></a>
+        
         <a href="#Matrix.ProdM"><li><code>Matrix.ProdM</code></li></a>
+        
+        <a href="#Matrix.Solver"><li><code>Matrix.Solver</code></li></a>
         
         <a href="#Matrix.SparseM"><li><code>Matrix.SparseM</code></li></a>
         
@@ -57,11 +63,21 @@
         
         <a href="#Matrix.UpperTriM"><li><code>Matrix.UpperTriM</code></li></a>
         
+        <a href="#Matrix.Vector.colBind"><li><code>Matrix.Vector.colBind</code></li></a>
+        
+        <a href="#Matrix.Vector.rowBind"><li><code>Matrix.Vector.rowBind</code></li></a>
+        
         <a href="#Matrix.ViewM"><li><code>Matrix.ViewM</code></li></a>
         
         <a href="#Matrix.ViewMV"><li><code>Matrix.ViewMV</code></li></a>
         
+        <a href="#Matrix.Vector%25colBind"><li><code>Matrix.Vector#colBind</code></li></a>
+        
         <a href="#Matrix.Vector%25mult"><li><code>Matrix.Vector#mult</code></li></a>
+        
+        <a href="#Matrix.Vector%25rowBind"><li><code>Matrix.Vector#rowBind</code></li></a>
+        
+        <a href="#Matrix.colBind"><li><code>Matrix.colBind</code></li></a>
         
         <a href="#Matrix.commonConstr"><li><code>Matrix.commonConstr</code></li></a>
         
@@ -73,11 +89,19 @@
         
         <a href="#Matrix.ensureSameDims"><li><code>Matrix.ensureSameDims</code></li></a>
         
+        <a href="#Matrix.perm"><li><code>Matrix.perm</code></li></a>
+        
+        <a href="#Matrix.rowBind"><li><code>Matrix.rowBind</code></li></a>
+        
         <a href="#Matrix.sameDims"><li><code>Matrix.sameDims</code></li></a>
         
         <a href="#Matrix%25_get"><li><code>Matrix#_get</code></li></a>
         
         <a href="#Matrix%25_set"><li><code>Matrix#_set</code></li></a>
+        
+        <a href="#Matrix%25all"><li><code>Matrix#all</code></li></a>
+        
+        <a href="#Matrix%25any"><li><code>Matrix#any</code></li></a>
         
         <a href="#Matrix%25change"><li><code>Matrix#change</code></li></a>
         
@@ -85,7 +109,13 @@
         
         <a href="#Matrix%25clone"><li><code>Matrix#clone</code></li></a>
         
+        <a href="#Matrix%25colBind"><li><code>Matrix#colBind</code></li></a>
+        
+        <a href="#Matrix%25colPermute"><li><code>Matrix#colPermute</code></li></a>
+        
         <a href="#Matrix%25colView"><li><code>Matrix#colView</code></li></a>
+        
+        <a href="#Matrix%25cols"><li><code>Matrix#cols</code></li></a>
         
         <a href="#Matrix%25compute"><li><code>Matrix#compute</code></li></a>
         
@@ -100,6 +130,8 @@
         <a href="#Matrix%25eachPair"><li><code>Matrix#eachPair</code></li></a>
         
         <a href="#Matrix%25eachRow"><li><code>Matrix#eachRow</code></li></a>
+        
+        <a href="#Matrix%25equals"><li><code>Matrix#equals</code></li></a>
         
         <a href="#Matrix%25forEach"><li><code>Matrix#forEach</code></li></a>
         
@@ -135,7 +167,13 @@
         
         <a href="#Matrix%25reduceRow"><li><code>Matrix#reduceRow</code></li></a>
         
+        <a href="#Matrix%25rowBind"><li><code>Matrix#rowBind</code></li></a>
+        
+        <a href="#Matrix%25rowPermute"><li><code>Matrix#rowPermute</code></li></a>
+        
         <a href="#Matrix%25rowView"><li><code>Matrix#rowView</code></li></a>
+        
+        <a href="#Matrix%25rows"><li><code>Matrix#rows</code></li></a>
         
         <a href="#Matrix%25rvMult"><li><code>Matrix#rvMult</code></li></a>
         
@@ -268,6 +306,12 @@ main diagonal.</p>
       </div>
       
       <div>
+        <h4 id="Matrix.OuterM"><code>Matrix.OuterM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing outer products of vectors (i.e., rank-1
+matrices).  Users should not need to access this subclass directly.</p>
+      </div>
+      
+      <div>
         <h4 id="Matrix.SumM"><code>Matrix.SumM</code></h4>
         <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing sums (A + k * B) of matrices.
 Users should not need to access this subclass directly.</p>
@@ -301,6 +345,16 @@ an object with an <code>nrow</code> property.</p>
       </div>
       
       <div>
+        <h4 id="Matrix.PermM"><code>Matrix.PermM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing permutation matrices. The constructor expects two
+arguments, a <code>perm</code> object that determines a <a href="#Permutation"><code>Permutation</code></a>, and an <code>nrow</code> number/object
+specifying the matrix dimensions.</p>
+<p>Multiplying a non-permutation matrix m by a permutation matrix p
+returns an appropriate view (<a href="#Matrix.ViewM"><code>Matrix.ViewM</code></a>) into m.  Multiplying two permutation
+matrices returns the matrix for the composed permutation (<a href="#Matrix.PermM"><code>Matrix.PermM</code></a>).</p>
+      </div>
+      
+      <div>
         <h4 id="Matrix.ViewM"><code>Matrix.ViewM</code></h4>
         <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing submatrix views into another matrix. Changes
 to the view are reflected on the original matrix and vice-versa. Use
@@ -315,6 +369,11 @@ to the view are reflected on the original matrix and vice-versa. Use
 the rows/columns/diagonals of a matrix as vectors.</p>
 <p>For creating these, see: <a href="#Matrix%25rowView"><code>Matrix.prototype.rowView</code></a>, <a href="#Matrix%25colView"><code>Matrix.prototype.colView</code></a>,
 <a href="#Matrix%25diagView"><code>Matrix.prototype.diagView</code></a>.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.Solver"><code>Matrix.Solver</code></h4>
+        <p>TODO</p>
       </div>
       
       <div>
@@ -337,6 +396,54 @@ The second argument, <code>nrow</code> can be the number of rows, or an object w
 argument. For instance to create an identity matrix with size same as the matrix <code>A</code>
 one would do:</p>
 <pre class="prettyprint source"><a href="#Matrix.const"><code>Matrix.const(1, A);  // Identity matrix with dimension same as A.</code></a></pre>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.perm"><code>Matrix.perm(perm, nrow)</code></h4>
+        <p>Return a permutation matrix based on the permutation indicated by <code>perm</code>. <code>perm</code> can be
+a <a href="#Permutation"><code>Permutation</code></a> object, or anything that can be turned to one (see <a href="#Permutation"><code>Permutation</code></a>).</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.rowBind"><code>Matrix.rowBind(matrices)</code></h4>
+        <p>Bind the arguments row-wise into a matrix. The arguments may be a
+mixture of matrices and vectors, but their <code>ncol/length</code> must all be the same.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25rowBind"><code>Matrix#rowBind(matrices)</code></h4>
+        <p>See <a href="#Matrix.rowBind"><code>Matrix.rowBind</code></a></p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.Vector.rowBind"><code>Matrix.Vector.rowBind</code></h4>
+        <p>See <a href="#Matrix.rowBind"><code>Matrix.rowBind</code></a></p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.Vector%25rowBind"><code>Matrix.Vector#rowBind</code></h4>
+        <p>See <a href="#Matrix.rowBind"><code>Matrix.rowBind</code></a></p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.colBind"><code>Matrix.colBind(matrices)</code></h4>
+        <p>Bind the arguments column-wise into a matrix. The arguments may be a
+mixture of matrices and vectors, but their <code>nrow/length</code> must all be the same.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25colBind"><code>Matrix#colBind(matrices)</code></h4>
+        <p>See <a href="#Matrix.colBind"><code>Matrix.colBind</code></a></p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.Vector.colBind"><code>Matrix.Vector.colBind</code></h4>
+        <p>See <a href="#Matrix.colBind"><code>Matrix.colBind</code></a></p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix.Vector%25colBind"><code>Matrix.Vector#colBind</code></h4>
+        <p>See <a href="#Matrix.colBind"><code>Matrix.colBind</code></a></p>
       </div>
       
       <div>
@@ -532,6 +639,16 @@ and vice versa. Use <a href="#Matrix%25clone"><code>Matrix.prototype.clone</code
       </div>
       
       <div>
+        <h4 id="Matrix%25rows"><code>Matrix#rows()</code></h4>
+        <p>Return an array of all matrix rows as rowViews</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25cols"><code>Matrix#cols()</code></h4>
+        <p>Return an array of all matrix columns as colViews</p>
+      </div>
+      
+      <div>
         <h4 id="Matrix%25diagView"><code>Matrix#diagView(offset)</code></h4>
         <p>Return a <a href="#Vector"><code>Vector</code></a> view of the diagonal of the matrix specified by
 the given <code>offset</code> (defaults to 0). The main diagonal has offset 0, the diagonal
@@ -543,6 +660,16 @@ A1.diagView(-1);  // [3];
 A1.diagView(1);   // [4, 7];
 A1.diagView(2);   // [6];
 A1.diagView(3);   // Error;</code></pre>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25rowPermute"><code>Matrix#rowPermute(perm)</code></h4>
+        <p>Permute the rows of the matrix.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25colPermute"><code>Matrix#colPermute(perm)</code></h4>
+        <p>Permute the columns of the matrix.</p>
       </div>
       
       <div>
@@ -667,6 +794,17 @@ The matrices must have the same dimensions.</p>
       </div>
       
       <div>
+        <h4 id="Matrix%25any"><code>Matrix#any(pred)</code></h4>
+        <p>Return true, if the predicate <code>pred(val, i, j)</code> is true for at least one entry,
+false otherwise.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25all"><code>Matrix#all(pred)</code></h4>
+        <p>Return true, if the predicate <code>pred(val, i, j)</code> is true for all entries, false otherwise.</p>
+      </div>
+      
+      <div>
         <h4 id="Matrix%25transpose"><code>Matrix#transpose()</code></h4>
         <p>Return the transpose of the matrix, preserving any appropriate structure.</p>
       </div>
@@ -679,6 +817,12 @@ The matrices must have the same dimensions.</p>
       <div>
         <h4 id="Matrix%25upper"><code>Matrix#upper()</code></h4>
         <p>Return a upper-triangular matrix created by the upper triangle of <code>this</code>.</p>
+      </div>
+      
+      <div>
+        <h4 id="Matrix%25equals"><code>Matrix#equals(m2, tolerance)</code></h4>
+        <p>Test if <code>this</code> pointwise equals <code>m2</code>, within a given pointwise <code>tolerance</code>
+(defaults to <a href="#Vector.tolerance"><code>Vector.tolerance</code></a>).</p>
       </div>
       
       <div>

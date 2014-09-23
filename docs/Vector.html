@@ -43,6 +43,8 @@
         
         <a href="#Vector.ViewV"><li><code>Vector.ViewV</code></li></a>
         
+        <a href="#Vector.concat"><li><code>Vector.concat</code></li></a>
+        
         <a href="#Vector.const"><li><code>Vector.const</code></li></a>
         
         <a href="#Vector.ones"><li><code>Vector.ones</code></li></a>
@@ -55,11 +57,17 @@
         
         <a href="#Vector%25_set"><li><code>Vector#_set</code></li></a>
         
+        <a href="#Vector%25all"><li><code>Vector#all</code></li></a>
+        
+        <a href="#Vector%25any"><li><code>Vector#any</code></li></a>
+        
         <a href="#Vector%25change"><li><code>Vector#change</code></li></a>
         
         <a href="#Vector%25clone"><li><code>Vector#clone</code></li></a>
         
         <a href="#Vector%25compute"><li><code>Vector#compute</code></li></a>
+        
+        <a href="#Vector%25concat"><li><code>Vector#concat</code></li></a>
         
         <a href="#Vector%25cumMax"><li><code>Vector#cumMax</code></li></a>
         
@@ -110,6 +118,8 @@
         <a href="#Vector%25pPow"><li><code>Vector#pPow</code></li></a>
         
         <a href="#Vector%25pSub"><li><code>Vector#pSub</code></li></a>
+        
+        <a href="#Vector%25permute"><li><code>Vector#permute</code></li></a>
         
         <a href="#Vector%25reduce"><li><code>Vector#reduce</code></li></a>
         
@@ -233,6 +243,12 @@ Vector.ones(v1.length).dot(v1)</code></pre>
       </div>
       
       <div>
+        <h4 id="Vector.concat"><code>Vector.concat(vectors)</code></h4>
+        <p>Returns the concatenation of its arguments. The arguments may be vectors, arrays
+or plain numbers.</p>
+      </div>
+      
+      <div>
         <h4 id="Vector%25get"><code>Vector#get(i)</code></h4>
         <p>Generic accessor method to obtain the values in the vector. The argument <code>i</code> can take a
 number of different forms:</p>
@@ -340,6 +356,16 @@ on vectors that are currently mutable.</p>
       </div>
       
       <div>
+        <h4 id="Vector%25concat"><code>Vector#concat(vectors)</code></h4>
+        <p>See <a href="#Vector.concat"><code>Vector.concat</code></a>.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25permute"><code>Vector#permute(perm)</code></h4>
+        <p>Permute the vector entries according to <code>perm</code></p>
+      </div>
+      
+      <div>
         <h4 id="Vector%25each"><code>Vector#each(f, skipZeros)</code></h4>
         <p>Execute the function <code>f</code> for each entry of the vector,
 starting with the entry with index 1. <code>f</code> will be called as <code>f(value, index)</code>.
@@ -416,6 +442,16 @@ v1.map(function(val, i) { return val + i; });</code></pre>
         <p>Like <a href="#Vector%25map"><code>Vector.prototype.map</code></a>, but the function <code>f</code> acts on two vectors, with
 signature <code>f(val1, val2, i)</code>. If <code>skipZeros</code> is <code>true</code>, the implementation may
 assume that <code>f</code> will return <code>0</code> as long as one of the values is <code>0</code>.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25any"><code>Vector#any(pred)</code></h4>
+        <p>Return true, if the predicate <code>pred(val, i)</code> is true for at least one entry, false otherwise.</p>
+      </div>
+      
+      <div>
+        <h4 id="Vector%25all"><code>Vector#all(pred)</code></h4>
+        <p>Return true, if the predicate <code>pred(val, i)</code> is true for all entries, false otherwise.</p>
       </div>
       
       <div>

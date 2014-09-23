@@ -1,7 +1,7 @@
 {
-   "name": "linAlg",
-   "version": "0.0.0",
-   "description": "linAlg\r ======",
+   "name": "linalg-panthr",
+   "version": "0.0.1",
+   "description": "Linear Algebra library",
    "main": "index.js",
    "scripts": {
       "test": "mocha --reporter=progress --recursive --require=./test/stackFixer.js",
@@ -19,7 +19,22 @@
    "linear-solvers",
    "numeric"
    ],
-   "author": "wahl@hanover.edu",
+   "author": {
+      "name": "PanthR Team",
+      "url": "https://github.com/PanthR/"
+   },
+   "contributors": [
+      {
+         "name": "Barb Wahl",
+         "email": "wahl@hanover.edu",
+         "url": "https://github.com/bwahl"
+      },
+      {
+         "name": "Haris Skiadas",
+         "email": "skiadas@hanover.edu",
+         "url": "https://github.com/skiadas"
+      }
+   ],
    "license": "MIT",
    "bugs": {
       "url": "https://github.com/PanthR/linAlg/issues"
