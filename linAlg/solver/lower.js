@@ -33,7 +33,7 @@ return function(Solver) {
 
    LowerS.prototype.isSingular = function isSingular() {
       return this.A.diagView().any(function(x) {
-         return utils.veryClose(x, 0, Vector.tolerance);
+         return isNaN(x) || utils.veryClose(x, 0, Vector.tolerance);
       });
    };
 
