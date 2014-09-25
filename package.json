@@ -2,7 +2,7 @@
    "name": "linalg-panthr",
    "version": "0.0.1",
    "description": "Linear Algebra library",
-   "main": "index.js",
+   "main": "linAlg.js",
    "scripts": {
       "test": "mocha --reporter=progress --recursive --require=./test/stackFixer.js",
       "lint": "eslint linAlg",
