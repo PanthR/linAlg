@@ -320,7 +320,8 @@ define(function(require) {
     * `Matrix.prototype.get` if both arguments are always present.
     */
    Matrix.prototype._get = function _get(i, j) {
-      if (!this.validate(i, j) || !this.validIndices(i, j)) { return 0; }
+      if (!this.validIndices(i, j)) { return null; } // Out of matrix bounds fetch
+      if (!this.validate(i, j)) { return 0; }        // Out of structure fetch
       return this.compute(i, j);
    };
 

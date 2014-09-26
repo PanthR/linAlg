@@ -22,10 +22,10 @@ describe('Tabular matrices', function() {
       expect(A1.get(4, 1)).to.equal(4 - 1);
       expect(A1.get(1, 1)).to.equal(1 - 1);
    });
-   it('return 0 for out-of-bounds indices', function() {
-      expect(A1.get(1, 0)).to.equal(0);
-      expect(A1.get(0, 2)).to.equal(0);
-      expect(A1.get(1, 7)).to.equal(0);
-      expect(A1.get(5, 1)).to.equal(0);
+   it('return null for out-of-bounds indices', function() {
+      expect(A1.get(1, 0)).to.equal(null);
+      expect(A1.get(0, 2)).to.equal(null);
+      expect(A1.get(1, 7)).to.equal(null);
+      expect(A1.get(5, 1)).to.equal(null);
    });
 })

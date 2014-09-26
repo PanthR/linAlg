@@ -16,10 +16,10 @@ describe('Tabular vectors', function() {
    it('are 1-indexed', function() {
       var v1 = new Vector(f, 10);
       expect(v1).to.respondTo('get');
-      expect(v1.get(0)).to.equal(0);
+      expect(v1.get(0)).to.equal(null);
       expect(v1.get(1)).to.equal(1);
       expect(v1.get(2)).to.equal(4);
-      expect(v1.get(11)).to.equal(0);
+      expect(v1.get(11)).to.equal(null);
       expect(v1.get(6)).to.equal(36);
    });
 });

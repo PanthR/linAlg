@@ -16,7 +16,7 @@ describe('Sparse vectors', function() {
    it('are 1-indexed', function() {
       var v1 = new Vector(dict, 1000);
       expect(v1).to.respondTo('get');
-      expect(v1.get(0)).to.equal(0);
+      expect(v1.get(0)).to.equal(null);
       expect(v1.get(1)).to.equal(0);
       expect(v1.get(2)).to.equal(10);
       expect(v1.get(105)).to.equal(12);

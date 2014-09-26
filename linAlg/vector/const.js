@@ -20,7 +20,7 @@ return function(Vector) {
    /* ConstV.prototype methods */
 
    ConstV.prototype._get = function _get(i) {
-      if ( i < 1 || i > this.length) { return 0; }
+      if ( i < 1 || i > this.length) { return null; }
       return this.val;
    };
 

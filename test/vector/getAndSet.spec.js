@@ -19,7 +19,7 @@ describe('Vector#get', function() {
       expect(v1.get([])).to.deep.equal([]);
       expect(v1.get([3,1,2])).to.deep.equal([5, 2, 1]);
       expect(v2.get([3,1,2])).to.deep.equal([9, 1, 4]);
-      expect(v3.get([3,1,2])).to.deep.equal([0, 1, 5]);
+      expect(v3.get([3,1,2])).to.deep.equal([null, 1, 5]);
    });
    it('with no argument returns the entire values array', function() {
       expect(v1.get()).to.deep.equal(v1.toArray());

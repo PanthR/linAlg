@@ -22,6 +22,7 @@ return function(Vector) {
 
    SparseV.prototype._get = function _get(i) {
       // If NaN, we do want to return that, cannot "|| 0"
+      if ( i < 1 || i > this.length) { return null; }
       return this._values.hasOwnProperty(i) ? this._values[i] : 0;
    };
 

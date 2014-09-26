@@ -29,8 +29,8 @@ describe('Constant-Diagonal matrices', function() {
                expect(d.get(i, j)).to.equal(i === j ? vals[ind] : 0);
             }
          }
-         expect(d.get(d.nrow + 2, d.nrow + 2)).to.equal(0);
-         expect(d.get(0, 0)).to.equal(0);
+         expect(d.get(d.nrow + 2, d.nrow + 2)).to.equal(null);
+         expect(d.get(0, 0)).to.equal(null);
          expect(d.mutable()).to.be.false;
          expect(function() { d.mutable(true); }).to.throw(Error);
          expect(function() { d.set(1, 1, 3); }).to.throw(Error);

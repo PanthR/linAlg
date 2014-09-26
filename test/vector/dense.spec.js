@@ -15,11 +15,11 @@ describe('Dense vectors', function() {
    it('are 1-indexed', function() {
       var v1 = new Vector([4,6,7]);
       expect(v1).to.respondTo('get');
-      expect(v1.get(0)).to.equal(0);
+      expect(v1.get(0)).to.equal(null);
       expect(v1.get(1)).to.equal(4);
       expect(v1.get(2)).to.equal(6);
       expect(v1.get(3)).to.equal(7);
-      expect(v1.get(10)).to.equal(0);
+      expect(v1.get(10)).to.equal(null);
    });
    it('allow non-integer values', function() {
       var a1 = [Math.random() * 4, -Math.random() * 3, Math.random()];

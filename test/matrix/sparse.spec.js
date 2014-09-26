@@ -21,11 +21,11 @@ describe('Sparse matrices', function() {
       expect(A1.get(2, 3)).to.equal(23);
       expect(A1.get(4, 1)).to.equal(2);
    });
-   it('return 0 for out-of-bounds and missing indices', function() {
+   it('return null for out-of-bounds and missing indices', function() {
       expect(A1.get(3, 2)).to.equal(0);
       expect(A1.get(1, 4)).to.equal(0);
-      expect(A1.get(0, 2)).to.equal(0);
+      expect(A1.get(0, 2)).to.equal(null);
       expect(A1.get(1, 5)).to.equal(0);
-      expect(A1.get(5, 1)).to.equal(0);
+      expect(A1.get(5, 1)).to.equal(null);
    });
 })
