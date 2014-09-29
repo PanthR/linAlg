@@ -71,6 +71,9 @@ describe('Other methods', function() {
          expect(v1.resize(6, f).toArray()).to.deep.equal([4.1, -2.2, 1, 6.2, 7.2, 8.2]);
          expect(v3.resize(6, f).toArray()).to.deep.equal([1, 4, 9, 16, 7.2, 8.2]);
       });
+      it('can reduce length', function() {
+         expect(v1.resize(2).toArray()).to.deep.equal([4.1, -2.2]);
+      });
       it('preserves sparse', function() {
          expect(v2.resize(14, true)).to.be.instanceof(Vector.SparseV);
          expect(v2.resize(14, true)

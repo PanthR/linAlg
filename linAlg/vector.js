@@ -359,16 +359,16 @@ define(function(require) {
     */
    Vector.prototype.resize = function resize(length, fill) {
       var arr, i, f;
-      arr = this.toArray();
+      arr = this.toArray().slice(0, length);
       if (typeof fill === 'function') {
          f = fill;
       } else {
          f = fill ? function(i) { return arr[(i - 1) % this.length]; }
-                  : function(i) { return 0; }
+                  : function(i) { return 0; };
       }
       for (i = this.length + 1; i <= length; i += 1) { arr.push(f.call(this, i)); }
       return new Vector(arr);
-   }
+   };
 
    /** Permute the vector entries according to `perm` */
    Vector.prototype.permute = function permute(perm) {
