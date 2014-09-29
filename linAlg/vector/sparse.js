@@ -106,6 +106,14 @@ return function(Vector) {
     */
    SparseV.prototype.resize = function resize(length, fill) {
       var obj, key, val, values;
+
+      function fillMore(fill) {
+         for (key = this.length + 1; key <= length; key += 1) {
+            val = fill.call(this, key);
+            if (val !== 0) { obj[key] = val; }
+         }
+      }
+
       obj = {};
       values = this._values;
       for (key in values) {
@@ -114,18 +122,14 @@ return function(Vector) {
          }
       }
       if (typeof fill === 'function') {
-         for (key = this.length + 1; key <= length; key += 1) {
-            val = fill(key);
-            if (val !== 0) { obj[key] = val; }
-         }
+         fillMore.call(this, fill);
       } else if (fill === true) {
-         for (key = this.length + 1; key <= length; key += 1) {
-            val = this.get((key - 1) % this.length + 1);
-            if (val !== 0) { obj[key] = val; }
-         }
+         fillMore.call(this, function(key) {
+            return this.get((key - 1) % this.length + 1);
+         });
       }
       return new Vector(obj, length);
-   }
+   };
 
    SparseV.prototype.isSparse = function isSparse() {
       return true;
