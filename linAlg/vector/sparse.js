@@ -98,6 +98,35 @@ return function(Vector) {
       return new Vector(values, this.length);
    };
 
+   /**
+    * Return a new resized version of `this` with a new `length`.`fill` may be:
+    * - `true`: we then recycle the Vector's values to the new length.
+    * - `false` or omitted: we then fill in with zeros.
+    * - a function `f(i)`: It is then used to fill in the _new_ values.
+    */
+   SparseV.prototype.resize = function resize(length, fill) {
+      var obj, key, val, values;
+      obj = {};
+      values = this._values;
+      for (key in values) {
+         if (values.hasOwnProperty(key) && parseInt(key) <= length) {
+            obj[key] = values[key];
+         }
+      }
+      if (typeof fill === 'function') {
+         for (key = this.length + 1; key <= length; key += 1) {
+            val = fill(key);
+            if (val !== 0) { obj[key] = val; }
+         }
+      } else if (fill === true) {
+         for (key = this.length + 1; key <= length; key += 1) {
+            val = this.get((key - 1) % this.length + 1);
+            if (val !== 0) { obj[key] = val; }
+         }
+      }
+      return new Vector(obj, length);
+   }
+
    SparseV.prototype.isSparse = function isSparse() {
       return true;
    };

@@ -351,6 +351,25 @@ define(function(require) {
       return Vector.concat.apply(null, vectors);
    };
 
+   /**
+    * Return a new resized version of `this` with a new `length`.`fill` may be:
+    * - `true`: we then recycle the Vector's values to the new length.
+    * - `false` or omitted: we then fill in with zeros.
+    * - a function `f(i)`: It is then used to fill in the _new_ values.
+    */
+   Vector.prototype.resize = function resize(length, fill) {
+      var arr, i, f;
+      arr = this.toArray();
+      if (typeof fill === 'function') {
+         f = fill;
+      } else {
+         f = fill ? function(i) { return arr[(i - 1) % this.length]; }
+                  : function(i) { return 0; }
+      }
+      for (i = this.length + 1; i <= length; i += 1) { arr.push(f.call(this, i)); }
+      return new Vector(arr);
+   }
+
    /** Permute the vector entries according to `perm` */
    Vector.prototype.permute = function permute(perm) {
       var invPerm;

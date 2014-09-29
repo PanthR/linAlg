@@ -5,7 +5,7 @@ var delta = 1e-5;
 describe('Other methods', function() {
    var v1 = new Vector([4, -2, 1]);
    var v2 = new Vector({ 6: -2, 2: 4, 5: 1 }, 10);
-   var v3 = new Vector(function(x) { return x*x; }, 4);   
+   var v3 = new Vector(function(x) { return x*x; }, 4);
    it('diff', function() {
       expect(v1.diff().toArray()).to.deep.equal([-6, 3]);
       expect(v2.diff().toArray())
@@ -52,5 +52,39 @@ describe('Other methods', function() {
       expect(v1.any(function(x) { return x < -2; })).to.be.false;
       expect(v1.all(function(x) { return x < 2; })).to.be.true;
       expect(v1.all(function(x) { return x < 1; })).to.be.false;
+   });
+   describe('resize', function() {
+      var v1 = new Vector([4.1, -2.2, 1]);
+      var v2 = new Vector({ 6: -2, 2: 4, 5: 1 }, 10);
+      var v3 = new Vector(function(x) { return x*x; }, 4);
+      function f(i) { return 2.2 + i; }
+      it('recycling values', function() {
+         expect(Vector).to.respondTo('resize');
+         expect(v1.resize(7, true).toArray()).to.deep.equal([4.1, -2.2, 1, 4.1, -2.2, 1, 4.1]);
+         expect(v3.resize(7, true).toArray()).to.deep.equal([1, 4, 9, 16, 1, 4, 9]);
+      });
+      it('extending with 0', function() {
+         expect(v1.resize(7, false).toArray()).to.deep.equal([4.1, -2.2, 1, 0, 0, 0, 0]);
+         expect(v3.resize(7).toArray()).to.deep.equal([1, 4, 9, 16, 0, 0, 0]);
+      });
+      it('using a function', function() {
+         expect(v1.resize(6, f).toArray()).to.deep.equal([4.1, -2.2, 1, 6.2, 7.2, 8.2]);
+         expect(v3.resize(6, f).toArray()).to.deep.equal([1, 4, 9, 16, 7.2, 8.2]);
+      });
+      it('preserves sparse', function() {
+         expect(v2.resize(14, true)).to.be.instanceof(Vector.SparseV);
+         expect(v2.resize(14, true)
+            .equals(new Vector({ 6: -2, 2: 4, 5: 1, 12: 4 }, 14))).to.be.true;
+         expect(v2.resize(14)
+            .equals(new Vector({ 6: -2, 2: 4, 5: 1 }, 14))).to.be.true;
+         expect(v2.resize(14, false)).to.be.instanceof(Vector.SparseV);
+         expect(v2.resize(14, false)
+            .equals(new Vector({ 6: -2, 2: 4, 5: 1 }, 14))).to.be.true;
+         expect(v2.resize(12, function(x) { return x + 1; })).to.be.instanceof(Vector.SparseV);
+         expect(v2.resize(12, function(x) { return x + 1; })
+            .equals(new Vector({ 6: -2, 2: 4, 5: 1, 11: 12, 12: 13 }, 12))).to.be.true;
+         expect(v2.resize(5, function(x) { return x + 1; })
+            .equals(new Vector({ 2: 4, 5: 1 }, 5))).to.be.true;
+      });
    });
 });
