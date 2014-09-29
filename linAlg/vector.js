@@ -244,7 +244,9 @@ define(function(require) {
          }
       }
       if (arguments.length === 1) {
-         changeAll(this, i);  // ind is the values
+         changeAll(this, i);  // i is the values
+      } else if (Array.isArray(i)) {
+         changeAll(this.view(i), vals);
       } else {
          this._set(i, vals);
       }

@@ -58,6 +58,18 @@ describe('Vectors', function() {
          v1.view([5, 2]).mutable(true).set(1, 4);
       }).to.throw(Error);
    });
+   it('can set multiple values at once', function() {
+      expect(function() { v1.mutable(true).set([1, 2], [2.3, -1.2]) }).to.not.throw(Error);
+      expect(v1.get(1)).to.equal(2.3);
+      expect(v1.get(2)).to.equal(-1.2);
+      expect(function() { v1.set([1, 2], 3.1) }).to.not.throw(Error);
+      expect(v1.get(1)).to.equal(3.1);
+      expect(v1.get(2)).to.equal(3.1);
+      expect(function() { v1.set([1, 2], function(x) { return x * x; }) }).to.not.throw(Error);
+      expect(v1.get(1)).to.equal(1);
+      expect(v1.get(2)).to.equal(4);
+      expect(function() { v1.set([1, 5], 3.1) }).to.throw(Error);
+   });
    it('can be set back to being immutable', function() {
       var value = v1.get(1);
       expect(function() { v1.mutable(false); }).to.not.throw(Error);
