@@ -112,3 +112,22 @@ describe('concat', function() {
       expect(c - 1).to.equal(res1.length);
    });
 });
+describe('rep', function() {
+    var A = [2, 3.1, 4, 1];
+    var B = [1, 2, 3, 4];
+    var scalar = new Vector(B);
+    it('repeats the vector', function() {
+        expect(Vector).to.respondTo('rep');
+        expect(scalar.rep(A).toArray()).to.deep.equal([1,1,2,2,2,3,3,3,3,4]);
+        expect(scalar.rep(new Vector(A)).toArray()).to.deep.equal([1,1,2,2,2,3,3,3,3,4]);
+        expect(scalar.rep(2.3).toArray()).to.deep.equal([1,2,3,4,1,2,3,4]);
+        expect(scalar.rep({ length : 2 }).toArray()).to.deep.equal([1,2]);
+        expect(scalar.rep({ length : 2.3 }).toArray()).to.deep.equal([1,2]);
+        expect(scalar.rep({ length : 6.2 }).toArray()).to.deep.equal([1,2,3,4,1,2]);
+        expect(scalar.rep({ each : 2 }).toArray()).to.deep.equal([1,1,2,2,3,3,4,4]);
+        expect(scalar.rep(1).toArray()).to.deep.equal(B);
+        expect(scalar.rep({ each: 1 }).toArray()).to.deep.equal(B);
+        expect(scalar.rep({ length: B.length }).toArray()).to.deep.equal(B);
+        expect(scalar.rep([1,0,1,1]).toArray()).to.deep.equal([1,3,4]);
+    });
+});

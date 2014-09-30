@@ -344,6 +344,40 @@ define(function(require) {
    };
    /* eslint-enable */
 
+   /**
+    * Return a new vector with the values of `this` repeated according to `times`.
+    * - If `times` is a number, recycle that many times.
+    * - If `times` is a vector or array of the same length, use its values as frequencies
+    * for the corresponding entries.
+    * - If `times` is an object with a `length` property, cycle the values until that length
+    * is filled.
+    * - If `times` is an object with an `each` property, repeat each value that many times.
+    */
+   Vector.prototype.rep = function rep(times) {
+      var arr, values;
+      arr = [];
+      values = this.toArray();
+      if (times instanceof Vector) { times = times.toArray(); }
+      if (Array.isArray(times)) {
+         if (!this.sameLength(times)) {
+            throw new Error('Incorrect "times" length.');
+         }
+         times.forEach(function(nTimes, i) {
+            nTimes = Math.floor(nTimes);
+            while (nTimes > 0) { arr.push(values[i]); nTimes -= 1; }
+         });
+         return new Vector(arr);
+      }
+      if (times.length != null) { return this.resize(Math.floor(times.length), true); }
+      if (times.each != null) {
+         times.each = Math.floor(times.each);
+         return new Vector(function(i) {
+            return values[Math.floor((i - 1) / times.each)];
+         }, times.each * this.length);
+      }
+      return this.resize(Math.floor(times) * this.length, true);
+   };
+
    /** See `Vector.concat`. */
    Vector.prototype.concat = function(vectors) {
       vectors = Array.prototype.slice.call(arguments);
