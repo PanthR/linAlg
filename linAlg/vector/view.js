@@ -37,7 +37,7 @@ return function(Vector) {
    ViewV.prototype = Object.create(Vector.prototype);
 
    ViewV.prototype._get = function _get(i) {
-      if ( i < 1 || i > this.length) { return null; }
+      if (i < 1 || i > this.length) { return null; }
       return this.compute(i);
    };
 
