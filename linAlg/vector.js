@@ -659,7 +659,26 @@ define(function(require) {
 
    // Other Vector prototype methods
 
-   /**
+   /** order takes a parameter `desc` which defaults to `false`.  If
+    * `desc` is `true` then the order is given in descending order.
+    *  Example:  If `this` has values [3, 1, 8, 10, 2] then
+    *  order(false) returns [2, 5, 1, 3, 4].  `desc` can also be a
+    *  comparator function.
+    */
+   Vector.prototype.order = function order(desc) {
+      var f;
+      // make sure desc is a function
+      if (typeof desc !== 'function') {
+         desc = desc === true ? function(a, b) {
+            return a > b ? -1 : a === b ? 0 : 1;
+         } : function(a, b) {
+            return a < b ? -1 : a === b ? 0 : 1;
+         };
+      }
+      f = function(i, j) { return desc(this.get(i), this.get(j)); }.bind(this);
+      return new Vector(Vector.seq(this.length).toArray().sort(f));
+   };
+
     * Compute the successive differences of the values in the vector, "`this[i+1] - this[i]`."
     *
     *     v1.diff(); // Produces: [5 - 3, 1 - 5, 2 - 1]
