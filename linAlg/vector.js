@@ -686,6 +686,12 @@ define(function(require) {
    };
 
    /**
+    */
+   Vector.prototype.sort = function sort(desc) {
+      return this.view(this.order(desc).toArray());
+   };
+
+   /**
     * Compute the successive differences of the values in the vector, "`this[i+1] - this[i]`."
     *
     *     v1.diff(); // Produces: [5 - 3, 1 - 5, 2 - 1]
