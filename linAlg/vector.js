@@ -664,14 +664,20 @@ define(function(require) {
     *  Example:  If `this` has values [3, 1, 8, 10, 2] then
     *  order(false) returns [2, 5, 1, 3, 4].  `desc` can also be a
     *  comparator function.
+    *  The default ordering functions only work for numeric vectors.
+    *  Provide custom function otherwise.
     */
    Vector.prototype.order = function order(desc) {
       var f;
       // make sure desc is a function
       if (typeof desc !== 'function') {
          desc = desc === true ? function(a, b) {
+            if (isNaN(b)) { return -1; }
+            if (isNaN(a)) { return 1; }
             return a > b ? -1 : a === b ? 0 : 1;
          } : function(a, b) {
+            if (isNaN(b)) { return -1; }
+            if (isNaN(a)) { return 1; }
             return a < b ? -1 : a === b ? 0 : 1;
          };
       }
@@ -679,6 +685,7 @@ define(function(require) {
       return new Vector(Vector.seq(this.length).toArray().sort(f));
    };
 
+   /**
     * Compute the successive differences of the values in the vector, "`this[i+1] - this[i]`."
     *
     *     v1.diff(); // Produces: [5 - 3, 1 - 5, 2 - 1]

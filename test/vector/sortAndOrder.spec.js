@@ -20,6 +20,9 @@ describe('order', function() {
    it('sends NaN values to the end', function() {
       var u = new Vector([2, NaN, 4.3, 1.5, 100, 1, -3]);
       expect(u.order().toArray()).to.deep.equal([7, 6, 4, 1, 3, 5, 2]);
-      expect(u.order(true).toArray()).to.deep.equal([2, 5, 3, 1, 4, 6, 7]);
+      expect(u.order(true).toArray()).to.deep.equal([5, 3, 1, 4, 6, 7, 2]);
+      u = new Vector([2, NaN, 4.3, 1.5, 100, 1, NaN, -3]);
+      expect(u.order().toArray()).to.deep.equal([8, 6, 4, 1, 3, 5, 2, 7]);
+      expect(u.order(true).toArray()).to.deep.equal([5, 3, 1, 4, 6, 8, 2, 7]);
    });
 });
