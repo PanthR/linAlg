@@ -26,6 +26,8 @@ describe('Vector#get', function() {
       expect(v2.get()).to.deep.equal(v2.toArray());
       expect(v3.get()).to.deep.equal(v3.toArray());
    });
-
+   it('with vector argument, turns it into an array first', function() {
+      expect(v1.get(new Vector([1,1,4,2]))).to.deep.equal([2,2,3,1]);
+   });
 
 });

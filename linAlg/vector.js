@@ -177,6 +177,7 @@ define(function(require) {
     */
    Vector.prototype.get = function get(i) {
       if (i == null) { return this.toArray(); }
+      if (i instanceof Vector) { i = i.get(); }
       if (!Array.isArray(i)) { return this._get(i); }
       // else, i is an array
       return this.view(i).toArray();
