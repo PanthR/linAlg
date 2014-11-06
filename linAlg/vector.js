@@ -402,7 +402,7 @@ define(function(require) {
                   : function(i) { return 0; };
       }
       for (i = this.length + 1; i <= length; i += 1) { arr.push(f.call(this, i)); }
-      return new Vector(arr);
+      return new Vector(arr).mutable(this.mutable());
    };
 
    /** Permute the vector entries according to `perm` */
