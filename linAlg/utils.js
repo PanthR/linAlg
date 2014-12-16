@@ -1,14 +1,13 @@
 /**
  * Utility library for linAlg.
+ *
+ * A collection of utilities used by other linAlg modules.
  * @module utils
  * @author Haris Skiadas <skiadas@hanover.edu>, Barb Wahl <wahl@hanover.edu>
  */
 (function(define) {'use strict';
 define(function(require) {
 
-   /**
-    * A collection of utilities used by other linAlg modules.
-    */
    var utils = {};
 
    // TODO: Is this the best way?
