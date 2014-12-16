@@ -14,17 +14,11 @@
       <div>
         <h3>Module Index</h3>
       <ul>
-        
         <a href="LinAlg.html"><li><code>LinAlg</code></li></a>
-        
         <a href="Matrix.html"><li><code>Matrix</code></li></a>
-        
-        <a href="Permutation.html"><li><code>Permutation</code></li></a>
-        
-        <a href="utils.html"><li><code>utils</code></li></a>
-        
         <a href="Vector.html"><li><code>Vector</code></li></a>
-        
+        <a href="Permutation.html"><li><code>Permutation</code></li></a>
+        <a href="utils.html"><li><code>utils</code></li></a>
       </ul>
       </div>
       <div>
@@ -72,7 +66,28 @@
         <p>Author(s): <a class="author" href="mailto:skiadas@hanover.edu">Haris Skiadas</a>, <a class="author" href="mailto:wahl@hanover.edu">Barb Wahl</a><p>
         <p>Algebraic Permutations on finite sets.</p>
       </div>
-      
+      <div>
+        <h4 id="CholeskyS"><code>CholeskyS(A)</code></h4>
+        <p>Solves the system Ax = b for a symmetric positive definite A by computing
+a Cholesky decomposition. <code>A</code> is a square symmetric positive definite matrix.
+&quot;isSingular&quot; returning true would indicate the matrix is not positive definite.</p>
+      </div>
+      <div>
+        <h4 id="DiagS"><code>DiagS(diag)</code></h4>
+        <p>diag is meant to be the diagonal of a diagonal matrix D.
+Solves the system Dx = b.</p>
+      </div>
+      <div>
+        <h4 id="LowerS"><code>LowerS(A)</code></h4>
+        <p>Expects a <code>LowerTriM</code> matrix for <code>A</code> (or full square matrix and it will use its lower triangle).
+Solves by forward substitution.</p>
+      </div>
+      <div>
+        <h4 id="PLUS"><code>PLUS(A, strategy)</code></h4>
+        <p>Solves the system Ax = b by computing a PLU decomposition.
+<code>A</code> is a square matrix and <code>strategy</code> specifies the pivoting
+strategy for the PLU solver ('partial' or 'complete').</p>
+      </div>
       <div>
         <h4 id="Permutation"><code>Permutation(relation)</code></h4>
         <p>A class representing permutations on sets <code>{1, 2, ..., n}</code>. Permutations are
@@ -88,93 +103,55 @@ an array of arrays representing a product of cycles, or a &quot;function object&
 <p>It can also be called with another <a href="#Permutation"><code>Permutation</code></a> as first argument, in which case
 it returns that permutation.</p>
       </div>
-      
-      <div>
-        <h4 id="Permutation%25compose"><code>Permutation#compose(other)</code></h4>
-        <p>Return the composed permutation of <code>this</code> followed by <code>other</code>.
-<code>other</code> may be a <a href="#Permutation"><code>Permutation</code></a>, a cycle, array of cycles, or a &quot;function object&quot;.</p>
-      </div>
-      
-      <div>
-        <h4 id="Permutation%25inverse"><code>Permutation#inverse()</code></h4>
-        <p>Return the inverse permutation</p>
-      </div>
-      
-      <div>
-        <h4 id="Permutation%25toCycles"><code>Permutation#toCycles()</code></h4>
-        <p>Return an array representing the cycle representation of the permutation.</p>
-      </div>
-      
       <div>
         <h4 id="Permutation.cycleToObject"><code>Permutation.cycleToObject(cycles)</code></h4>
         <p>Return the function object represented by the cycle. Helper method.
 It also recognizes an array of cycles, or a &quot;function object&quot;.</p>
       </div>
-      
       <div>
         <h4 id="Solver"><code>Solver(A)</code></h4>
         <p>Top level class for solving linear systems</p>
       </div>
-      
       <div>
-        <h4 id="Solver%25solve"><code>Solver#solve(b)</code></h4>
-        <p>Expects b to be a Vector or Matrix (maybe array also?)</p>
+        <h4 id="UpperS"><code>UpperS(A)</code></h4>
+        <p>Expects a <code>UpperTriM</code> matrix for <code>A</code> (or full square matrix and it will use its Upper triangle).
+Solves by back substitution.</p>
       </div>
-      
+      <div>
+        <h4 id="DiagS%25_solve"><code>DiagS#_solve(b)</code></h4>
+        <p>Expects b to be a vector. Returns a vector</p>
+      </div>
+      <div>
+        <h4 id="LowerS%25_solve"><code>LowerS#_solve(b)</code></h4>
+        <p>Expects b to be a vector. Returns a vector</p>
+      </div>
+      <div>
+        <h4 id="Permutation%25compose"><code>Permutation#compose(other)</code></h4>
+        <p>Return the composed permutation of <code>this</code> followed by <code>other</code>.
+<code>other</code> may be a <a href="#Permutation"><code>Permutation</code></a>, a cycle, array of cycles, or a &quot;function object&quot;.</p>
+      </div>
+      <div>
+        <h4 id="Permutation%25inverse"><code>Permutation#inverse()</code></h4>
+        <p>Return the inverse permutation</p>
+      </div>
+      <div>
+        <h4 id="Permutation%25toCycles"><code>Permutation#toCycles()</code></h4>
+        <p>Return an array representing the cycle representation of the permutation.</p>
+      </div>
       <div>
         <h4 id="Solver%25isSingular"><code>Solver#isSingular()</code></h4>
         <p>Return whether the system that the solver solves is &quot;singular&quot;. Overridden in
 subclasses.
 When <code>isSingular</code> returns true, you should not call <code>solve</code>.</p>
       </div>
-      
       <div>
-        <h4 id="CholeskyS"><code>CholeskyS(A)</code></h4>
-        <p>Solves the system Ax = b for a symmetric positive definite A by computing
-a Cholesky decomposition. <code>A</code> is a square symmetric positive definite matrix.
-&quot;isSingular&quot; returning true would indicate the matrix is not positive definite.</p>
+        <h4 id="Solver%25solve"><code>Solver#solve(b)</code></h4>
+        <p>Expects b to be a Vector or Matrix (maybe array also?)</p>
       </div>
-      
-      <div>
-        <h4 id="DiagS"><code>DiagS(diag)</code></h4>
-        <p>diag is meant to be the diagonal of a diagonal matrix D.
-Solves the system Dx = b.</p>
-      </div>
-      
-      <div>
-        <h4 id="DiagS%25_solve"><code>DiagS#_solve(b)</code></h4>
-        <p>Expects b to be a vector. Returns a vector</p>
-      </div>
-      
-      <div>
-        <h4 id="LowerS"><code>LowerS(A)</code></h4>
-        <p>Expects a <code>LowerTriM</code> matrix for <code>A</code> (or full square matrix and it will use its lower triangle).
-Solves by forward substitution.</p>
-      </div>
-      
-      <div>
-        <h4 id="LowerS%25_solve"><code>LowerS#_solve(b)</code></h4>
-        <p>Expects b to be a vector. Returns a vector</p>
-      </div>
-      
-      <div>
-        <h4 id="PLUS"><code>PLUS(A, strategy)</code></h4>
-        <p>Solves the system Ax = b by computing a PLU decomposition.
-<code>A</code> is a square matrix and <code>strategy</code> specifies the pivoting
-strategy for the PLU solver ('partial' or 'complete').</p>
-      </div>
-      
-      <div>
-        <h4 id="UpperS"><code>UpperS(A)</code></h4>
-        <p>Expects a <code>UpperTriM</code> matrix for <code>A</code> (or full square matrix and it will use its Upper triangle).
-Solves by back substitution.</p>
-      </div>
-      
       <div>
         <h4 id="UpperS%25_solve"><code>UpperS#_solve(b)</code></h4>
         <p>Expects b to be a vector. Returns a vector</p>
       </div>
-      
     </div>
   </body>
 </html>

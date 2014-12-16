@@ -12,7 +12,7 @@ ul {
    list-style: none;
 }
 a {
-   
+
 }
 
 em {
@@ -125,6 +125,21 @@ h1 code, h2 code {
 #main p a code:hover {
    border-bottom: 1px dotted #780002;
 }
+#main ul {
+   list-style-type: square;
+}
+#main ul ul {
+   list-style-type: none;
+}
+#main ul ul li {
+   margin-left: -1em;
+}
+#main ul ul li::before {
+   content: "- ";
+   margin-left: -1em;
+   padding-right: 0.5em;
+}
+
 
 p {
    margin-bottom: 0.8em;

@@ -1,0 +1,1446 @@
+\documentclass{article}
+\usepackage{listings}
+\usepackage[vmargin=1in,hmargin=1in]{geometry}
+\title{PanthRBase Documentation}
+\author{PanthR Team}
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+  \section{LinAlg}
+    \subsection*{LinAlg}
+    \addcontentsline{toc}{subsection}{LinAlg}
+    Linear Algebra module offers a framework for Linear Algebra computations
+with a goal to making those operations reasonably efficient for large sizes.
+If you will only be using small matrices and/or vectors, but require a huge
+number of them, you might find this library unsuitable.
+
+
+    \subsection*{LinAlg.Matrix}
+    \addcontentsline{toc}{subsection}{LinAlg.Matrix}
+    Implementation of 2-dimensional matrices.
+
+
+    \subsection*{LinAlg.Vector}
+    \addcontentsline{toc}{subsection}{LinAlg.Vector}
+    Implementation of fixed-length vectors.
+
+
+  \section{Matrix}
+    \subsection*{StructuredM.LowerTriM}
+    \addcontentsline{toc}{subsection}{StructuredM.LowerTriM}
+    Subclass of \texttt{Matrix} representing diagonal matrices.
+Users should not need to access this subclass directly.
+
+
+    \subsection*{Matrix(arr, options)}
+    \addcontentsline{toc}{subsection}{Matrix(arr, options)}
+    The \texttt{Matrix} class is a representation of 2-dimensional algebraic matrices
+with real entries. Their values are internally represented as \texttt{Vector}s.
+One can access the matrix dimensions via the properties \texttt{nrow} and \texttt{ncol}.
+
+
+New \texttt{Matrix} objects are created via the \texttt{Matrix} constructor, which accepts
+a number of options for its first argument, \texttt{arr}:
+
+
+
+Examples:
+
+
+\begin{lstlisting}
+\texttt{// All these create:
+//        0 1 1
+//        2 0 1
+//
+new Matrix([0, 2, 1, 0, 1, 1], { nrow : 2 }); // by column default
+new Matrix([0, 1, 1, 2, 0, 1], { nrow : 2, byRow: true });
+new Matrix([[0, 1, 1], [2, 0, 1]], { byRow : true });
+new Matrix([[0, 2], [1, 0], [1, 1]]);
+// Sparse matrix:
+new Matrix({ 1: { 2: 1, 3: 1}, 2: { 1: 2, 3: 1 }}, { nrow : 2, ncol: 3 });
+
+// The following produces in rows: [[1, 2, 3], [2, 4, 6]]
+new Matrix(function(i, j) { return i * j; }, { nrow: 2, ncol: 3 });}\end{lstlisting}
+
+    \subsection*{Matrix.CDiagM}
+    \addcontentsline{toc}{subsection}{Matrix.CDiagM}
+    Subclass of \texttt{Matrix} representing matrices that are constant multiples of
+the identity. The constructor expects two arguments: \texttt{val} with the value to be
+used, and \texttt{nrow}, which is either a number indicating the number of rows or
+an object with an \texttt{nrow} property.
+
+
+CDiagM matrices are immutable.
+
+
+    \subsection*{Matrix.DenseM}
+    \addcontentsline{toc}{subsection}{Matrix.DenseM}
+    Subclass of \texttt{Matrix} representing \&quot;dense\&quot; matrices.
+Dense matrices are internally stored simply as Javascript Arrays.
+Users should not need to access this subclass directly.
+
+
+    \subsection*{Matrix.DiagM}
+    \addcontentsline{toc}{subsection}{Matrix.DiagM}
+    Subclass of \texttt{Matrix} representing diagonal matrices.
+Users should not need to access this subclass directly. Use \texttt{Matrix.diag} instead.
+
+
+One can only set values on the diagonal of a DiagM matrix.
+Trying to set outside the diagonal will result in error.
+In order to set values outside the diagonal, would need to
+\&quot;unstructure\&quot; the matrix.
+
+
+Using rowView/colView on diagonal matrices may be quite inefficient,
+as it does not recognize the sparse nature of those vectors.
+
+
+    \subsection*{Matrix.LowerTriM}
+    \addcontentsline{toc}{subsection}{Matrix.LowerTriM}
+    Subclass of \texttt{StructuredM} representing \&quot;Lower triangular\&quot; matrices.
+
+
+The constructor expects two arguments:
+
+
+\begin{itemize}
+
+\item The first argument,\texttt{values}, cam be:
+
+
+\end{itemize}
+
+    \subsection*{Matrix.OuterM}
+    \addcontentsline{toc}{subsection}{Matrix.OuterM}
+    Subclass of \texttt{Matrix} representing outer products of vectors (i.e., rank-1
+matrices).  Users should not need to access this subclass directly.
+
+
+    \subsection*{Matrix.PermM}
+    \addcontentsline{toc}{subsection}{Matrix.PermM}
+    Subclass of \texttt{Matrix} representing permutation matrices. The constructor expects two
+arguments, a \texttt{perm} object that determines a \texttt{Permutation}, and an \texttt{nrow} number/object
+specifying the matrix dimensions.
+
+
+Multiplying a non-permutation matrix m by a permutation matrix p
+returns an appropriate view (\texttt{Matrix.ViewM}) into m.  Multiplying two permutation
+matrices returns the matrix for the composed permutation (\texttt{Matrix.PermM}).
+
+
+    \subsection*{Matrix.ProdM}
+    \addcontentsline{toc}{subsection}{Matrix.ProdM}
+    Subclass of \texttt{Matrix} representing products of matrices.
+Users should not need to access this subclass directly.
+
+
+    \subsection*{Matrix.Solver}
+    \addcontentsline{toc}{subsection}{Matrix.Solver}
+    Class containing solvers for various linear systems. TODO: Add Solver module docs
+
+
+    \subsection*{Matrix.SparseM}
+    \addcontentsline{toc}{subsection}{Matrix.SparseM}
+    Subclass of \texttt{Matrix} representing \&quot;sparse\&quot; matrices.
+Sparse matrices are stored as objects, whose keys represent the indices
+that have non-zero values.
+Users should not need to access this subclass directly.
+
+
+    \subsection*{Matrix.StructuredM}
+    \addcontentsline{toc}{subsection}{Matrix.StructuredM}
+    Subclass of \texttt{Matrix} acting as a superclass for classes of matrices
+with extra structure. Users should not need to access this subclass
+directly.
+
+
+    \subsection*{Matrix.SumM}
+    \addcontentsline{toc}{subsection}{Matrix.SumM}
+    Subclass of \texttt{Matrix} representing sums (A + k * B) of matrices.
+Users should not need to access this subclass directly.
+
+
+    \subsection*{Matrix.SymmetricM}
+    \addcontentsline{toc}{subsection}{Matrix.SymmetricM}
+    Subclass of \texttt{StructuredM} representing symmetric matrices.
+
+
+A symmetric matrix behaves exactly like a \texttt{Matrix.LowerTriM} matrix reflected across the
+main diagonal.
+
+
+    \subsection*{Matrix.TabularM}
+    \addcontentsline{toc}{subsection}{Matrix.TabularM}
+    Subclass of \texttt{Matrix} representing matrices whose values are specified via
+a function \texttt{f(i)} of the index.
+The values of the matrix are computed lazily, only when they are accessed.
+Users should not need to access this subclass directly.
+
+
+    \subsection*{Matrix.UpperTriM}
+    \addcontentsline{toc}{subsection}{Matrix.UpperTriM}
+    Subclass of \texttt{StructuredM} representing \&quot;Upper triangular\&quot; matrices.
+
+
+See \texttt{Matrix.LowerTriM} for the constructor parameters. See \texttt{Matrix.prototype.upper} for
+obtaining the upper triangle of a given square matrix.
+
+
+    \subsection*{Matrix.Vector.colBind}
+    \addcontentsline{toc}{subsection}{Matrix.Vector.colBind}
+    See \texttt{Matrix.colBind}
+
+
+    \subsection*{Matrix.Vector.rowBind}
+    \addcontentsline{toc}{subsection}{Matrix.Vector.rowBind}
+    See \texttt{Matrix.rowBind}
+
+
+    \subsection*{Matrix.ViewM}
+    \addcontentsline{toc}{subsection}{Matrix.ViewM}
+    Subclass of \texttt{Matrix} representing submatrix views into another matrix. Changes
+to the view are reflected on the original matrix and vice-versa. Use
+\texttt{Matrix.prototype.view} to create these.
+
+
+See also: \texttt{Matrix.prototype.rowView}, \texttt{Matrix.prototype.colView},
+\texttt{Matrix.prototype.diagView}.
+
+
+    \subsection*{Matrix.ViewMV}
+    \addcontentsline{toc}{subsection}{Matrix.ViewMV}
+    Subclass of Vector that is used internally by \texttt{Matrix} for representing
+the rows/columns/diagonals of a matrix as vectors.
+
+
+For creating these, see: \texttt{Matrix.prototype.rowView}, \texttt{Matrix.prototype.colView},
+\texttt{Matrix.prototype.diagView}.
+
+
+    \subsection*{Matrix.Vector.prototype.colBind}
+    \addcontentsline{toc}{subsection}{Matrix.Vector.prototype.colBind}
+    See \texttt{Matrix.colBind}
+
+
+    \subsection*{Matrix.Vector.prototype.mult(other)}
+    \addcontentsline{toc}{subsection}{Matrix.Vector.prototype.mult(other)}
+    TODO: Find a way to add to Vector docs
+
+
+    \subsection*{Matrix.Vector.prototype.rowBind}
+    \addcontentsline{toc}{subsection}{Matrix.Vector.prototype.rowBind}
+    See \texttt{Matrix.rowBind}
+
+
+    \subsection*{Matrix.colBind(matrices)}
+    \addcontentsline{toc}{subsection}{Matrix.colBind(matrices)}
+    Bind the arguments column-wise into a matrix. The arguments may be a
+mixture of matrices and vectors, but their \texttt{nrow/length} must all be the same.
+
+
+    \subsection*{Matrix.commonConstr(A, B)}
+    \addcontentsline{toc}{subsection}{Matrix.commonConstr(A, B)}
+    Return a common constructor for \texttt{A} and \texttt{B}, from the lists provided by
+\texttt{Matrix.prototype.classes}.
+
+
+    \subsection*{Matrix.compatibleDims(A, B)}
+    \addcontentsline{toc}{subsection}{Matrix.compatibleDims(A, B)}
+    Return whether \texttt{A} and \texttt{B} have compatible dimensions for
+forming the product \texttt{A * B}.  If \texttt{A} and; \texttt{B} are not both matrices, then
+one of them is a matrix and the other is a vector.
+
+
+    \subsection*{Matrix.const(val, nrow)}
+    \addcontentsline{toc}{subsection}{Matrix.const(val, nrow)}
+    Return a constant multiple of the identity matrix. These matrices cannot become mutable.
+They should be treated as constants.
+The second argument, \texttt{nrow} can be the number of rows, or an object with an \texttt{nrow}
+argument. For instance to create an identity matrix with size same as the matrix \texttt{A}
+one would do:
+
+
+\begin{lstlisting}
+\texttt{Matrix.const(1, A);  // Identity matrix with dimension same as A.}\end{lstlisting}
+
+    \subsection*{Matrix.diag(diagonal, len)}
+    \addcontentsline{toc}{subsection}{Matrix.diag(diagonal, len)}
+    Return a square diagonal matrix with values given by \texttt{diagonal}. The argument
+\texttt{diagonal} may be an array, a \texttt{Vector}, or a function \texttt{f(i)}. In the latter case,
+a second argument \texttt{len} is required to provide the length of the resulting diagonal.
+\texttt{len} may also be an object with an \texttt{nrow} property.
+
+
+This method takes ownership of the \texttt{diagonal} vector and may
+change its values when it itself is changed. Clone the
+array/vector before passing it to avoid this.
+
+
+To obtain a diagonal of an arbitrary matrix, see \texttt{Matrix.prototype.diagView}.
+
+
+    \subsection*{Matrix.ensureSameDims(A, B)}
+    \addcontentsline{toc}{subsection}{Matrix.ensureSameDims(A, B)}
+    Throw error if \texttt{A}, \texttt{B} don't have same dimensions.
+
+
+    \subsection*{Matrix.perm(perm, nrow)}
+    \addcontentsline{toc}{subsection}{Matrix.perm(perm, nrow)}
+    Return a permutation matrix based on the permutation indicated by \texttt{perm}. \texttt{perm} can be
+a \texttt{Permutation} object, or anything that can be turned to one (see \texttt{Permutation}).
+
+
+    \subsection*{Matrix.rowBind(matrices)}
+    \addcontentsline{toc}{subsection}{Matrix.rowBind(matrices)}
+    Bind the arguments row-wise into a matrix. The arguments may be a
+mixture of matrices and vectors, but their \texttt{ncol/length} must all be the same.
+
+
+    \subsection*{Matrix.sameDims(A, B)}
+    \addcontentsline{toc}{subsection}{Matrix.sameDims(A, B)}
+    Return whether the matrix \texttt{A} has the same dimensions as the matrix \texttt{B}.
+
+
+    \subsection*{Matrix.prototype.\_get(i, j)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.\_get(i, j)}
+    Internally used by \texttt{Matrix.prototype.get}. May be used in place of
+\texttt{Matrix.prototype.get} if both arguments are always present.
+
+
+    \subsection*{Matrix.prototype.\_set(i, j, val)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.\_set(i, j, val)}
+    Internally used by \texttt{Matrix.prototype.set}. \emph{Internal method}. May be used
+instead of \texttt{Matrix.prototype.\_set} if all three arguments are always present.
+
+
+    \subsection*{Matrix.prototype.all(pred)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.all(pred)}
+    Return true, if the predicate \texttt{pred(val, i, j)} is true for all entries, false otherwise.
+
+
+    \subsection*{Matrix.prototype.any(pred)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.any(pred)}
+    Return true, if the predicate \texttt{pred(val, i, j)} is true for at least one entry,
+false otherwise.
+
+
+    \subsection*{Matrix.prototype.change(i, j, val)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.change(i, j, val)}
+    Internal method used by \texttt{Matrix.prototype.\_set} to change the value of the
+matrix at a particular location. \emph{Internal method}. This method bypasses
+various checks and should only be used with extreme care.
+
+
+    \subsection*{Matrix.prototype.classes}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.classes}
+    The array of constructors for this type and its supertypes, in order from
+most specific to most general.
+
+
+    \subsection*{Matrix.prototype.clone(faithful)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.clone(faithful)}
+    Create a clone of the matrix. The clone inherits the values that the matrix
+has at the time of cloning. If \texttt{faithful} is \texttt{true} (default), then the clone
+also inherits any structure (e.g. being diagonal) when possible.
+
+
+Unfaithful clones are useful if you want to set values of a structured matrix
+outside of the structure (e.g. setting off-diagonal elements on a diagonal matrix).
+In general, \texttt{Matrix.prototype.set} respects any imposed structure the matrix has
+on its creation.
+
+
+    \subsection*{Matrix.prototype.colBind(matrices)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.colBind(matrices)}
+    See \texttt{Matrix.colBind}
+
+
+    \subsection*{Matrix.prototype.colPermute(perm)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.colPermute(perm)}
+    Permute the columns of the matrix.
+
+
+    \subsection*{Matrix.prototype.colView(j)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.colView(j)}
+    Return a \texttt{Vector} view of the \texttt{j}-th column of the matrix.
+
+
+    \subsection*{Matrix.prototype.cols()}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.cols()}
+    Return an array of all matrix columns as colViews
+
+
+    \subsection*{Matrix.prototype.compute(i, j)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.compute(i, j)}
+    Computes the value at the (i, j) location. \emph{Internal method}. Use \texttt{Matrix.prototype.get}
+instead.
+
+
+    \subsection*{Matrix.prototype.constr()}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.constr()}
+    Return the constructor method to be used for creating new objects of
+this type.
+
+
+Each of these constructors will accept the parameter list \texttt{(f, obj)}
+where \texttt{f(i, j)} is a function for generating matrix values, and \texttt{obj}
+has properties \texttt{nrow} and \texttt{ncol}.
+
+
+    \subsection*{Matrix.prototype.diagView(offset)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.diagView(offset)}
+    Return a \texttt{Vector} view of the diagonal of the matrix specified by
+the given \texttt{offset} (defaults to 0). The main diagonal has offset 0, the diagonal
+above it has offset 1, while the one below the main diagonal has offset -1.
+Asking for a diagonal beyond the matrix bounds results in an error.
+
+
+\begin{lstlisting}
+\texttt{var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 });
+A1.diagView();    // [2, 5];
+A1.diagView(-1);  // [3];
+A1.diagView(1);   // [4, 7];
+A1.diagView(2);   // [6];
+A1.diagView(3);   // Error;}\end{lstlisting}
+
+    \subsection*{Matrix.prototype.each(f)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.each(f)}
+    Apply the given function to each entry in the matrix. The signature of the
+function is \texttt{f(val, i, j)}.
+
+
+\texttt{Each} respects the \&quot;structure\&quot; of the matrix. For instance
+on a \texttt{SparseM} matrix, it will only be called on the non-zero entries, on a
+\texttt{DiagM} matrix it will only be called on the diagonal entries, on a \texttt{SymmetricM}
+matrix it will be called on only roughly one half of the entries and so on.
+
+
+If you really need the function to be called on \emph{each} matrix entry, regardless of
+structure, then you should use \texttt{Matrix.prototype.clone} first to create an
+\&quot;unfaithful clone\&quot;.
+
+
+    \subsection*{Matrix.prototype.eachCol(f)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.eachCol(f)}
+    Apply the function \texttt{f} to each column in the matrix. The signature of \texttt{f} is
+\texttt{f(col, j)} where \texttt{col} is a \texttt{Vector} object representing the \texttt{j}-th col.
+
+
+    \subsection*{Matrix.prototype.eachPair(other, f)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.eachPair(other, f)}
+    Apply function \texttt{f(val1, val2, i, j)} to all pairwise entries of \texttt{this} and \texttt{other}.
+The matrices must have the same dimensions. No promises are made about the order of
+iteration.
+
+
+    \subsection*{Matrix.prototype.eachRow(f)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.eachRow(f)}
+    Apply the function \texttt{f} to each row in the matrix. The signature of \texttt{f} is
+\texttt{f(row, i)} where \texttt{row} is a \texttt{Vector} object representing the \texttt{i}-th row.
+
+
+    \subsection*{Matrix.prototype.equals(m2, tolerance)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.equals(m2, tolerance)}
+    Test if \texttt{this} pointwise equals \texttt{m2}, within a given pointwise \texttt{tolerance}
+(defaults to \texttt{Vector.tolerance}).
+
+
+    \subsection*{Matrix.prototype.forEach(f)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.forEach(f)}
+    Alias for \texttt{Matrix.prototype.each}
+
+
+    \subsection*{Matrix.prototype.force()}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.force()}
+    Force unresolved computations for the matrix.
+
+
+    \subsection*{Matrix.prototype.get(i, j)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.get(i, j)}
+    Return the value at location \texttt{(i, j)}. Returns \texttt{0} if accessing a location out
+of bounds.
+
+
+Called with 0 or 1 arguments, it is an alias for \texttt{Matrix.prototype.toArray}.
+
+
+    \subsection*{Matrix.prototype.getSolver()}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.getSolver()}
+    Internally used to obtain a solver for systems.
+
+
+    \subsection*{Matrix.prototype.inverse()}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.inverse()}
+    Return the inverse of \texttt{this}, if \texttt{this} is a square non-singular matrix.
+
+
+    \subsection*{Matrix.prototype.isA(constr)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.isA(constr)}
+    Return whether \texttt{constr} is in the list of class constructors produced by
+\texttt{Matrix.prototype.classes}.
+
+
+    \subsection*{Matrix.prototype.lower()}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.lower()}
+    Return a lower-triangular matrix created by the lower triangle of \texttt{this}.
+
+
+    \subsection*{Matrix.prototype.lvMult(vec)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.lvMult(vec)}
+    Multiply the matrix on the left with a vector \texttt{vec}. \texttt{vec.length} must equal \texttt{this.nrow}.
+Returns a vector of length \texttt{this.ncol}. This is an \emph{internal method} and bypasses certain tests.
+
+
+    \subsection*{Matrix.prototype.map(f)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.map(f)}
+    Apply the function \texttt{f(val, i, j)} to every entry of the matrix, and assemble the
+returned values into a new matrix. Just like \texttt{Matrix.prototype.each}, this method
+respects the structure of the input matrix, and will return a matrix with the
+same structure, only applying \texttt{f} on the values pertinent to the structure.
+
+
+If you really need the function to be called on \emph{each} matrix entry, regardless of
+structure, then you should use \texttt{Matrix.prototype.clone} first to create an
+\&quot;unfaithful clone\&quot;.
+
+
+\begin{lstlisting}
+\texttt{// Create a matrix containing the absolute values of the values in A.
+A.map(Math.abs);}\end{lstlisting}
+
+    \subsection*{Matrix.prototype.mapCol(f)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.mapCol(f)}
+    Similar to \texttt{Matrix.prototype.mapRow}, but operating on the columns of the matrix
+instead.
+
+
+    \subsection*{Matrix.prototype.mapPair(other, f)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.mapPair(other, f)}
+    Create a new matrix by applying the function \texttt{f(val1, val2, i, j)} to all pairwise entries
+of \texttt{this} and \texttt{other}. No matrix structure is preserved.
+The matrices must have the same dimensions.
+
+
+    \subsection*{Matrix.prototype.mapRow(f)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.mapRow(f)}
+    Apply the function \texttt{f(row, i)} to each row in the matrix, and assemble the resulting
+values.
+
+
+If the return values of \texttt{f} are numbers, they are assembled into a \texttt{Vector}. If they
+are arrays or \texttt{Vector}s, then they must be of the same length, and they are assembled
+into a matrix with \texttt{nrow} equal to the original matrix's \texttt{nrow}, and \texttt{ncol} equal to
+the value's length.
+
+
+\begin{lstlisting}
+\texttt{// Create an n x 3 array of the index, 1-norm and 2-norm of each row.
+A.mapRow(function(row, i) { return [i, row.norm(1), row.norm(2) ]; });}\end{lstlisting}
+
+    \subsection*{Matrix.prototype.mult(other)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.mult(other)}
+    Return the matrix product \texttt{this * other}, where \texttt{this} and \texttt{other} have
+compatible dimensions.
+
+
+    \subsection*{Matrix.prototype.mutable(newSetting)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.mutable(newSetting)}
+    With no arguments, returns the mutable state of the matrix.
+
+
+With a boolean argument, sets the mutable state of the matrix and returns
+the matrix.
+
+
+    \subsection*{Matrix.prototype.pAdd(other, k)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.pAdd(other, k)}
+    Return \texttt{this + k * other}, where \texttt{this} and \texttt{other} are matrices of the
+same dimensions, and \texttt{k} is a scalar.
+
+
+    \subsection*{Matrix.prototype.reduce(f, initial)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.reduce(f, initial)}
+    Return the accumulated value of the calls of \texttt{f(acc, val, i, j)} over the entries
+of the matrix, with \texttt{acc} starting with value \texttt{initial}.
+
+
+\texttt{Matrix.prototype.reduce} is similar to \texttt{Matrix.prototype.each} in how it deals
+with structured matrices.
+
+
+Compare with \texttt{Vector.prototype.reduce}.
+
+
+\begin{lstlisting}
+\texttt{var A = new Matrix(Math.random, { nrow: 3, ncol: 2 });
+// Counts the number of entries in A which exceed 0.5
+A.reduce(function(acc, val, i, j) {
+  return acc + (val > 0.5 ? 1 : 0);
+}, 0);}\end{lstlisting}
+
+    \subsection*{Matrix.prototype.reduceCol(f, initial)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.reduceCol(f, initial)}
+    Return the accumulated value of the calls of \texttt{f(acc, col, i, j)} over the columns
+of the matrix, with \texttt{acc} starting with value \texttt{initial}.
+
+
+    \subsection*{Matrix.prototype.reducePair(other, f, initial)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.reducePair(other, f, initial)}
+    Reduce on the pair of matrices \texttt{this} and \texttt{other} using the function
+\texttt{f(acc, val1, val2, i, j)}, with an \texttt{initial} value.
+The matrices must have the same dimensions. No promises are made about the order of
+iteration.
+
+
+    \subsection*{Matrix.prototype.reduceRow(f, initial)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.reduceRow(f, initial)}
+    Return the accumulated value of the calls of \texttt{f(acc, row, i, j)} over the rows
+of the matrix, with \texttt{acc} starting with value \texttt{initial}.
+
+
+\begin{lstlisting}
+\texttt{// Add the rows in A with 2-norm >= 1
+A.reduce(function(acc, row, i, j) {
+  if (row.norm() >= 1) { return acc.pAdd(row); }
+  return acc;
+}, Vector.const(0, A.ncol));}\end{lstlisting}
+
+    \subsection*{Matrix.prototype.rowBind(matrices)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.rowBind(matrices)}
+    See \texttt{Matrix.rowBind}
+
+
+    \subsection*{Matrix.prototype.rowPermute(perm)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.rowPermute(perm)}
+    Permute the rows of the matrix.
+
+
+    \subsection*{Matrix.prototype.rowView(i)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.rowView(i)}
+    Return a \texttt{Vector} view of the \texttt{i}-th row of the matrix.
+
+
+    \subsection*{Matrix.prototype.rows()}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.rows()}
+    Return an array of all matrix rows as rowViews
+
+
+    \subsection*{Matrix.prototype.rvMult(vec)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.rvMult(vec)}
+    Multiply on the right with a vector \texttt{vec}. \texttt{vec.length} must equal \texttt{this.ncol}.
+Returns a vector of length \texttt{this.nrow}. This is an \emph{internal method} and bypasses certain tests.
+
+
+    \subsection*{Matrix.prototype.sMult(k)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.sMult(k)}
+    Return \texttt{k * this}, where \texttt{k} is a scalar (required numerical argument).
+
+
+    \subsection*{Matrix.prototype.set(i, j, val)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.set(i, j, val)}
+    Set the value of the matrix at the \texttt{(i, j)} location to \texttt{val}. Requires that
+the matrix be set to be mutable.
+
+
+If called with only one argument, then that argument may be a function \texttt{f(i, j)}, or
+a single value, or a \texttt{Matrix} with the same dimensions. That argument will then be used
+to set all the values of the Matrix.
+
+
+\begin{lstlisting}
+\texttt{var A1 = new Matrix([1, 2, 3, 4, 5, 6], { nrow: 2, byRow: true });
+A1.set(1, 1, 42);    // Throws an exception
+A1.mutable(true);    // Set matrix to mutable
+A1.set(2, 2, 42);    // Changes 5 to 42
+A1.set(Math.random); // Fills A1 with random values
+A1.set(5);           // Sets all entries to 5
+var A2 = new Matrix([1, 2, 3, 4, 5, 6], { nrow: 2, byRow: true });
+A1.set(A2);          // Sets all values of A1 based on those from A2
+A1.set(1, 1, 42);    // Only changes A1, not A2}\end{lstlisting}
+Trying to set at an out-of-bounds location results in an exception. If the matrix is
+\&quot;structured\&quot;, trying to set at a location outside the structure (e.g. an off-diagonal
+entry of a diagonal matrix) also results in an exception.
+
+
+: In order to avoid unnecessary computations, many matrix operations avoid
+computing their values until those values are called for. If you have used a matrix or
+vector in the construction of other matrices/vectors, then you should avoid changing
+that matrice's values, as the effects of those changes on the dependent objects are
+unpredictable. In general, you should treat a matrix that has been used in the creation
+of other matrices as an immutable object, unless \texttt{Matrix.prototype.force} has been called
+on those other matrices.
+
+
+    \subsection*{Matrix.prototype.solve(b)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.solve(b)}
+    Return the solution to \texttt{Ax = b}, where \texttt{A} is \texttt{this} and  \texttt{b} is a \texttt{Matrix} or \texttt{Vector}.
+Only works for square non-singular matrices \texttt{A} at the moment.
+
+
+    \subsection*{Matrix.prototype.toArray(byRow)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.toArray(byRow)}
+    Return an array of arrays representing the matrix. This representation is
+as an array of columns (or an array of rows if \texttt{byRow} is \texttt{true}).
+
+
+\begin{lstlisting}
+\texttt{var A = new Matrix([1, 2, 3, 4, 5, 6], { byRow: true, nrow: 3 });
+A.toArray(true);  // [[1, 2], [3, 4], [5, 6]]
+A.toArray(false); // [[1, 3, 5], [2, 4, 6]]}\end{lstlisting}
+
+    \subsection*{Matrix.prototype.toVector(byRow)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.toVector(byRow)}
+    Return a flat vector of the matrix values by concatenating its
+columns (or its rows if \texttt{byRow} is true). This is not a view into
+the matrix, and cannot be used to change the matrix values.
+
+
+    \subsection*{Matrix.prototype.transpose()}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.transpose()}
+    Return the transpose of the matrix, preserving any appropriate structure.
+
+
+    \subsection*{Matrix.prototype.upper()}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.upper()}
+    Return a upper-triangular matrix created by the upper triangle of \texttt{this}.
+
+
+    \subsection*{Matrix.prototype.validIndices(i, j)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.validIndices(i, j)}
+    Return whether the (i, j) pair is within the matrix's bounds. Matrices with extra
+extra structure do further checks via \texttt{Matrix.prototype.validate}.
+
+
+    \subsection*{Matrix.prototype.validate(i, j, val)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.validate(i, j, val)}
+    Overriden by subclasses that need special index/value validation.
+
+
+This method will be called from \texttt{Matrix.prototype.\_get} with two arguments \texttt{(i, j)}.
+It should return whether the pair \texttt{(i, j)} is valid for that array's structure, without
+worrying about being out of bounds (which is checked separately).
+
+
+This method is also called from \texttt{Matrix.prototype.\_set} with three arguments
+\texttt{(i, j, val)}, where \texttt{val} is the value that is to be set in those coordinates.
+It should either return \texttt{false} or throw an error if the assignment should not
+happen, and return true if it should be allowed to happen.
+
+
+    \subsection*{Matrix.prototype.view(rowIndex, colIndex, dims)}
+    \addcontentsline{toc}{subsection}{Matrix.prototype.view(rowIndex, colIndex, dims)}
+    Return a view into a submatrix of \texttt{this}.
+
+
+The parameters \texttt{rowIndex}, \texttt{colIndex}
+may be either arrays or functions \texttt{f(i)} used to obtain the indices.
+In the latter case, a third argument \texttt{dims} is required.
+
+
+\texttt{dims} is an object with properties \texttt{nrow} or \texttt{ncol} as needed, specifying the
+dimensions of the resulting matrix.
+
+
+\begin{lstlisting}
+\texttt{// A 2x3 matrix
+var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 });
+// Both return a view into the 2nd \& 3rd columns as a 2x2 matrix
+var A2 = A1.view([1, 2], [2, 3]);
+var A2 = A1.view([1, 2], function(j) { return 1 + j; }, { ncol: 2 });}\end{lstlisting}
+The View matrix (vector) is linked to the original matrix.
+The mutable state of the view is that of the original
+matrix. Changing the values in the view also changes the values in the matrix,
+and vice versa. Use \texttt{Matrix.prototype.clone} on the view matrix to break the link.
+
+
+  \section{Vector}
+    \subsection*{Vector.ConstV}
+    \addcontentsline{toc}{subsection}{Vector.ConstV}
+    Subclass of \texttt{Vector} efficiently representing vectors all of whose
+values are meant to be the same number.
+Users should not need to access this subclass directly.
+Use \texttt{Vector.const} or \texttt{Vector.ones} instead.
+
+
+    \subsection*{Vector.DenseV}
+    \addcontentsline{toc}{subsection}{Vector.DenseV}
+    Subclass of \texttt{Vector} representing \&quot;dense\&quot; vectors.
+Dense vectors are internally stored simply as Javascript Arrays.
+Users should not need to access this subclass directly.
+
+
+    \subsection*{Vector.SparseV}
+    \addcontentsline{toc}{subsection}{Vector.SparseV}
+    Subclass of \texttt{Vector} representing \&quot;sparse\&quot; vectors.
+Sparse vectors are stored as objects, whose keys represent the indices
+that have non-zero values.
+Users should not need to access this subclass directly.
+
+
+    \subsection*{Vector.TabularV}
+    \addcontentsline{toc}{subsection}{Vector.TabularV}
+    Subclass of \texttt{Vector} representing vectors whose values are specified via
+a function \texttt{f(i)} of the index.
+The values of the vector are computed lazily, only when they are accessed.
+Users should not need to access this subclass directly.
+
+
+    \subsection*{Vector.ViewV}
+    \addcontentsline{toc}{subsection}{Vector.ViewV}
+    Subclass of \texttt{Vector} representing vectors that provide a \&quot;view\&quot; into
+another object, e.g. a row or column of a \texttt{Matrix}. Changes to a view
+vector cause changes to the corresponding \&quot;viewed\&quot; object and vice versa.
+Users should not need to access this subclass directly.
+Use \texttt{Vector.prototype.view} instead.
+
+
+    \subsection*{Matrix.Vector.prototype.outer(v2, f)}
+    \addcontentsline{toc}{subsection}{Matrix.Vector.prototype.outer(v2, f)}
+    Return the outer product matrix of two vectors. If a function
+\texttt{f(val1, val2, i, j)} is provided as the second argument, it will be used.
+If no second argument is provided, the usual multiplication of numbers is
+used resulting in the standard outer product.
+
+
+TODO: Include helpful examples.
+
+
+TODO: Find a way to add this the Vector docs
+
+
+    \subsection*{Vector(arr, len)}
+    \addcontentsline{toc}{subsection}{Vector(arr, len)}
+    \texttt{Vector} objects are Javascript representations of real-valued vectors.
+They are constructed in one of three ways depending on the type of the first parameter \texttt{arr}:
+
+
+
+When \texttt{arr} is a \texttt{Vector}, it is simply returned unchanged.
+
+
+\texttt{Vector} objects are 1-indexed. By default, they are immutable structures, they cannot be edited
+once created. See \texttt{Vector.MutableV} for a description of mutable vectors.
+
+
+Every vector has a fixed \texttt{length}, accessed as a property.
+Vectors of length \texttt{0} are allowed, though there is not much one can do with them.
+
+
+\begin{lstlisting}
+\texttt{// A length-4 vector
+var v1 = new Vector([3, 5, 1, 2]);
+// A length-10 sparse vector
+var v2 = new Vector({ 4: 10, 2: 12 }, 10);
+// A length-3 vector with values exp(1), exp(2), exp(3)
+var v3 = new Vector(Math.exp, 3);
+v3.length === 3  // true
+// A length-5 vector with all values equal to 4
+var v4 = new Vector(4, 5);}\end{lstlisting}
+
+    \subsection*{Vector.concat(vectors)}
+    \addcontentsline{toc}{subsection}{Vector.concat(vectors)}
+    Returns the concatenation of its arguments. The arguments may be vectors, arrays
+or plain numbers.
+
+
+    \subsection*{Vector.const(val, len)}
+    \addcontentsline{toc}{subsection}{Vector.const(val, len)}
+    Generate a constant vector of length \texttt{len}, with all entries having value \texttt{val}.
+\emph{Constant vectors are immutable}. Use \texttt{Vector.fill} if you want to initialize a
+vector with some value(s).
+
+
+    \subsection*{Vector.ones(len)}
+    \addcontentsline{toc}{subsection}{Vector.ones(len)}
+    Generate a constant vector of length \texttt{len}, with all entries having value 1.
+\emph{Constant vectors are immutable}.
+
+
+\begin{lstlisting}
+\texttt{// Sums all elements of v1
+Vector.ones(v1.length).dot(v1)}\end{lstlisting}
+
+    \subsection*{Vector.seq(a, b, step)}
+    \addcontentsline{toc}{subsection}{Vector.seq(a, b, step)}
+    Create a vector that follows a linear progression starting from \texttt{a} increasing
+by \texttt{step} amount, and ending the moment \texttt{b} is exceeded.
+
+
+If \texttt{step} is omitted, it defaults to 1 or -1 depending on the relation between
+\texttt{a} and \texttt{b}. If \texttt{b} is also omitted, then the vector generated is \texttt{1,2,...,a}.
+
+
+\begin{lstlisting}
+\texttt{Vector.seq(1, 6, 2)  // Produces [1, 3, 5]
+Vector.seq(5, 1)     // Produces [5, 4, 3, 2, 1]
+Vector.seq(3)        // Produces [1, 2, 3]}\end{lstlisting}
+
+    \subsection*{Vector.tolerance}
+    \addcontentsline{toc}{subsection}{Vector.tolerance}
+    The tolerance used in equality tests. You may set a different value. Defaults to \texttt{1e-8}.
+
+
+    \subsection*{SparseV.prototype.resize(length, fill)}
+    \addcontentsline{toc}{subsection}{SparseV.prototype.resize(length, fill)}
+    Return a new resized version of \texttt{this} with a new \texttt{length}.\texttt{fill} may be:
+
+
+\begin{itemize}
+
+\item \texttt{true}: we then recycle the Vector's values to the new length.
+
+\item \texttt{false} or omitted: we then fill in with zeros.
+
+\item a function \texttt{f(i)}: It is then used to fill in the \emph{new} values.
+
+\end{itemize}
+
+    \subsection*{Vector.prototype.\_get(i)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.\_get(i)}
+    Same as \texttt{Vector.prototype.get}, but only works with an integer argument.
+
+
+    \subsection*{Vector.prototype.\_set(i, val)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.\_set(i, val)}
+    Set the entry at index \texttt{i} of the vector to \texttt{val}. Can only be used on a vector
+that is currently mutable.
+
+
+    \subsection*{Vector.prototype.all(pred)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.all(pred)}
+    Return true, if the predicate \texttt{pred(val, i)} is true for all entries, false otherwise.
+
+
+    \subsection*{Vector.prototype.any(pred)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.any(pred)}
+    Return true, if the predicate \texttt{pred(val, i)} is true for at least one entry, false otherwise.
+
+
+    \subsection*{Vector.prototype.change(i, val)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.change(i, val)}
+    Method meant to be used internally for setting the value at index \texttt{i} of the
+vector to \texttt{val}. Bypasses the checks made by \texttt{Vector.prototype.\_set}, including
+whether the vector has been set to be mutable. \emph{Avoid using this method unless
+you are really certain of what you are doing!}
+
+
+    \subsection*{Vector.prototype.clone()}
+    \addcontentsline{toc}{subsection}{Vector.prototype.clone()}
+    Return a clone of the vector.
+
+
+    \subsection*{Vector.prototype.compute(i)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.compute(i)}
+    Compute the entry at index \texttt{i} of the vector. This method is used internally
+by \texttt{Vector.prototype.get} and \texttt{Vector.prototype.\_get} to obtain the correct
+value in cases where the vector values are stored \emph{lazily}. Users should not
+call it directly. Use \texttt{Vector.prototype.get} or \texttt{Vector.prototype.\_get} instead.
+
+
+    \subsection*{Vector.prototype.concat(vectors)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.concat(vectors)}
+    See \texttt{Vector.concat}.
+
+
+    \subsection*{Vector.prototype.cumMax()}
+    \addcontentsline{toc}{subsection}{Vector.prototype.cumMax()}
+    Create a new vector from the partial maxima in the vector.
+
+
+\begin{lstlisting}
+\texttt{v1.cumMax(); // Produces [3, 5, 5, 5]}\end{lstlisting}
+
+    \subsection*{Vector.prototype.cumMin()}
+    \addcontentsline{toc}{subsection}{Vector.prototype.cumMin()}
+    Create a new vector from the partial minima in the vector.
+
+
+\begin{lstlisting}
+\texttt{v1.cumMin(); // Produces [3, 3, 1, 1]}\end{lstlisting}
+
+    \subsection*{Vector.prototype.cumProd()}
+    \addcontentsline{toc}{subsection}{Vector.prototype.cumProd()}
+    Create a new vector from the partial products in the vector.
+
+
+\begin{lstlisting}
+\texttt{v1.cumProd(); // [3, 15, 15, 30]}\end{lstlisting}
+
+    \subsection*{Vector.prototype.cumSum()}
+    \addcontentsline{toc}{subsection}{Vector.prototype.cumSum()}
+    Create a new vector from the partial sums in the vector.
+
+
+\begin{lstlisting}
+\texttt{v1.cumSum();  // [3, 8, 9, 11]}\end{lstlisting}
+
+    \subsection*{Vector.prototype.cumulative(f, initial)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.cumulative(f, initial)}
+    Create a new vector by accumulating one by one the results
+\texttt{f(acc, val, i)} as \texttt{val} ranges over the values of the vector,
+starting with the value \texttt{initial} (defaults to \texttt{0}). This is effectively a version of
+\texttt{Vector.prototype.reduce} where each intermediate step is stored.
+
+
+\begin{lstlisting}
+\texttt{var v1 = new Vector([3, 5, 1, 2]);
+function f(acc, val) { return acc + val * val; }
+v1.cumulative(f, 2);  // [11, 36, 37, 41]}\end{lstlisting}
+
+    \subsection*{Vector.prototype.diff()}
+    \addcontentsline{toc}{subsection}{Vector.prototype.diff()}
+    Compute the successive differences of the values in the vector, \&quot;\texttt{this[i+1] - this[i]}.\&quot;
+
+
+\begin{lstlisting}
+\texttt{v1.diff(); // Produces: [5 - 3, 1 - 5, 2 - 1]
+v1.diff().length === v1.length - 1 // true}\end{lstlisting}
+
+    \subsection*{Vector.prototype.dot(v)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.dot(v)}
+    Compute the dot product of \texttt{this} with \texttt{v}.
+
+
+\begin{lstlisting}
+\texttt{// Returns 3 * 3 + 5 * 5 + 1 * 1 + 2 * 2
+v1.dot(v1);}\end{lstlisting}
+
+    \subsection*{Vector.prototype.each(f, skipZeros)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.each(f, skipZeros)}
+    Execute the function \texttt{f} for each entry of the vector,
+starting with the entry with index 1. \texttt{f} will be called as \texttt{f(value, index)}.
+If \texttt{skipZeros} is \texttt{true}, then the system \emph{may} skip the execution
+of \texttt{f} for zero entries.
+
+
+\begin{lstlisting}
+\texttt{var v1 = new Vector([3, 5, 1, 2]);
+// Prints: 3 1, 5 2, 1 3, 2 4
+v1.each(console.log);}\end{lstlisting}
+
+    \subsection*{Vector.prototype.eachPair(v2, f, skipZeros)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.eachPair(v2, f, skipZeros)}
+    Execute the function \texttt{f} for each pair of corresponding entries from the
+vector and \texttt{v2}, starting with the entries with index 1.
+\texttt{f} will be called as \texttt{f(val1, val2, index)}, where \texttt{val1}, \texttt{val2}
+are the entries of the vectors \texttt{this}, \texttt{v2} at index \texttt{i}.
+If \texttt{skipZeros} is \texttt{true}, then the system \emph{may} skip the execution of \texttt{f} when
+one of the values is \texttt{0}.
+
+
+\begin{lstlisting}
+\texttt{// Prints 3 3 1, 5 5 2, 1 1 3, 2 2 4
+v1.eachPair(v1, console.log);}\end{lstlisting}
+
+    \subsection*{Vector.prototype.equals(v2, tolerance)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.equals(v2, tolerance)}
+    Test if \texttt{this} pointwise equals \texttt{v2}, within a given pointwise \texttt{tolerance}
+(defaults to \texttt{Vector.tolerance}).
+
+
+    \subsection*{Vector.prototype.fill(val, start, end)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.fill(val, start, end)}
+    Fill in the segment of the vector's values from \texttt{start} to \texttt{end} with \texttt{val}.
+If \texttt{start} is an array or vector, use its values as the indices to fill. Only usable
+on vectors that are currently mutable.
+
+
+    \subsection*{Vector.prototype.foldl}
+    \addcontentsline{toc}{subsection}{Vector.prototype.foldl}
+    Alias for \texttt{Vector.prototype.reduce}.
+
+
+    \subsection*{Vector.prototype.forEach(f, skipZeros)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.forEach(f, skipZeros)}
+    Alias for \texttt{Vector.prototype.each}.
+
+
+    \subsection*{Vector.prototype.force()}
+    \addcontentsline{toc}{subsection}{Vector.prototype.force()}
+    Force a vector to be evaluated. This resolves any deferred calculations
+needed for the computation of the vector's elements.
+
+
+Many vector methods, notably \texttt{Vector.prototype.map}, delay the required computations
+until the point where they need to be computed. \texttt{Vector.prototype.force} is one
+way to force that computation.
+
+
+    \subsection*{Vector.prototype.get(i)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.get(i)}
+    Generic accessor method to obtain the values in the vector. The argument \texttt{i} can take a
+number of different forms:
+
+
+
+Users should always go through this method, or \texttt{Vector.prototype.\_get}, when accessing
+values of the vector unless they really know what they're doing.
+You may use \texttt{Vector.prototype.\_get} for slightly more efficient access if you will always
+be accessing values via an integer.
+
+
+\begin{lstlisting}
+\texttt{v1.get() === [3, 5, 1, 2];
+v1.get([2, 3]) === [5, 1];
+v1.get(1) === 3;
+v1.get(2) === 5;
+// Out of range defaults to 0
+v1.get(0) === 0;
+v1.get(5) === 0;}\end{lstlisting}
+
+    \subsection*{Vector.prototype.isSparse()}
+    \addcontentsline{toc}{subsection}{Vector.prototype.isSparse()}
+    Return whether the vector is stored as a sparse vector.
+
+
+    \subsection*{Vector.prototype.map(f, skipZeros)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.map(f, skipZeros)}
+    Create a new vector by applying the function \texttt{f} to all elements of \texttt{this}.
+The function \texttt{f} has the signature \texttt{f(val, i)}.
+If \texttt{skipZeros} is \texttt{true}, the operation may assume that \texttt{f(0, i)=0} and
+may choose to skip those computations.
+
+
+\texttt{Vector\#map} only returns a \&quot;promise\&quot; to compute the resulting vector.
+The implementation may choose to not call \texttt{f} until its values
+are actually needed. Users should not rely on side-effects of \texttt{f}.
+
+
+\begin{lstlisting}
+\texttt{// Results in [3 + 1, 5 + 2, 1 + 3, 2 + 4];
+v1.map(function(val, i) { return val + i; });}\end{lstlisting}
+
+    \subsection*{Vector.prototype.mapPair(v2, f, skipZeros)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.mapPair(v2, f, skipZeros)}
+    Like \texttt{Vector.prototype.map}, but the function \texttt{f} acts on two vectors, with
+signature \texttt{f(val1, val2, i)}. If \texttt{skipZeros} is \texttt{true}, the implementation may
+assume that \texttt{f} will return \texttt{0} as long as one of the values is \texttt{0}.
+
+
+    \subsection*{Vector.prototype.mutable(isMutable)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.mutable(isMutable)}
+    Called with no arguments (or with undefined/null argument), return the mutable
+state of the vector.
+
+
+Called with a boolean argument \texttt{isMutable}, set the mutable state to that value
+and return the vector.
+
+
+    \subsection*{Vector.prototype.norm(p)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.norm(p)}
+    Compute the p-norm of the vector. \texttt{p} should be a positive real
+number or \texttt{Infinity}. Defaults to the 2-norm.
+
+
+\begin{lstlisting}
+\texttt{v.norm(1)        // 1-norm (sum of absolute values)
+v.norm()         // 2-norm (Euclidean formula)
+v.norm(Infinity) // Infinity (max) norm}\end{lstlisting}
+
+    \subsection*{Vector.prototype.order(desc)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.order(desc)}
+    order takes a parameter \texttt{desc} which defaults to \texttt{false}.  If
+\texttt{desc} is \texttt{true} then the order is given in descending order.
+ Example:  If \texttt{this} has values [3, 1, 8, 10, 2] then
+ order(false) returns [2, 5, 1, 3, 4].  \texttt{desc} can also be a
+ comparator function.
+ The default ordering functions only work for numeric vectors.
+ Provide custom function otherwise.
+
+
+    \subsection*{Vector.prototype.pAdd(v)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.pAdd(v)}
+    Pointwise add two vectors. Returns a new vector.
+
+
+\begin{lstlisting}
+\texttt{// Returns: [3 + 1, 5 + 1, 1 + 1, 2 + 1]
+v1.pAdd(Vector.ones(4));}\end{lstlisting}
+
+    \subsection*{Vector.prototype.pDiv(v)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.pDiv(v)}
+    Pointwise divide two vectors. Returns a new vector.
+
+
+    \subsection*{Vector.prototype.pMult(v)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.pMult(v)}
+    Pointwise multiply two vectors. Returns a new vector.
+
+
+    \subsection*{Vector.prototype.pPow(n)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.pPow(n)}
+    Raise each entry in \texttt{this} to the \texttt{n}-th power. Returns a new vector.
+
+
+    \subsection*{Vector.prototype.pSub(v)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.pSub(v)}
+    Pointwise subtract two vectors. Returns a new vector.
+
+
+    \subsection*{Vector.prototype.permute(perm)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.permute(perm)}
+    Permute the vector entries according to \texttt{perm}
+
+
+    \subsection*{Vector.prototype.reduce(f, initial, skipZeros)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.reduce(f, initial, skipZeros)}
+    Similar to \texttt{Array.prototype.reduce}. Given a function \texttt{f(acc, val, i)} and an
+\texttt{initial} value, it successively calls the function on the vector's entries,
+storing each result in the variable \texttt{acc}, then feeding that value back.
+If \texttt{skipZeros} is \texttt{true}, this operation \emph{may} skip any zero entries.
+\texttt{initial} and \texttt{acc} do not have to be numbers, but they do need to have the
+same type, and \texttt{f} should return that same type.
+
+
+\begin{lstlisting}
+\texttt{function add(acc, val) { return acc + val; };
+// Equivalent to ((((4 + 3) + 5) + 1) + 2)
+v1.reduce(add, 4);}\end{lstlisting}
+
+    \subsection*{Vector.prototype.reducePair(v2, f, initial, skipZeros)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.reducePair(v2, f, initial, skipZeros)}
+    Similar to \texttt{Vector.prototype.reduce} but acts on a pair of vectors \texttt{this}, \texttt{v2}.
+The signature of the function \texttt{f} would be \texttt{f(acc, val1, val2, i)} where \texttt{acc}
+is the accumulated value, \texttt{i} is the index, and \texttt{val1}, \texttt{val2} are the \texttt{i}-indexed
+values from \texttt{this}, \texttt{v2}. If \texttt{skipZeros} is \texttt{true}, the implementation \emph{may} avoid
+calling \texttt{f} for an index \texttt{i} if one of the values is \texttt{0}.
+
+
+The vectors \texttt{this}, \texttt{v2} need to have the same length.
+
+
+\begin{lstlisting}
+\texttt{function f(acc, val1, val2) = { return acc + val1 * val2; };
+// Computes the dot product of v1, v2.
+v1.reducePair(v2, f, 0)}\end{lstlisting}
+
+    \subsection*{Vector.prototype.rep(times)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.rep(times)}
+    Return a new vector with the values of \texttt{this} repeated according to \texttt{times}.
+
+
+\begin{itemize}
+
+\item If \texttt{times} is a number, recycle that many times.
+
+\item If \texttt{times} is a vector or array of the same length, use its values as frequencies
+for the corresponding entries.
+
+\item If \texttt{times} is an object with a \texttt{length} property, cycle the values until that length
+is filled.
+
+\item If \texttt{times} is an object with an \texttt{each} property, repeat each value that many times.
+
+\end{itemize}
+
+    \subsection*{Vector.prototype.resize(length, fill)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.resize(length, fill)}
+    Return a new resized version of \texttt{this} with a new \texttt{length}.\texttt{fill} may be:
+
+
+\begin{itemize}
+
+\item \texttt{true}: we then recycle the Vector's values to the new length.
+
+\item \texttt{false} or omitted: we then fill in with zeros.
+
+\item a function \texttt{f(i)}: It is then used to fill in the \emph{new} values.
+
+\end{itemize}
+
+    \subsection*{Vector.prototype.sMult(a)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.sMult(a)}
+    Multiply the vector \texttt{v} by the constant \texttt{a}. Returns a new vector.
+
+
+    \subsection*{Vector.prototype.sameLength(other)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.sameLength(other)}
+    Return whether the vector has the same length as the vector \texttt{other}.
+
+
+    \subsection*{Vector.prototype.set(i, vals)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.set(i, vals)}
+    Set the entries of the vector that are specified by the parameter \texttt{i} to the value(s)
+specified by the parameter \texttt{vals}. \emph{Can only be used on a vector that is set to
+be mutable}. The parameters can take two forms:
+
+
+
+In order to set more than one of a vector's values at the same time, create a
+\texttt{Vector.ViewV} and use \texttt{Vector.prototype.set} on that.
+
+
+You may use \texttt{Vector.prototype.\_set} if efficiency is an issue and you are certain that
+you are in the single-index case.
+
+
+    \subsection*{Vector.prototype.sort(desc)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.sort(desc)}
+    
+    \subsection*{Vector.prototype.toArray()}
+    \addcontentsline{toc}{subsection}{Vector.prototype.toArray()}
+    Return a Javascript array of the vector's values. Returns a new
+Array object every time.
+
+
+    \subsection*{Vector.prototype.view(arr, len)}
+    \addcontentsline{toc}{subsection}{Vector.prototype.view(arr, len)}
+    Return a view vector on the \texttt{arr} indices. View vectors reflect the values on their
+target, but allow one to access those locations via a different indexing.
+Changing the values of a view vector actually changes the values of their target.
+
+
+The indices to view may also be specified via a function \texttt{f(i)} as the first argument.
+In that case, a second argument is needed with the desired length for the resulting vector.
+
+
+\begin{lstlisting}
+\texttt{var v1 = new Vector([3, 5, 1, 2]);
+var view = v1.view([2, 3]);
+view.get(1) === 5;
+view.get(2) === 1;
+var view2 = v1.view(function(i) { return 5 - i; }, 3); // [2, 1, 5]}\end{lstlisting}
+
+  \section{Permutation}
+    \subsection*{CholeskyS(A)}
+    \addcontentsline{toc}{subsection}{CholeskyS(A)}
+    Solves the system Ax = b for a symmetric positive definite A by computing
+a Cholesky decomposition. \texttt{A} is a square symmetric positive definite matrix.
+\&quot;isSingular\&quot; returning true would indicate the matrix is not positive definite.
+
+
+    \subsection*{DiagS(diag)}
+    \addcontentsline{toc}{subsection}{DiagS(diag)}
+    diag is meant to be the diagonal of a diagonal matrix D.
+Solves the system Dx = b.
+
+
+    \subsection*{LowerS(A)}
+    \addcontentsline{toc}{subsection}{LowerS(A)}
+    Expects a \texttt{LowerTriM} matrix for \texttt{A} (or full square matrix and it will use its lower triangle).
+Solves by forward substitution.
+
+
+    \subsection*{PLUS(A, strategy)}
+    \addcontentsline{toc}{subsection}{PLUS(A, strategy)}
+    Solves the system Ax = b by computing a PLU decomposition.
+\texttt{A} is a square matrix and \texttt{strategy} specifies the pivoting
+strategy for the PLU solver ('partial' or 'complete').
+
+
+    \subsection*{Permutation(relation)}
+    \addcontentsline{toc}{subsection}{Permutation(relation)}
+    A class representing permutations on sets \texttt{{1, 2, ..., n}}. Permutations are
+represented via a \&quot;function object\&quot; whose key-value pairs are non-fixed points of
+the permutation. In other words, if \texttt{s(i) = j} and \texttt{j} is not equal to \texttt{i}, then
+the object contains a key \texttt{i} with value \texttt{j}. If a key \texttt{i} does not appear in the
+object then \texttt{s(i) = i}. For example the cycle \texttt{(2 4)} can be represented as the
+object \texttt{{ 2: 4, 4: 2 }}.
+
+
+The size \texttt{n} is only implicit; permutations can be thought of as functions on any
+set big enough to contain their non-fixed points.
+The first argument, \texttt{relation}, needs to be either an array representing a cycle,
+an array of arrays representing a product of cycles, or a \&quot;function object\&quot;.
+
+
+It can also be called with another \texttt{Permutation} as first argument, in which case
+it returns that permutation.
+
+
+    \subsection*{Permutation.cycleToObject(cycles)}
+    \addcontentsline{toc}{subsection}{Permutation.cycleToObject(cycles)}
+    Return the function object represented by the cycle. Helper method.
+It also recognizes an array of cycles, or a \&quot;function object\&quot;.
+
+
+    \subsection*{Solver(A)}
+    \addcontentsline{toc}{subsection}{Solver(A)}
+    Top level class for solving linear systems
+
+
+    \subsection*{UpperS(A)}
+    \addcontentsline{toc}{subsection}{UpperS(A)}
+    Expects a \texttt{UpperTriM} matrix for \texttt{A} (or full square matrix and it will use its Upper triangle).
+Solves by back substitution.
+
+
+    \subsection*{DiagS.prototype.\_solve(b)}
+    \addcontentsline{toc}{subsection}{DiagS.prototype.\_solve(b)}
+    Expects b to be a vector. Returns a vector
+
+
+    \subsection*{LowerS.prototype.\_solve(b)}
+    \addcontentsline{toc}{subsection}{LowerS.prototype.\_solve(b)}
+    Expects b to be a vector. Returns a vector
+
+
+    \subsection*{Permutation.prototype.compose(other)}
+    \addcontentsline{toc}{subsection}{Permutation.prototype.compose(other)}
+    Return the composed permutation of \texttt{this} followed by \texttt{other}.
+\texttt{other} may be a \texttt{Permutation}, a cycle, array of cycles, or a \&quot;function object\&quot;.
+
+
+    \subsection*{Permutation.prototype.inverse()}
+    \addcontentsline{toc}{subsection}{Permutation.prototype.inverse()}
+    Return the inverse permutation
+
+
+    \subsection*{Permutation.prototype.toCycles()}
+    \addcontentsline{toc}{subsection}{Permutation.prototype.toCycles()}
+    Return an array representing the cycle representation of the permutation.
+
+
+    \subsection*{Solver.prototype.isSingular()}
+    \addcontentsline{toc}{subsection}{Solver.prototype.isSingular()}
+    Return whether the system that the solver solves is \&quot;singular\&quot;. Overridden in
+subclasses.
+When \texttt{isSingular} returns true, you should not call \texttt{solve}.
+
+
+    \subsection*{Solver.prototype.solve(b)}
+    \addcontentsline{toc}{subsection}{Solver.prototype.solve(b)}
+    Expects b to be a Vector or Matrix (maybe array also?)
+
+
+    \subsection*{UpperS.prototype.\_solve(b)}
+    \addcontentsline{toc}{subsection}{UpperS.prototype.\_solve(b)}
+    Expects b to be a vector. Returns a vector
+
+
+  \section{utils}
+    \subsection*{utils.op}
+    \addcontentsline{toc}{subsection}{utils.op}
+    Arithmetic operators
+
+
+    \subsection*{utils.op.add(a, b)}
+    \addcontentsline{toc}{subsection}{utils.op.add(a, b)}
+    The function that adds two numbers. Also available as \texttt{utils.op['+']}.
+
+
+    \subsection*{utils.op.div(a, b)}
+    \addcontentsline{toc}{subsection}{utils.op.div(a, b)}
+    The function that divides two numbers. Also available as \texttt{utils.op['/']}.
+
+
+    \subsection*{utils.op.mult(a, b)}
+    \addcontentsline{toc}{subsection}{utils.op.mult(a, b)}
+    The function that multiplies two numbers. Also available as \texttt{utils.op['*']}.
+
+
+    \subsection*{utils.op.sub(a, b)}
+    \addcontentsline{toc}{subsection}{utils.op.sub(a, b)}
+    The function that subtracts two numbers. Also available as \texttt{utils.op['-']}.
+
+
+    \subsection*{utils.veryClose(a, b, tol)}
+    \addcontentsline{toc}{subsection}{utils.veryClose(a, b, tol)}
+    Return whether the numbers \texttt{a}, \texttt{b} are within \texttt{tol} of each other.
+
+
+\end{document}

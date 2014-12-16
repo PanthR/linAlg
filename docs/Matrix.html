@@ -14,17 +14,11 @@
       <div>
         <h3>Module Index</h3>
       <ul>
-        
         <a href="LinAlg.html"><li><code>LinAlg</code></li></a>
-        
         <a href="Matrix.html"><li><code>Matrix</code></li></a>
-        
-        <a href="Permutation.html"><li><code>Permutation</code></li></a>
-        
-        <a href="utils.html"><li><code>utils</code></li></a>
-        
         <a href="Vector.html"><li><code>Vector</code></li></a>
-        
+        <a href="Permutation.html"><li><code>Permutation</code></li></a>
+        <a href="utils.html"><li><code>utils</code></li></a>
       </ul>
       </div>
       <div>
@@ -139,6 +133,10 @@
         
         <a href="#Matrix%25get"><li><code>Matrix#get</code></li></a>
         
+        <a href="#Matrix%25getSolver"><li><code>Matrix#getSolver</code></li></a>
+        
+        <a href="#Matrix%25inverse"><li><code>Matrix#inverse</code></li></a>
+        
         <a href="#Matrix%25isA"><li><code>Matrix#isA</code></li></a>
         
         <a href="#Matrix%25lower"><li><code>Matrix#lower</code></li></a>
@@ -181,6 +179,8 @@
         
         <a href="#Matrix%25set"><li><code>Matrix#set</code></li></a>
         
+        <a href="#Matrix%25solve"><li><code>Matrix#solve</code></li></a>
+        
         <a href="#Matrix%25toArray"><li><code>Matrix#toArray</code></li></a>
         
         <a href="#Matrix%25toVector"><li><code>Matrix#toVector</code></li></a>
@@ -204,7 +204,11 @@
         <p>Author(s): <a class="author" href="mailto:skiadas@hanover.edu">Haris Skiadas</a>, <a class="author" href="mailto:wahl@hanover.edu">Barb Wahl</a><p>
         <p>Javascript implementation of Linear Algebra Matrices.</p>
       </div>
-      
+      <div>
+        <h4 id="StructuredM.LowerTriM"><code>StructuredM.LowerTriM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing diagonal matrices.
+Users should not need to access this subclass directly.</p>
+      </div>
       <div>
         <h4 id="Matrix"><code>Matrix(arr, options)</code></h4>
         <p>The <a href="#Matrix"><code>Matrix</code></a> class is a representation of 2-dimensional algebraic matrices
@@ -242,37 +246,31 @@ new Matrix({ 1: { 2: 1, 3: 1}, 2: { 1: 2, 3: 1 }}, { nrow : 2, ncol: 3 });
 // The following produces in rows: [[1, 2, 3], [2, 4, 6]]
 new Matrix(function(i, j) { return i * j; }, { nrow: 2, ncol: 3 });</code></pre>
       </div>
-      
+      <div>
+        <h4 id="Matrix.CDiagM"><code>Matrix.CDiagM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing matrices that are constant multiples of
+the identity. The constructor expects two arguments: <code>val</code> with the value to be
+used, and <code>nrow</code>, which is either a number indicating the number of rows or
+an object with an <code>nrow</code> property.</p>
+<p>CDiagM matrices are immutable.</p>
+      </div>
       <div>
         <h4 id="Matrix.DenseM"><code>Matrix.DenseM</code></h4>
         <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing &quot;dense&quot; matrices.
 Dense matrices are internally stored simply as Javascript Arrays.
 Users should not need to access this subclass directly.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix.SparseM"><code>Matrix.SparseM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing &quot;sparse&quot; matrices.
-Sparse matrices are stored as objects, whose keys represent the indices
-that have non-zero values.
-Users should not need to access this subclass directly.</p>
+        <h4 id="Matrix.DiagM"><code>Matrix.DiagM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing diagonal matrices.
+Users should not need to access this subclass directly. Use <a href="#Matrix.diag"><code>Matrix.diag</code></a> instead.</p>
+<p>One can only set values on the diagonal of a DiagM matrix.
+Trying to set outside the diagonal will result in error.
+In order to set values outside the diagonal, would need to
+&quot;unstructure&quot; the matrix.</p>
+<p>Using rowView/colView on diagonal matrices may be quite inefficient,
+as it does not recognize the sparse nature of those vectors.</p>
       </div>
-      
-      <div>
-        <h4 id="Matrix.TabularM"><code>Matrix.TabularM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing matrices whose values are specified via
-a function <code>f(i)</code> of the index.
-The values of the matrix are computed lazily, only when they are accessed.
-Users should not need to access this subclass directly.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix.StructuredM"><code>Matrix.StructuredM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> acting as a superclass for classes of matrices
-with extra structure. Users should not need to access this subclass
-directly.</p>
-      </div>
-      
       <div>
         <h4 id="Matrix.LowerTriM"><code>Matrix.LowerTriM</code></h4>
         <p>Subclass of <code>StructuredM</code> representing &quot;Lower triangular&quot; matrices.</p>
@@ -290,60 +288,11 @@ number or an object with an <code>nrow</code> property.</li>
 </li>
 </ul>
       </div>
-      
-      <div>
-        <h4 id="Matrix.UpperTriM"><code>Matrix.UpperTriM</code></h4>
-        <p>Subclass of <code>StructuredM</code> representing &quot;Upper triangular&quot; matrices.</p>
-<p>See <a href="#Matrix.LowerTriM"><code>Matrix.LowerTriM</code></a> for the constructor parameters. See <a href="#Matrix%25upper"><code>Matrix.prototype.upper</code></a> for
-obtaining the upper triangle of a given square matrix.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix.SymmetricM"><code>Matrix.SymmetricM</code></h4>
-        <p>Subclass of <code>StructuredM</code> representing symmetric matrices.</p>
-<p>A symmetric matrix behaves exactly like a <a href="#Matrix.LowerTriM"><code>Matrix.LowerTriM</code></a> matrix reflected across the
-main diagonal.</p>
-      </div>
-      
       <div>
         <h4 id="Matrix.OuterM"><code>Matrix.OuterM</code></h4>
         <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing outer products of vectors (i.e., rank-1
 matrices).  Users should not need to access this subclass directly.</p>
       </div>
-      
-      <div>
-        <h4 id="Matrix.SumM"><code>Matrix.SumM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing sums (A + k * B) of matrices.
-Users should not need to access this subclass directly.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix.ProdM"><code>Matrix.ProdM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing products of matrices.
-Users should not need to access this subclass directly.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix.DiagM"><code>Matrix.DiagM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing diagonal matrices.
-Users should not need to access this subclass directly. Use <a href="#Matrix.diag"><code>Matrix.diag</code></a> instead.</p>
-<p>One can only set values on the diagonal of a DiagM matrix.
-Trying to set outside the diagonal will result in error.
-In order to set values outside the diagonal, would need to
-&quot;unstructure&quot; the matrix.</p>
-<p>Using rowView/colView on diagonal matrices may be quite inefficient,
-as it does not recognize the sparse nature of those vectors.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix.CDiagM"><code>Matrix.CDiagM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing matrices that are constant multiples of
-the identity. The constructor expects two arguments: <code>val</code> with the value to be
-used, and <code>nrow</code>, which is either a number indicating the number of rows or
-an object with an <code>nrow</code> property.</p>
-<p>CDiagM matrices are immutable.</p>
-      </div>
-      
       <div>
         <h4 id="Matrix.PermM"><code>Matrix.PermM</code></h4>
         <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing permutation matrices. The constructor expects two
@@ -353,7 +302,60 @@ specifying the matrix dimensions.</p>
 returns an appropriate view (<a href="#Matrix.ViewM"><code>Matrix.ViewM</code></a>) into m.  Multiplying two permutation
 matrices returns the matrix for the composed permutation (<a href="#Matrix.PermM"><code>Matrix.PermM</code></a>).</p>
       </div>
-      
+      <div>
+        <h4 id="Matrix.ProdM"><code>Matrix.ProdM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing products of matrices.
+Users should not need to access this subclass directly.</p>
+      </div>
+      <div>
+        <h4 id="Matrix.Solver"><code>Matrix.Solver</code></h4>
+        <p>Class containing solvers for various linear systems. TODO: Add Solver module docs</p>
+      </div>
+      <div>
+        <h4 id="Matrix.SparseM"><code>Matrix.SparseM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing &quot;sparse&quot; matrices.
+Sparse matrices are stored as objects, whose keys represent the indices
+that have non-zero values.
+Users should not need to access this subclass directly.</p>
+      </div>
+      <div>
+        <h4 id="Matrix.StructuredM"><code>Matrix.StructuredM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> acting as a superclass for classes of matrices
+with extra structure. Users should not need to access this subclass
+directly.</p>
+      </div>
+      <div>
+        <h4 id="Matrix.SumM"><code>Matrix.SumM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing sums (A + k * B) of matrices.
+Users should not need to access this subclass directly.</p>
+      </div>
+      <div>
+        <h4 id="Matrix.SymmetricM"><code>Matrix.SymmetricM</code></h4>
+        <p>Subclass of <code>StructuredM</code> representing symmetric matrices.</p>
+<p>A symmetric matrix behaves exactly like a <a href="#Matrix.LowerTriM"><code>Matrix.LowerTriM</code></a> matrix reflected across the
+main diagonal.</p>
+      </div>
+      <div>
+        <h4 id="Matrix.TabularM"><code>Matrix.TabularM</code></h4>
+        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing matrices whose values are specified via
+a function <code>f(i)</code> of the index.
+The values of the matrix are computed lazily, only when they are accessed.
+Users should not need to access this subclass directly.</p>
+      </div>
+      <div>
+        <h4 id="Matrix.UpperTriM"><code>Matrix.UpperTriM</code></h4>
+        <p>Subclass of <code>StructuredM</code> representing &quot;Upper triangular&quot; matrices.</p>
+<p>See <a href="#Matrix.LowerTriM"><code>Matrix.LowerTriM</code></a> for the constructor parameters. See <a href="#Matrix%25upper"><code>Matrix.prototype.upper</code></a> for
+obtaining the upper triangle of a given square matrix.</p>
+      </div>
+      <div>
+        <h4 id="Matrix.Vector.colBind"><code>Matrix.Vector.colBind</code></h4>
+        <p>See <a href="#Matrix.colBind"><code>Matrix.colBind</code></a></p>
+      </div>
+      <div>
+        <h4 id="Matrix.Vector.rowBind"><code>Matrix.Vector.rowBind</code></h4>
+        <p>See <a href="#Matrix.rowBind"><code>Matrix.rowBind</code></a></p>
+      </div>
       <div>
         <h4 id="Matrix.ViewM"><code>Matrix.ViewM</code></h4>
         <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing submatrix views into another matrix. Changes
@@ -362,7 +364,6 @@ to the view are reflected on the original matrix and vice-versa. Use
 <p>See also: <a href="#Matrix%25rowView"><code>Matrix.prototype.rowView</code></a>, <a href="#Matrix%25colView"><code>Matrix.prototype.colView</code></a>,
 <a href="#Matrix%25diagView"><code>Matrix.prototype.diagView</code></a>.</p>
       </div>
-      
       <div>
         <h4 id="Matrix.ViewMV"><code>Matrix.ViewMV</code></h4>
         <p>Subclass of Vector that is used internally by <a href="#Matrix"><code>Matrix</code></a> for representing
@@ -370,12 +371,43 @@ the rows/columns/diagonals of a matrix as vectors.</p>
 <p>For creating these, see: <a href="#Matrix%25rowView"><code>Matrix.prototype.rowView</code></a>, <a href="#Matrix%25colView"><code>Matrix.prototype.colView</code></a>,
 <a href="#Matrix%25diagView"><code>Matrix.prototype.diagView</code></a>.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix.Solver"><code>Matrix.Solver</code></h4>
-        <p>TODO</p>
+        <h4 id="Matrix.Vector%25colBind"><code>Matrix.Vector#colBind</code></h4>
+        <p>See <a href="#Matrix.colBind"><code>Matrix.colBind</code></a></p>
       </div>
-      
+      <div>
+        <h4 id="Matrix.Vector%25mult"><code>Matrix.Vector#mult(other)</code></h4>
+        <p>TODO: Find a way to add to Vector docs</p>
+      </div>
+      <div>
+        <h4 id="Matrix.Vector%25rowBind"><code>Matrix.Vector#rowBind</code></h4>
+        <p>See <a href="#Matrix.rowBind"><code>Matrix.rowBind</code></a></p>
+      </div>
+      <div>
+        <h4 id="Matrix.colBind"><code>Matrix.colBind(matrices)</code></h4>
+        <p>Bind the arguments column-wise into a matrix. The arguments may be a
+mixture of matrices and vectors, but their <code>nrow/length</code> must all be the same.</p>
+      </div>
+      <div>
+        <h4 id="Matrix.commonConstr"><code>Matrix.commonConstr(A, B)</code></h4>
+        <p>Return a common constructor for <code>A</code> and <code>B</code>, from the lists provided by
+<a href="#Matrix%25classes"><code>Matrix.prototype.classes</code></a>.</p>
+      </div>
+      <div>
+        <h4 id="Matrix.compatibleDims"><code>Matrix.compatibleDims(A, B)</code></h4>
+        <p>Return whether <code>A</code> and <code>B</code> have compatible dimensions for
+forming the product <code>A * B</code>.  If <code>A</code> and; <code>B</code> are not both matrices, then
+one of them is a matrix and the other is a vector.</p>
+      </div>
+      <div>
+        <h4 id="Matrix.const"><code>Matrix.const(val, nrow)</code></h4>
+        <p>Return a constant multiple of the identity matrix. These matrices cannot become mutable.
+They should be treated as constants.
+The second argument, <code>nrow</code> can be the number of rows, or an object with an <code>nrow</code>
+argument. For instance to create an identity matrix with size same as the matrix <code>A</code>
+one would do:</p>
+<pre class="prettyprint source"><a href="#Matrix.const"><code>Matrix.const(1, A);  // Identity matrix with dimension same as A.</code></a></pre>
+      </div>
       <div>
         <h4 id="Matrix.diag"><code>Matrix.diag(diagonal, len)</code></h4>
         <p>Return a square diagonal matrix with values given by <code>diagonal</code>. The argument
@@ -387,102 +419,285 @@ change its values when it itself is changed. Clone the
 array/vector before passing it to avoid this.</p>
 <p>To obtain a diagonal of an arbitrary matrix, see <a href="#Matrix%25diagView"><code>Matrix.prototype.diagView</code></a>.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix.const"><code>Matrix.const(val, nrow)</code></h4>
-        <p>Return a constant multiple of the identity matrix. These matrices cannot become mutable.
-They should be treated as constants.
-The second argument, <code>nrow</code> can be the number of rows, or an object with an <code>nrow</code>
-argument. For instance to create an identity matrix with size same as the matrix <code>A</code>
-one would do:</p>
-<pre class="prettyprint source"><a href="#Matrix.const"><code>Matrix.const(1, A);  // Identity matrix with dimension same as A.</code></a></pre>
+        <h4 id="Matrix.ensureSameDims"><code>Matrix.ensureSameDims(A, B)</code></h4>
+        <p>Throw error if <code>A</code>, <code>B</code> don't have same dimensions.</p>
       </div>
-      
       <div>
         <h4 id="Matrix.perm"><code>Matrix.perm(perm, nrow)</code></h4>
         <p>Return a permutation matrix based on the permutation indicated by <code>perm</code>. <code>perm</code> can be
 a <a href="#Permutation"><code>Permutation</code></a> object, or anything that can be turned to one (see <a href="#Permutation"><code>Permutation</code></a>).</p>
       </div>
-      
       <div>
         <h4 id="Matrix.rowBind"><code>Matrix.rowBind(matrices)</code></h4>
         <p>Bind the arguments row-wise into a matrix. The arguments may be a
 mixture of matrices and vectors, but their <code>ncol/length</code> must all be the same.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix%25rowBind"><code>Matrix#rowBind(matrices)</code></h4>
-        <p>See <a href="#Matrix.rowBind"><code>Matrix.rowBind</code></a></p>
+        <h4 id="Matrix.sameDims"><code>Matrix.sameDims(A, B)</code></h4>
+        <p>Return whether the matrix <code>A</code> has the same dimensions as the matrix <code>B</code>.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix.Vector.rowBind"><code>Matrix.Vector.rowBind</code></h4>
-        <p>See <a href="#Matrix.rowBind"><code>Matrix.rowBind</code></a></p>
+        <h4 id="Matrix%25_get"><code>Matrix#_get(i, j)</code></h4>
+        <p>Internally used by <a href="#Matrix%25get"><code>Matrix.prototype.get</code></a>. May be used in place of
+<a href="#Matrix%25get"><code>Matrix.prototype.get</code></a> if both arguments are always present.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix.Vector%25rowBind"><code>Matrix.Vector#rowBind</code></h4>
-        <p>See <a href="#Matrix.rowBind"><code>Matrix.rowBind</code></a></p>
+        <h4 id="Matrix%25_set"><code>Matrix#_set(i, j, val)</code></h4>
+        <p>Internally used by <a href="#Matrix%25set"><code>Matrix.prototype.set</code></a>. <em>Internal method</em>. May be used
+instead of <a href="#Matrix%25_set"><code>Matrix.prototype._set</code></a> if all three arguments are always present.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix.colBind"><code>Matrix.colBind(matrices)</code></h4>
-        <p>Bind the arguments column-wise into a matrix. The arguments may be a
-mixture of matrices and vectors, but their <code>nrow/length</code> must all be the same.</p>
+        <h4 id="Matrix%25all"><code>Matrix#all(pred)</code></h4>
+        <p>Return true, if the predicate <code>pred(val, i, j)</code> is true for all entries, false otherwise.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix%25colBind"><code>Matrix#colBind(matrices)</code></h4>
-        <p>See <a href="#Matrix.colBind"><code>Matrix.colBind</code></a></p>
+        <h4 id="Matrix%25any"><code>Matrix#any(pred)</code></h4>
+        <p>Return true, if the predicate <code>pred(val, i, j)</code> is true for at least one entry,
+false otherwise.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix.Vector.colBind"><code>Matrix.Vector.colBind</code></h4>
-        <p>See <a href="#Matrix.colBind"><code>Matrix.colBind</code></a></p>
+        <h4 id="Matrix%25change"><code>Matrix#change(i, j, val)</code></h4>
+        <p>Internal method used by <a href="#Matrix%25_set"><code>Matrix.prototype._set</code></a> to change the value of the
+matrix at a particular location. <em>Internal method</em>. This method bypasses
+various checks and should only be used with extreme care.</p>
       </div>
-      
-      <div>
-        <h4 id="Matrix.Vector%25colBind"><code>Matrix.Vector#colBind</code></h4>
-        <p>See <a href="#Matrix.colBind"><code>Matrix.colBind</code></a></p>
-      </div>
-      
       <div>
         <h4 id="Matrix%25classes"><code>Matrix#classes</code></h4>
         <p>The array of constructors for this type and its supertypes, in order from
 most specific to most general.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix%25isA"><code>Matrix#isA(constr)</code></h4>
-        <p>Return whether <code>constr</code> is in the list of class constructors produced by
-<a href="#Matrix%25classes"><code>Matrix.prototype.classes</code></a>.</p>
+        <h4 id="Matrix%25clone"><code>Matrix#clone(faithful)</code></h4>
+        <p>Create a clone of the matrix. The clone inherits the values that the matrix
+has at the time of cloning. If <code>faithful</code> is <code>true</code> (default), then the clone
+also inherits any structure (e.g. being diagonal) when possible.</p>
+<p>Unfaithful clones are useful if you want to set values of a structured matrix
+outside of the structure (e.g. setting off-diagonal elements on a diagonal matrix).
+In general, <a href="#Matrix%25set"><code>Matrix.prototype.set</code></a> respects any imposed structure the matrix has
+on its creation.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix.commonConstr"><code>Matrix.commonConstr(A, B)</code></h4>
-        <p>Return a common constructor for <code>A</code> and <code>B</code>, from the lists provided by
-<a href="#Matrix%25classes"><code>Matrix.prototype.classes</code></a>.</p>
+        <h4 id="Matrix%25colBind"><code>Matrix#colBind(matrices)</code></h4>
+        <p>See <a href="#Matrix.colBind"><code>Matrix.colBind</code></a></p>
       </div>
-      
+      <div>
+        <h4 id="Matrix%25colPermute"><code>Matrix#colPermute(perm)</code></h4>
+        <p>Permute the columns of the matrix.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25colView"><code>Matrix#colView(j)</code></h4>
+        <p>Return a <a href="#Vector"><code>Vector</code></a> view of the <code>j</code>-th column of the matrix.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25cols"><code>Matrix#cols()</code></h4>
+        <p>Return an array of all matrix columns as colViews</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25compute"><code>Matrix#compute(i, j)</code></h4>
+        <p>Computes the value at the (i, j) location. <em>Internal method</em>. Use <a href="#Matrix%25get"><code>Matrix.prototype.get</code></a>
+instead.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25constr"><code>Matrix#constr()</code></h4>
+        <p>Return the constructor method to be used for creating new objects of
+this type.</p>
+<p>Each of these constructors will accept the parameter list <code>(f, obj)</code>
+where <code>f(i, j)</code> is a function for generating matrix values, and <code>obj</code>
+has properties <code>nrow</code> and <code>ncol</code>.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25diagView"><code>Matrix#diagView(offset)</code></h4>
+        <p>Return a <a href="#Vector"><code>Vector</code></a> view of the diagonal of the matrix specified by
+the given <code>offset</code> (defaults to 0). The main diagonal has offset 0, the diagonal
+above it has offset 1, while the one below the main diagonal has offset -1.
+Asking for a diagonal beyond the matrix bounds results in an error.</p>
+<pre class="prettyprint source"><code>var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 });
+A1.diagView();    // [2, 5];
+A1.diagView(-1);  // [3];
+A1.diagView(1);   // [4, 7];
+A1.diagView(2);   // [6];
+A1.diagView(3);   // Error;</code></pre>
+      </div>
+      <div>
+        <h4 id="Matrix%25each"><code>Matrix#each(f)</code></h4>
+        <p>Apply the given function to each entry in the matrix. The signature of the
+function is <code>f(val, i, j)</code>.</p>
+<p><code>Each</code> respects the &quot;structure&quot; of the matrix. For instance
+on a <code>SparseM</code> matrix, it will only be called on the non-zero entries, on a
+<code>DiagM</code> matrix it will only be called on the diagonal entries, on a <code>SymmetricM</code>
+matrix it will be called on only roughly one half of the entries and so on.</p>
+<p>If you really need the function to be called on <em>each</em> matrix entry, regardless of
+structure, then you should use <a href="#Matrix%25clone"><code>Matrix.prototype.clone</code></a> first to create an
+&quot;unfaithful clone&quot;.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25eachCol"><code>Matrix#eachCol(f)</code></h4>
+        <p>Apply the function <code>f</code> to each column in the matrix. The signature of <code>f</code> is
+<code>f(col, j)</code> where <code>col</code> is a <a href="#Vector"><code>Vector</code></a> object representing the <code>j</code>-th col.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25eachPair"><code>Matrix#eachPair(other, f)</code></h4>
+        <p>Apply function <code>f(val1, val2, i, j)</code> to all pairwise entries of <code>this</code> and <code>other</code>.
+The matrices must have the same dimensions. No promises are made about the order of
+iteration.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25eachRow"><code>Matrix#eachRow(f)</code></h4>
+        <p>Apply the function <code>f</code> to each row in the matrix. The signature of <code>f</code> is
+<code>f(row, i)</code> where <code>row</code> is a <a href="#Vector"><code>Vector</code></a> object representing the <code>i</code>-th row.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25equals"><code>Matrix#equals(m2, tolerance)</code></h4>
+        <p>Test if <code>this</code> pointwise equals <code>m2</code>, within a given pointwise <code>tolerance</code>
+(defaults to <a href="#Vector.tolerance"><code>Vector.tolerance</code></a>).</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25forEach"><code>Matrix#forEach(f)</code></h4>
+        <p>Alias for <a href="#Matrix%25each"><code>Matrix.prototype.each</code></a></p>
+      </div>
+      <div>
+        <h4 id="Matrix%25force"><code>Matrix#force()</code></h4>
+        <p>Force unresolved computations for the matrix.</p>
+      </div>
       <div>
         <h4 id="Matrix%25get"><code>Matrix#get(i, j)</code></h4>
         <p>Return the value at location <code>(i, j)</code>. Returns <code>0</code> if accessing a location out
 of bounds.</p>
 <p>Called with 0 or 1 arguments, it is an alias for <a href="#Matrix%25toArray"><code>Matrix.prototype.toArray</code></a>.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix%25_get"><code>Matrix#_get(i, j)</code></h4>
-        <p>Internally used by <a href="#Matrix%25get"><code>Matrix.prototype.get</code></a>. May be used in place of
-<a href="#Matrix%25get"><code>Matrix.prototype.get</code></a> if both arguments are always present.</p>
+        <h4 id="Matrix%25getSolver"><code>Matrix#getSolver()</code></h4>
+        <p>Internally used to obtain a solver for systems.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix%25compute"><code>Matrix#compute(i, j)</code></h4>
-        <p>Computes the value at the (i, j) location. <em>Internal method</em>. Use <a href="#Matrix%25get"><code>Matrix.prototype.get</code></a>
+        <h4 id="Matrix%25inverse"><code>Matrix#inverse()</code></h4>
+        <p>Return the inverse of <code>this</code>, if <code>this</code> is a square non-singular matrix.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25isA"><code>Matrix#isA(constr)</code></h4>
+        <p>Return whether <code>constr</code> is in the list of class constructors produced by
+<a href="#Matrix%25classes"><code>Matrix.prototype.classes</code></a>.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25lower"><code>Matrix#lower()</code></h4>
+        <p>Return a lower-triangular matrix created by the lower triangle of <code>this</code>.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25lvMult"><code>Matrix#lvMult(vec)</code></h4>
+        <p>Multiply the matrix on the left with a vector <code>vec</code>. <code>vec.length</code> must equal <code>this.nrow</code>.
+Returns a vector of length <code>this.ncol</code>. This is an <em>internal method</em> and bypasses certain tests.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25map"><code>Matrix#map(f)</code></h4>
+        <p>Apply the function <code>f(val, i, j)</code> to every entry of the matrix, and assemble the
+returned values into a new matrix. Just like <a href="#Matrix%25each"><code>Matrix.prototype.each</code></a>, this method
+respects the structure of the input matrix, and will return a matrix with the
+same structure, only applying <code>f</code> on the values pertinent to the structure.</p>
+<p>If you really need the function to be called on <em>each</em> matrix entry, regardless of
+structure, then you should use <a href="#Matrix%25clone"><code>Matrix.prototype.clone</code></a> first to create an
+&quot;unfaithful clone&quot;.</p>
+<pre class="prettyprint source"><code>// Create a matrix containing the absolute values of the values in A.
+A.map(Math.abs);</code></pre>
+      </div>
+      <div>
+        <h4 id="Matrix%25mapCol"><code>Matrix#mapCol(f)</code></h4>
+        <p>Similar to <a href="#Matrix%25mapRow"><code>Matrix.prototype.mapRow</code></a>, but operating on the columns of the matrix
 instead.</p>
       </div>
-      
+      <div>
+        <h4 id="Matrix%25mapPair"><code>Matrix#mapPair(other, f)</code></h4>
+        <p>Create a new matrix by applying the function <code>f(val1, val2, i, j)</code> to all pairwise entries
+of <code>this</code> and <code>other</code>. No matrix structure is preserved.
+The matrices must have the same dimensions.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25mapRow"><code>Matrix#mapRow(f)</code></h4>
+        <p>Apply the function <code>f(row, i)</code> to each row in the matrix, and assemble the resulting
+values.</p>
+<p>If the return values of <code>f</code> are numbers, they are assembled into a <a href="#Vector"><code>Vector</code></a>. If they
+are arrays or <a href="#Vector"><code>Vector</code></a>s, then they must be of the same length, and they are assembled
+into a matrix with <code>nrow</code> equal to the original matrix's <code>nrow</code>, and <code>ncol</code> equal to
+the value's length.</p>
+<pre class="prettyprint source"><code>// Create an n x 3 array of the index, 1-norm and 2-norm of each row.
+A.mapRow(function(row, i) { return [i, row.norm(1), row.norm(2) ]; });</code></pre>
+      </div>
+      <div>
+        <h4 id="Matrix%25mult"><code>Matrix#mult(other)</code></h4>
+        <p>Return the matrix product <code>this * other</code>, where <code>this</code> and <code>other</code> have
+compatible dimensions.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25mutable"><code>Matrix#mutable(newSetting)</code></h4>
+        <p>With no arguments, returns the mutable state of the matrix.</p>
+<p>With a boolean argument, sets the mutable state of the matrix and returns
+the matrix.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25pAdd"><code>Matrix#pAdd(other, k)</code></h4>
+        <p>Return <code>this + k * other</code>, where <code>this</code> and <code>other</code> are matrices of the
+same dimensions, and <code>k</code> is a scalar.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25reduce"><code>Matrix#reduce(f, initial)</code></h4>
+        <p>Return the accumulated value of the calls of <code>f(acc, val, i, j)</code> over the entries
+of the matrix, with <code>acc</code> starting with value <code>initial</code>.</p>
+<p><a href="#Matrix%25reduce"><code>Matrix.prototype.reduce</code></a> is similar to <a href="#Matrix%25each"><code>Matrix.prototype.each</code></a> in how it deals
+with structured matrices.</p>
+<p>Compare with <a href="#Vector%25reduce"><code>Vector.prototype.reduce</code></a>.</p>
+<pre class="prettyprint source"><code>var A = new Matrix(Math.random, { nrow: 3, ncol: 2 });
+// Counts the number of entries in A which exceed 0.5
+A.reduce(function(acc, val, i, j) {
+  return acc + (val > 0.5 ? 1 : 0);
+}, 0);</code></pre>
+      </div>
+      <div>
+        <h4 id="Matrix%25reduceCol"><code>Matrix#reduceCol(f, initial)</code></h4>
+        <p>Return the accumulated value of the calls of <code>f(acc, col, i, j)</code> over the columns
+of the matrix, with <code>acc</code> starting with value <code>initial</code>.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25reducePair"><code>Matrix#reducePair(other, f, initial)</code></h4>
+        <p>Reduce on the pair of matrices <code>this</code> and <code>other</code> using the function
+<code>f(acc, val1, val2, i, j)</code>, with an <code>initial</code> value.
+The matrices must have the same dimensions. No promises are made about the order of
+iteration.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25reduceRow"><code>Matrix#reduceRow(f, initial)</code></h4>
+        <p>Return the accumulated value of the calls of <code>f(acc, row, i, j)</code> over the rows
+of the matrix, with <code>acc</code> starting with value <code>initial</code>.</p>
+<pre class="prettyprint source"><code>// Add the rows in A with 2-norm >= 1
+A.reduce(function(acc, row, i, j) {
+  if (row.norm() >= 1) { return acc.pAdd(row); }
+  return acc;
+}, Vector.const(0, A.ncol));</code></pre>
+      </div>
+      <div>
+        <h4 id="Matrix%25rowBind"><code>Matrix#rowBind(matrices)</code></h4>
+        <p>See <a href="#Matrix.rowBind"><code>Matrix.rowBind</code></a></p>
+      </div>
+      <div>
+        <h4 id="Matrix%25rowPermute"><code>Matrix#rowPermute(perm)</code></h4>
+        <p>Permute the rows of the matrix.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25rowView"><code>Matrix#rowView(i)</code></h4>
+        <p>Return a <a href="#Vector"><code>Vector</code></a> view of the <code>i</code>-th row of the matrix.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25rows"><code>Matrix#rows()</code></h4>
+        <p>Return an array of all matrix rows as rowViews</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25rvMult"><code>Matrix#rvMult(vec)</code></h4>
+        <p>Multiply on the right with a vector <code>vec</code>. <code>vec.length</code> must equal <code>this.ncol</code>.
+Returns a vector of length <code>this.nrow</code>. This is an <em>internal method</em> and bypasses certain tests.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25sMult"><code>Matrix#sMult(k)</code></h4>
+        <p>Return <code>k * this</code>, where <code>k</code> is a scalar (required numerical argument).</p>
+      </div>
       <div>
         <h4 id="Matrix%25set"><code>Matrix#set(i, j, val)</code></h4>
         <p>Set the value of the matrix at the <code>(i, j)</code> location to <code>val</code>. Requires that
@@ -509,20 +724,38 @@ unpredictable. In general, you should treat a matrix that has been used in the c
 of other matrices as an immutable object, unless <a href="#Matrix%25force"><code>Matrix.prototype.force</code></a> has been called
 on those other matrices.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix%25_set"><code>Matrix#_set(i, j, val)</code></h4>
-        <p>Internally used by <a href="#Matrix%25set"><code>Matrix.prototype.set</code></a>. <em>Internal method</em>. May be used
-instead of <a href="#Matrix%25_set"><code>Matrix.prototype._set</code></a> if all three arguments are always present.</p>
+        <h4 id="Matrix%25solve"><code>Matrix#solve(b)</code></h4>
+        <p>Return the solution to <code>Ax = b</code>, where <code>A</code> is <code>this</code> and  <code>b</code> is a <a href="#Matrix"><code>Matrix</code></a> or <a href="#Vector"><code>Vector</code></a>.
+Only works for square non-singular matrices <code>A</code> at the moment.</p>
       </div>
-      
       <div>
-        <h4 id="Matrix%25change"><code>Matrix#change(i, j, val)</code></h4>
-        <p>Internal method used by <a href="#Matrix%25_set"><code>Matrix.prototype._set</code></a> to change the value of the
-matrix at a particular location. <em>Internal method</em>. This method bypasses
-various checks and should only be used with extreme care.</p>
+        <h4 id="Matrix%25toArray"><code>Matrix#toArray(byRow)</code></h4>
+        <p>Return an array of arrays representing the matrix. This representation is
+as an array of columns (or an array of rows if <code>byRow</code> is <code>true</code>).</p>
+<pre class="prettyprint source"><code>var A = new Matrix([1, 2, 3, 4, 5, 6], { byRow: true, nrow: 3 });
+A.toArray(true);  // [[1, 2], [3, 4], [5, 6]]
+A.toArray(false); // [[1, 3, 5], [2, 4, 6]]</code></pre>
       </div>
-      
+      <div>
+        <h4 id="Matrix%25toVector"><code>Matrix#toVector(byRow)</code></h4>
+        <p>Return a flat vector of the matrix values by concatenating its
+columns (or its rows if <code>byRow</code> is true). This is not a view into
+the matrix, and cannot be used to change the matrix values.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25transpose"><code>Matrix#transpose()</code></h4>
+        <p>Return the transpose of the matrix, preserving any appropriate structure.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25upper"><code>Matrix#upper()</code></h4>
+        <p>Return a upper-triangular matrix created by the upper triangle of <code>this</code>.</p>
+      </div>
+      <div>
+        <h4 id="Matrix%25validIndices"><code>Matrix#validIndices(i, j)</code></h4>
+        <p>Return whether the (i, j) pair is within the matrix's bounds. Matrices with extra
+extra structure do further checks via <a href="#Matrix%25validate"><code>Matrix.prototype.validate</code></a>.</p>
+      </div>
       <div>
         <h4 id="Matrix%25validate"><code>Matrix#validate(i, j, val)</code></h4>
         <p>Overriden by subclasses that need special index/value validation.</p>
@@ -534,82 +767,6 @@ worrying about being out of bounds (which is checked separately).</p>
 It should either return <code>false</code> or throw an error if the assignment should not
 happen, and return true if it should be allowed to happen.</p>
       </div>
-      
-      <div>
-        <h4 id="Matrix%25toArray"><code>Matrix#toArray(byRow)</code></h4>
-        <p>Return an array of arrays representing the matrix. This representation is
-as an array of columns (or an array of rows if <code>byRow</code> is <code>true</code>).</p>
-<pre class="prettyprint source"><code>var A = new Matrix([1, 2, 3, 4, 5, 6], { byRow: true, nrow: 3 });
-A.toArray(true);  // [[1, 2], [3, 4], [5, 6]]
-A.toArray(false); // [[1, 3, 5], [2, 4, 6]]</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25toVector"><code>Matrix#toVector(byRow)</code></h4>
-        <p>Return a flat vector of the matrix values by concatenating its
-columns (or its rows if <code>byRow</code> is true). This is not a view into
-the matrix, and cannot be used to change the matrix values.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25force"><code>Matrix#force()</code></h4>
-        <p>Force unresolved computations for the matrix.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25constr"><code>Matrix#constr()</code></h4>
-        <p>Return the constructor method to be used for creating new objects of
-this type.</p>
-<p>Each of these constructors will accept the parameter list <code>(f, obj)</code>
-where <code>f(i, j)</code> is a function for generating matrix values, and <code>obj</code>
-has properties <code>nrow</code> and <code>ncol</code>.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25clone"><code>Matrix#clone(faithful)</code></h4>
-        <p>Create a clone of the matrix. The clone inherits the values that the matrix
-has at the time of cloning. If <code>faithful</code> is <code>true</code> (default), then the clone
-also inherits any structure (e.g. being diagonal) when possible.</p>
-<p>Unfaithful clones are useful if you want to set values of a structured matrix
-outside of the structure (e.g. setting off-diagonal elements on a diagonal matrix).
-In general, <a href="#Matrix%25set"><code>Matrix.prototype.set</code></a> respects any imposed structure the matrix has
-on its creation.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25pAdd"><code>Matrix#pAdd(other, k)</code></h4>
-        <p>Return <code>this + k * other</code>, where <code>this</code> and <code>other</code> are matrices of the
-same dimensions, and <code>k</code> is a scalar.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25sMult"><code>Matrix#sMult(k)</code></h4>
-        <p>Return <code>k * this</code>, where <code>k</code> is a scalar (required numerical argument).</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25mult"><code>Matrix#mult(other)</code></h4>
-        <p>Return the matrix product <code>this * other</code>, where <code>this</code> and <code>other</code> have
-compatible dimensions.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix.Vector%25mult"><code>Matrix.Vector#mult(other)</code></h4>
-        <p>TODO: Find a way to add to Vector docs</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25lvMult"><code>Matrix#lvMult(vec)</code></h4>
-        <p>Multiply the matrix on the left with a vector <code>vec</code>. <code>vec.length</code> must equal <code>this.nrow</code>.
-Returns a vector of length <code>this.ncol</code>. This is an <em>internal method</em> and bypasses certain tests.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25rvMult"><code>Matrix#rvMult(vec)</code></h4>
-        <p>Multiply on the right with a vector <code>vec</code>. <code>vec.length</code> must equal <code>this.ncol</code>.
-Returns a vector of length <code>this.nrow</code>. This is an <em>internal method</em> and bypasses certain tests.</p>
-      </div>
-      
       <div>
         <h4 id="Matrix%25view"><code>Matrix#view(rowIndex, colIndex, dims)</code></h4>
         <p>Return a view into a submatrix of <code>this</code>.</p>
@@ -627,233 +784,6 @@ The mutable state of the view is that of the original
 matrix. Changing the values in the view also changes the values in the matrix,
 and vice versa. Use <a href="#Matrix%25clone"><code>Matrix.prototype.clone</code></a> on the view matrix to break the link.</p>
       </div>
-      
-      <div>
-        <h4 id="Matrix%25rowView"><code>Matrix#rowView(i)</code></h4>
-        <p>Return a <a href="#Vector"><code>Vector</code></a> view of the <code>i</code>-th row of the matrix.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25colView"><code>Matrix#colView(j)</code></h4>
-        <p>Return a <a href="#Vector"><code>Vector</code></a> view of the <code>j</code>-th column of the matrix.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25rows"><code>Matrix#rows()</code></h4>
-        <p>Return an array of all matrix rows as rowViews</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25cols"><code>Matrix#cols()</code></h4>
-        <p>Return an array of all matrix columns as colViews</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25diagView"><code>Matrix#diagView(offset)</code></h4>
-        <p>Return a <a href="#Vector"><code>Vector</code></a> view of the diagonal of the matrix specified by
-the given <code>offset</code> (defaults to 0). The main diagonal has offset 0, the diagonal
-above it has offset 1, while the one below the main diagonal has offset -1.
-Asking for a diagonal beyond the matrix bounds results in an error.</p>
-<pre class="prettyprint source"><code>var A1 = new Matrix([2, 3, 4, 5, 6, 7], { nrow: 2 });
-A1.diagView();    // [2, 5];
-A1.diagView(-1);  // [3];
-A1.diagView(1);   // [4, 7];
-A1.diagView(2);   // [6];
-A1.diagView(3);   // Error;</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25rowPermute"><code>Matrix#rowPermute(perm)</code></h4>
-        <p>Permute the rows of the matrix.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25colPermute"><code>Matrix#colPermute(perm)</code></h4>
-        <p>Permute the columns of the matrix.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25mutable"><code>Matrix#mutable(newSetting)</code></h4>
-        <p>With no arguments, returns the mutable state of the matrix.</p>
-<p>With a boolean argument, sets the mutable state of the matrix and returns
-the matrix.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25each"><code>Matrix#each(f)</code></h4>
-        <p>Apply the given function to each entry in the matrix. The signature of the
-function is <code>f(val, i, j)</code>.</p>
-<p><code>Each</code> respects the &quot;structure&quot; of the matrix. For instance
-on a <code>SparseM</code> matrix, it will only be called on the non-zero entries, on a
-<code>DiagM</code> matrix it will only be called on the diagonal entries, on a <code>SymmetricM</code>
-matrix it will be called on only roughly one half of the entries and so on.</p>
-<p>If you really need the function to be called on <em>each</em> matrix entry, regardless of
-structure, then you should use <a href="#Matrix%25clone"><code>Matrix.prototype.clone</code></a> first to create an
-&quot;unfaithful clone&quot;.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25forEach"><code>Matrix#forEach(f)</code></h4>
-        <p>Alias for <a href="#Matrix%25each"><code>Matrix.prototype.each</code></a></p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25eachRow"><code>Matrix#eachRow(f)</code></h4>
-        <p>Apply the function <code>f</code> to each row in the matrix. The signature of <code>f</code> is
-<code>f(row, i)</code> where <code>row</code> is a <a href="#Vector"><code>Vector</code></a> object representing the <code>i</code>-th row.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25eachCol"><code>Matrix#eachCol(f)</code></h4>
-        <p>Apply the function <code>f</code> to each column in the matrix. The signature of <code>f</code> is
-<code>f(col, j)</code> where <code>col</code> is a <a href="#Vector"><code>Vector</code></a> object representing the <code>j</code>-th col.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25reduce"><code>Matrix#reduce(f, initial)</code></h4>
-        <p>Return the accumulated value of the calls of <code>f(acc, val, i, j)</code> over the entries
-of the matrix, with <code>acc</code> starting with value <code>initial</code>.</p>
-<p><a href="#Matrix%25reduce"><code>Matrix.prototype.reduce</code></a> is similar to <a href="#Matrix%25each"><code>Matrix.prototype.each</code></a> in how it deals
-with structured matrices.</p>
-<p>Compare with <a href="#Vector%25reduce"><code>Vector.prototype.reduce</code></a>.</p>
-<pre class="prettyprint source"><code>var A = new Matrix(Math.random, { nrow: 3, ncol: 2 });
-// Counts the number of entries in A which exceed 0.5
-A.reduce(function(acc, val, i, j) {
-  return acc + (val > 0.5 ? 1 : 0);
-}, 0);</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25reduceRow"><code>Matrix#reduceRow(f, initial)</code></h4>
-        <p>Return the accumulated value of the calls of <code>f(acc, row, i, j)</code> over the rows
-of the matrix, with <code>acc</code> starting with value <code>initial</code>.</p>
-<pre class="prettyprint source"><code>// Add the rows in A with 2-norm >= 1
-A.reduce(function(acc, row, i, j) {
-  if (row.norm() >= 1) { return acc.pAdd(row); }
-  return acc;
-}, Vector.const(0, A.ncol));</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25reduceCol"><code>Matrix#reduceCol(f, initial)</code></h4>
-        <p>Return the accumulated value of the calls of <code>f(acc, col, i, j)</code> over the columns
-of the matrix, with <code>acc</code> starting with value <code>initial</code>.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25map"><code>Matrix#map(f)</code></h4>
-        <p>Apply the function <code>f(val, i, j)</code> to every entry of the matrix, and assemble the
-returned values into a new matrix. Just like <a href="#Matrix%25each"><code>Matrix.prototype.each</code></a>, this method
-respects the structure of the input matrix, and will return a matrix with the
-same structure, only applying <code>f</code> on the values pertinent to the structure.</p>
-<p>If you really need the function to be called on <em>each</em> matrix entry, regardless of
-structure, then you should use <a href="#Matrix%25clone"><code>Matrix.prototype.clone</code></a> first to create an
-&quot;unfaithful clone&quot;.</p>
-<pre class="prettyprint source"><code>// Create a matrix containing the absolute values of the values in A.
-A.map(Math.abs);</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25mapRow"><code>Matrix#mapRow(f)</code></h4>
-        <p>Apply the function <code>f(row, i)</code> to each row in the matrix, and assemble the resulting
-values.</p>
-<p>If the return values of <code>f</code> are numbers, they are assembled into a <a href="#Vector"><code>Vector</code></a>. If they
-are arrays or <a href="#Vector"><code>Vector</code></a>s, then they must be of the same length, and they are assembled
-into a matrix with <code>nrow</code> equal to the original matrix's <code>nrow</code>, and <code>ncol</code> equal to
-the value's length.</p>
-<pre class="prettyprint source"><code>// Create an n x 3 array of the index, 1-norm and 2-norm of each row.
-A.mapRow(function(row, i) { return [i, row.norm(1), row.norm(2) ]; });</code></pre>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25mapCol"><code>Matrix#mapCol(f)</code></h4>
-        <p>Similar to <a href="#Matrix%25mapRow"><code>Matrix.prototype.mapRow</code></a>, but operating on the columns of the matrix
-instead.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25eachPair"><code>Matrix#eachPair(other, f)</code></h4>
-        <p>Apply function <code>f(val1, val2, i, j)</code> to all pairwise entries of <code>this</code> and <code>other</code>.
-The matrices must have the same dimensions. No promises are made about the order of
-iteration.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25reducePair"><code>Matrix#reducePair(other, f, initial)</code></h4>
-        <p>Reduce on the pair of matrices <code>this</code> and <code>other</code> using the function
-<code>f(acc, val1, val2, i, j)</code>, with an <code>initial</code> value.
-The matrices must have the same dimensions. No promises are made about the order of
-iteration.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25mapPair"><code>Matrix#mapPair(other, f)</code></h4>
-        <p>Create a new matrix by applying the function <code>f(val1, val2, i, j)</code> to all pairwise entries
-of <code>this</code> and <code>other</code>. No matrix structure is preserved.
-The matrices must have the same dimensions.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25any"><code>Matrix#any(pred)</code></h4>
-        <p>Return true, if the predicate <code>pred(val, i, j)</code> is true for at least one entry,
-false otherwise.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25all"><code>Matrix#all(pred)</code></h4>
-        <p>Return true, if the predicate <code>pred(val, i, j)</code> is true for all entries, false otherwise.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25transpose"><code>Matrix#transpose()</code></h4>
-        <p>Return the transpose of the matrix, preserving any appropriate structure.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25lower"><code>Matrix#lower()</code></h4>
-        <p>Return a lower-triangular matrix created by the lower triangle of <code>this</code>.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25upper"><code>Matrix#upper()</code></h4>
-        <p>Return a upper-triangular matrix created by the upper triangle of <code>this</code>.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25equals"><code>Matrix#equals(m2, tolerance)</code></h4>
-        <p>Test if <code>this</code> pointwise equals <code>m2</code>, within a given pointwise <code>tolerance</code>
-(defaults to <a href="#Vector.tolerance"><code>Vector.tolerance</code></a>).</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix.sameDims"><code>Matrix.sameDims(A, B)</code></h4>
-        <p>Return whether the matrix <code>A</code> has the same dimensions as the matrix <code>B</code>.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix.ensureSameDims"><code>Matrix.ensureSameDims(A, B)</code></h4>
-        <p>Throw error if <code>A</code>, <code>B</code> don't have same dimensions.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix.compatibleDims"><code>Matrix.compatibleDims(A, B)</code></h4>
-        <p>Return whether <code>A</code> and <code>B</code> have compatible dimensions for
-forming the product <code>A * B</code>.  If <code>A</code> and; <code>B</code> are not both matrices, then
-one of them is a matrix and the other is a vector.</p>
-      </div>
-      
-      <div>
-        <h4 id="Matrix%25validIndices"><code>Matrix#validIndices(i, j)</code></h4>
-        <p>Return whether the (i, j) pair is within the matrix's bounds. Matrices with extra
-extra structure do further checks via <a href="#Matrix%25validate"><code>Matrix.prototype.validate</code></a>.</p>
-      </div>
-      
-      <div>
-        <h4 id="StructuredM.LowerTriM"><code>StructuredM.LowerTriM</code></h4>
-        <p>Subclass of <a href="#Matrix"><code>Matrix</code></a> representing diagonal matrices.
-Users should not need to access this subclass directly.</p>
-      </div>
-      
     </div>
   </body>
 </html>
