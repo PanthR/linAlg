@@ -446,7 +446,7 @@ define(function(require) {
     */
    Vector.prototype.eachPair = function eachPair(v2, f, skipZeros) {
       if (!this.sameLength(v2)) {
-         throw new Error('Vector#eachPair: vectors should be same langth');
+         throw new Error('Vector#eachPair: vectors should be same length');
       }
       if (v2.isSparse()) {
          v2.eachPair(this, swap(f), skipZeros); return this;
