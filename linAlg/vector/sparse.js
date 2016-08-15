@@ -49,7 +49,7 @@ return function(Vector) {
    SparseV.prototype.eachPair = function eachPair(v2, f, skipZeros) {
       var i, vals;
       if (!this.sameLength(v2)) {
-         throw new Error('SparseV#eachPair: vectors should be same langth');
+         throw new Error('SparseV#eachPair: vectors should be same length');
       }
       vals = this._values;
       if (skipZeros) {
@@ -75,7 +75,7 @@ return function(Vector) {
 
    SparseV.prototype.mapPair = function mapPair(v2, f, skipZeros) {
       if (!this.sameLength(v2)) {
-         throw new Error('Vector.mapPair: vectors should be same langth');
+         throw new Error('Vector.mapPair: vectors should be same length');
       }
       var newValues = {};
       if (!skipZeros && !v2.isSparse()) {

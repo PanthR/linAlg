@@ -527,7 +527,7 @@ define(function(require) {
     */
    Vector.prototype.mapPair = function mapPair(v2, f, skipZeros) {
       if (!this.sameLength(v2)) {
-         throw new Error('Vector.mapPair: vectors should be same langth');
+         throw new Error('Vector.mapPair: vectors should be same length');
       }
       if (skipZeros && v2.isSparse()) {
          return v2.mapPair(this, swap(f), skipZeros);
