@@ -187,7 +187,7 @@ define(function(require) {
     * Same as `Vector.prototype.get`, but only works with an integer argument.
     */
    Vector.prototype._get = function _get(i) {
-      if ( i < 1 || i > this.length) { return null; }
+      if (!(i >= 1 && i <= this.length)) { return null; }
       if (!this.values) { this.values = []; }
       if (!this.cached && this.values[i - 1] == null) {
          this.values[i - 1] = this.compute(i);
